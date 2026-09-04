@@ -37,8 +37,10 @@ function App() {
   return (
     <Router>
       <div className="min-h-screen bg-gray-950 bg-dotted">
+        <div className="fixed inset-0 dither-background -z-10" />
+        <div className="fixed inset-0 bg-gradient-to-b from-black/90 via-transparent to-black/80 -z-10" />
         <Navbar />
-        <main>
+        <main className="relative z-10">
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/about" element={<AboutPage />} />

@@ -45,38 +45,11 @@ export function HeroSection() {
       className="relative min-h-screen flex items-center justify-center overflow-hidden"
       onMouseMove={(e) => setMousePosition({ x: e.clientX, y: e.clientY })}
     >
-      {/* Animated Background */}
-      <motion.div
-        className="absolute inset-0 bg-gradient-to-br from-gray-900 via-gray-950 to-black"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 1 }}
-      />
-
-      {/* Floating Particles */}
-      <div className="absolute inset-0 pointer-events-none">
-        {Array.from({ length: 50 }).map((_, i) => (
-          <motion.div
-            key={i}
-            className="absolute w-1 h-1 rounded-full bg-primary-500/30"
-            initial={{ x: Math.random() * 100, y: Math.random() * 100 }}
-            animate={{
-              x: [Math.random() * 100, Math.random() * 100 + 50],
-              y: [Math.random() * 100, Math.random() * 100 + 50],
-              opacity: [0.3, 0.6, 0.3],
-            }}
-            transition={{
-              duration: 10 + Math.random() * 20,
-              repeat: Infinity,
-              delay: Math.random() * 5,
-            }}
-            style={{
-              x: `${Math.random() * 100}vw`,
-              y: `${Math.random() * 100}vh`,
-            }}
-          />
-        ))}
-      </div>
+      {/* ReactBits Dither Background */}
+      <div className="absolute inset-0 dither-background" />
+      
+      {/* Gradient Overlay */}
+      <div className="absolute inset-0 bg-gradient-to-br from-black/80 via-transparent to-black/60" />
 
       {/* Mouse Trail Effect */}
       <motion.div

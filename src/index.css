@@ -12,6 +12,23 @@
   }
 }
 
+/* ReactBits Dither Background */
+@keyframes dither {
+  0%, 100% {
+    background-position: 0% 0%;
+  }
+  50% {
+    background-position: 100% 100%;
+  }
+}
+
+.dither-background {
+  background: 
+    radial-gradient(circle at 1px 1px, rgba(255,255,255,0.15) 1px, transparent 0);
+  background-size: 20px 20px;
+  animation: dither 2s linear infinite;
+}
+
 @layer components {
   .glass-card {
     @apply bg-white/5 backdrop-blur-lg rounded-xl border border-white/10 shadow-lg;
