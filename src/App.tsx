@@ -159,15 +159,6 @@ function App() {
     }
   }
 
-  // Prevent page reload on hash change
-  useEffect(() => {
-    const handleHashChange = (e: HashChangeEvent) => {
-      e.preventDefault()
-    }
-    window.addEventListener('hashchange', handleHashChange as any, false)
-    return () => window.removeEventListener('hashchange', handleHashChange as any)
-  }, [])
-
   return (
     <div className="min-h-screen bg-black text-white">
       {/* Fixed Dither Background - does NOT scroll */}
@@ -185,30 +176,28 @@ function App() {
         />
       </div>
 
-      {/* GooeyNav - FIXED at top, always visible, centered */}
-      <header className="fixed top-0 left-0 right-0 z-50">
-        <div className="w-full">
-          <GooeyNav
-            items={navItems.map((item, index) => ({
-              ...item,
-              onClick: (e: React.MouseEvent) => handleNavClick(index, item.href, e)
-            }))}
-            particleCount={15}
-            particleDistances={[90, 10]}
-            particleR={100}
-            initialActiveIndex={activeNavIndex}
-            animationTime={600}
-            timeVariance={300}
-            colors={[1, 2, 3, 1, 2, 3, 1, 4]}
-          />
-        </div>
-      </header>
+      {/* GooeyNav - SCROLLS with content, always visible, centered */}
+      <div className="relative z-50 w-full">
+        <GooeyNav
+          items={navItems.map((item, index) => ({
+            ...item,
+            onClick: (e: React.MouseEvent) => handleNavClick(index, item.href, e)
+          }))}
+          particleCount={15}
+          particleDistances={[90, 10]}
+          particleR={100}
+          initialActiveIndex={activeNavIndex}
+          animationTime={600}
+          timeVariance={300}
+          colors={[1, 2, 3, 1, 2, 3, 1, 4]}
+        />
+      </div>
 
-      {/* Main Content Container with breathing room - starts below nav */}
-      <main className="relative z-10 pt-20">
+      {/* Main Content Container with breathing room */}
+      <main className="relative z-10">
         
         {/* Hero Section - Split 2/3 left, 1/3 right with breathing room */}
-        <section className="flex flex-col lg:flex-row min-h-[calc(100vh-80px)] py-8 px-4 lg:px-8 gap-6 lg:gap-12">
+        <section className="flex flex-col lg:flex-row min-h-screen py-8 px-4 lg:px-8 gap-6 lg:gap-12">
           
           {/* Left Side - 2/3 width on desktop, full on mobile */}
           <div className="flex-1 lg:w-2/3 flex flex-col justify-center relative">
