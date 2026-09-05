@@ -1,252 +1,261 @@
-import { useState, useRef } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { useRef, useEffect, useState, useCallback } from 'react';
+import { gsap } from 'gsap';
+import './AccordionGallery.css';
+
+interface AccordionGalleryItem {
+  image: string;
+  label?: string;
+  link?: string;
+  alt?: string;
+}
 
 interface AccordionGalleryProps {
-  title?: string
+  items?: AccordionGalleryItem[];
+  defaultIndex?: number;
+  accentColor?: string;
+  overlayColor?: string;
+  textColor?: string;
+  height?: number;
+  gap?: number;
+  radius?: number;
+  expandRatio?: number;
+  orientation?: 'horizontal' | 'vertical';
+  duration?: number;
+  ease?: string;
+  parallax?: number;
+  tilt?: number;
+  stagger?: number;
+  trigger?: 'hover' | 'click';
+  showLabels?: boolean;
+  grayscale?: boolean;
+  className?: string;
 }
 
-// Placeholder data
-const galleryItems = [
-  {
-    id: 1,
-    title: 'Modern Villas',
-    subtitle: 'Contemporary Architecture',
-    images: [
-      'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=400&h=300&fit=crop',
-      'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=400&h=300&fit=crop',
-      'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=400&h=300&fit=crop',
-    ]
-  },
-  {
-    id: 2,
-    title: 'Urban Spaces',
-    subtitle: 'City Architecture',
-    images: [
-      'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=300&fit=crop',
-      'https://images.unsplash.com/photo-1520637836862-4d197d17c35a?w=400&h=300&fit=crop',
-      'https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=400&h=300&fit=crop',
-    ]
-  },
-  {
-    id: 3,
-    title: 'Coastal Retreats',
-    subtitle: 'Beachfront Properties',
-    images: [
-      'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=400&h=300&fit=crop',
-      'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=400&h=300&fit=crop',
-      'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=400&h=300&fit=crop',
-    ]
-  },
-  {
-    id: 4,
-    title: 'Commercial Buildings',
-    subtitle: 'Office Complexes',
-    images: [
-      'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=300&fit=crop',
-      'https://images.unsplash.com/photo-1520637836862-4d197d17c35a?w=400&h=300&fit=crop',
-      'https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=400&h=300&fit=crop',
-    ]
-  }
-]
+const DEFAULT_ITEMS: AccordionGalleryItem[] = [
+  { image: 'https://picsum.photos/id/1015/900/1200', label: 'Canyon', link: '#' },
+  { image: 'https://picsum.photos/id/1018/900/1200', label: 'Ridgeline', link: '#' },
+  { image: 'https://picsum.photos/id/1039/900/1200', label: 'Falls', link: '#' },
+  { image: 'https://picsum.photos/id/1043/900/1200', label: 'Harbour', link: '#' },
+  { image: 'https://picsum.photos/id/1044/900/1200', label: 'Skyline', link: '#' }
+];
 
-export function AccordionGallery({ title = 'Accordion Gallery' }: AccordionGalleryProps) {
-  const [expandedId, setExpandedId] = useState<number | null>(null)
-  const containerRef = useRef<HTMLDivElement>(null)
-  
-  // Toggle accordion
-  const toggleAccordion = (id: number) => {
-    setExpandedId(expandedId === id ? null : id)
-  }
-  
-  // Accordion item animation
-  const accordionVariants = {
-    collapsed: {
-      height: 80,
-      marginBottom: 16
+const AccordionGallery: React.FC<AccordionGalleryProps> = ({
+  items = DEFAULT_ITEMS,
+  defaultIndex = 2,
+  accentColor = '#ffffff',
+  overlayColor = '#060010',
+  textColor = '#ffffff',
+  height = 460,
+  gap = 10,
+  radius = 16,
+  expandRatio = 0.52,
+  orientation = 'horizontal',
+  duration = 0.6,
+  ease = 'power3.out',
+  parallax = 0.5,
+  tilt = 8,
+  stagger = 0.06,
+  trigger = 'hover',
+  showLabels = true,
+  grayscale = true,
+  className = ''
+}) => {
+  const rootRef = useRef<HTMLDivElement>(null);
+  const panelRefs = useRef<(HTMLAnchorElement | HTMLDivElement)[]>([]);
+  const mediaRefs = useRef<HTMLSpanElement[]>([]);
+  const barRefs = useRef<HTMLSpanElement[]>([]);
+  const textRefs = useRef<HTMLSpanElement[]>([]);
+  const tlRef = useRef<gsap.core.Timeline | null>(null);
+  const firstRunRef = useRef(true);
+  const mediaSizeRef = useRef(320);
+
+  const vertical = orientation === 'vertical';
+  const count = items.length;
+  const [active, setActive] = useState(Math.min(Math.max(defaultIndex, 0), count - 1));
+
+  const prefersReduced =
+    typeof window !== 'undefined' && window.matchMedia
+      ? window.matchMedia('(prefers-reduced-motion: reduce)').matches
+      : false;
+
+  const applyLayout = useCallback(
+    (animate: boolean) => {
+      const panels = panelRefs.current;
+      if (!panels.length) return;
+
+      const r = Math.min(Math.max(expandRatio, 0.2), 0.9);
+      const grow = count > 1 ? (r * (count - 1)) / (1 - r) : 1;
+      const mediaSize = mediaSizeRef.current;
+
+      tlRef.current?.kill();
+      const dur = animate && !prefersReduced ? duration : 0;
+      const tl = gsap.timeline();
+
+      panels.forEach((panel, i) => {
+        if (!panel) return;
+        const isActive = i === active;
+        const media = mediaRefs.current[i];
+        const bar = barRefs.current[i];
+        const text = textRefs.current[i];
+
+        const rot = isActive ? 0 : i < active ? tilt : -tilt;
+        const rotProp = vertical ? { rotateX: -rot } : { rotateY: rot };
+
+        tl.to(panel, { flexGrow: isActive ? grow : 1, ...rotProp, duration: dur, ease }, 0);
+
+        if (media) {
+          const drift = Math.max(-1.5, Math.min(1.5, active - i));
+          const shift = drift * parallax * mediaSize * 0.06;
+          const gray = grayscale ? (isActive ? 0 : 1) : 0;
+          tl.to(
+            media,
+            {
+              xPercent: -50,
+              yPercent: -50,
+              x: vertical ? 0 : isActive ? 0 : shift,
+              y: vertical ? (isActive ? 0 : shift) : 0,
+              '--ag-gray': gray,
+              '--ag-dim': isActive ? 0 : 0.35,
+              duration: dur,
+              ease
+            },
+            0
+          );
+        }
+
+        if (showLabels && bar && text) {
+          if (isActive) {
+            tl.to([bar, text], { opacity: 1, x: 0, duration: dur, ease, stagger: prefersReduced ? 0 : stagger }, 0);
+          } else {
+            tl.to([bar, text], { opacity: 0, x: -14, duration: dur * 0.6, ease }, 0);
+          }
+        }
+      });
+
+      tlRef.current = tl;
     },
-    expanded: {
-      height: 'auto',
-      marginBottom: 16
-    }
-  }
-  
-  // Content animation
-  const contentVariants = {
-    hidden: {
-      opacity: 0,
-      height: 0
+    [
+      active,
+      count,
+      expandRatio,
+      duration,
+      ease,
+      vertical,
+      tilt,
+      parallax,
+      grayscale,
+      showLabels,
+      stagger,
+      prefersReduced
+    ]
+  );
+
+  useEffect(() => {
+    const el = rootRef.current;
+    if (!el) return;
+
+    const measure = () => {
+      const rect = el.getBoundingClientRect();
+      const total = vertical ? rect.height : rect.width;
+      const usable = Math.max(total - gap * (count - 1), 120);
+      const size = Math.max(140, usable * Math.min(Math.max(expandRatio, 0.2), 0.9) * 1.22);
+      mediaSizeRef.current = size;
+      el.style.setProperty('--ag-media-size', `${size}px`);
+      applyLayout(!firstRunRef.current);
+    };
+
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [applyLayout, gap, count, expandRatio, vertical]);
+
+  useEffect(() => {
+    applyLayout(!firstRunRef.current);
+    firstRunRef.current = false;
+  }, [applyLayout]);
+
+  useEffect(
+    () => () => {
+      tlRef.current?.kill();
     },
-    visible: {
-      opacity: 1,
-      height: 'auto',
-      transition: {
-        duration: 0.5,
-        staggerChildren: 0.1
-      }
+    []
+  );
+
+  const handleEnter = (i: number) => {
+    if (trigger === 'hover') setActive(i);
+  };
+
+  const handleClick = (i: number, e: React.MouseEvent) => {
+    if (i !== active) {
+      e.preventDefault();
+      setActive(i);
     }
-  }
-  
-  // Image animation
-  const imageVariants = {
-    hidden: {
-      opacity: 0,
-      y: 20,
-      scale: 0.8
-    },
-    visible: {
-      opacity: 1,
-      y: 0,
-      scale: 1
+  };
+
+  const handleKeyDown = (i: number, e: React.KeyboardEvent) => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+      e.preventDefault();
+      setActive((i + 1) % count);
+    } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+      e.preventDefault();
+      setActive((i - 1 + count) % count);
     }
-  }
-  
+  };
+
   return (
-    <div 
-      ref={containerRef}
-      className="w-full max-w-4xl mx-auto p-6"
+    <div
+      ref={rootRef}
+      className={`accordion-gallery${vertical ? ' accordion-gallery--vertical' : ''}${className ? ` ${className}` : ''}`}
+      style={{
+        '--ag-accent': accentColor,
+        '--ag-overlay': overlayColor,
+        '--ag-text': textColor,
+        '--ag-gap': `${gap}px`,
+        '--ag-radius': `${radius}px`,
+        height: vertical ? `${Math.round(height * 1.6)}px` : `${height}px`
+      } as React.CSSProperties}
+      role="list"
+      aria-label="Image accordion gallery"
     >
-      {/* Header */}
-      <motion.div 
-        className="mb-12"
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-      >
-        <h2 className="text-3xl font-bold text-white mb-2">{title}</h2>
-        <p className="text-white/60 text-sm">
-          Click to expand and reveal nested galleries
-        </p>
-      </motion.div>
-      
-      {/* Accordion Items */}
-      <div className="space-y-0">
-        {galleryItems.map((item, index) => (
-          <motion.div
-            key={item.id}
-            className="relative overflow-hidden rounded-2xl"
-            variants={accordionVariants}
-            initial="collapsed"
-            animate={expandedId === item.id ? 'expanded' : 'collapsed'}
-            transition={{ duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
+      {items.map((item, i) => {
+        const isActive = i === active;
+        const Tag = item.link ? 'a' : 'div';
+        return (
+          <Tag
+            key={i}
+            ref={el => (panelRefs.current[i] = el as HTMLAnchorElement | HTMLDivElement)}
+            className={`ag-panel${isActive ? ' ag-panel--active' : ''}`}
+            style={{ borderRadius: `${radius}px` }}
+            href={item.link || undefined}
+            onClick={e => handleClick(i, e)}
+            onMouseEnter={() => handleEnter(i)}
+            onFocus={() => setActive(i)}
+            onKeyDown={e => handleKeyDown(i, e)}
+            role="listitem"
+            tabIndex={0}
+            aria-current={isActive ? 'true' : undefined}
+            aria-label={item.label}
           >
-            {/* Header */}
-            <motion.button
-              onClick={() => toggleAccordion(item.id)}
-              className="w-full h-20 flex items-center justify-between p-6 bg-white/5 backdrop-blur-lg border border-white/10"
-              whileHover={{ backgroundColor: 'rgba(255, 255, 255, 0.1)' }}
-              whileTap={{ scale: 0.995 }}
-            >
-              <div className="flex items-center space-x-4">
-                <motion.div
-                  className="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center"
-                  whileHover={{ scale: 1.1, rotate: 5 }}
-                >
-                  <span className="text-white text-xl font-bold">{item.id}</span>
-                </motion.div>
-                <div className="text-left">
-                  <h3 className="text-white font-semibold text-lg">{item.title}</h3>
-                  <p className="text-white/60 text-sm">{item.subtitle}</p>
-                </div>
-              </div>
-              
-              {/* Chevron Icon */}
-              <motion.div
-                className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center"
-                animate={{ rotate: expandedId === item.id ? 180 : 0 }}
-                transition={{ duration: 0.3 }}
-              >
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M6 9L12 15L18 9" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
-              </motion.div>
-            </motion.button>
-            
-            {/* Content */}
-            <AnimatePresence mode="wait">
-              {expandedId === item.id && (
-                <motion.div
-                  key={`content-${item.id}`}
-                  variants={contentVariants}
-                  initial="hidden"
-                  animate="visible"
-                  exit="hidden"
-                  className="p-6 bg-white/2 backdrop-blur-lg border-t border-white/10"
-                >
-                  {/* Image Grid */}
-                  <motion.div 
-                    className="grid grid-cols-1 md:grid-cols-3 gap-6"
-                    variants={{
-                      hidden: {},
-                      visible: {
-                        transition: {
-                          staggerChildren: 0.1
-                        }
-                      }
-                    }}
-                  >
-                    {item.images.map((src, imgIndex) => (
-                      <motion.div
-                        key={imgIndex}
-                        variants={imageVariants}
-                        className="relative overflow-hidden rounded-xl cursor-pointer"
-                        whileHover={{ scale: 1.05 }}
-                      >
-                        <img
-                          src={src}
-                          alt={`${item.title} ${imgIndex + 1}`}
-                          className="w-full h-48 object-cover"
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
-                        <div className="absolute bottom-4 left-4 right-4">
-                          <motion.div 
-                            className="bg-white/90 backdrop-blur-md rounded-lg p-3 text-black"
-                            initial={{ y: 50 }}
-                            whileHover={{ y: 0 }}
-                            transition={{ duration: 0.3 }}
-                          >
-                            <p className="text-sm font-medium">Image {imgIndex + 1}</p>
-                          </motion.div>
-                        </div>
-                      </motion.div>
-                    ))}
-                  </motion.div>
-                  
-                  {/* Nested Gallery Indicator */}
-                  <motion.div 
-                    className="mt-6 p-4 bg-white/5 rounded-xl border border-white/10 text-center"
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5, delay: 0.3 }}
-                  >
-                    <p className="text-white/80 text-sm">
-                      This gallery can contain nested galleries
-                    </p>
-                    <button
-                      onClick={() => {}}
-                      className="mt-2 px-4 py-2 bg-white/10 hover:bg-white/20 rounded-lg text-sm font-medium transition-colors"
-                    >
-                      Explore Sub-Gallery
-                    </button>
-                  </motion.div>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </motion.div>
-        ))}
-      </div>
-      
-      {/* Footer */}
-      <motion.div 
-        className="mt-12 pt-8 border-t border-white/10"
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.5 }}
-      >
-        <p className="text-white/40 text-sm text-center">
-          Accordion Gallery - ReactBits inspired
-        </p>
-      </motion.div>
+            <span className="ag-panel__frame">
+              <span className="ag-panel__media" ref={el => (mediaRefs.current[i] = el as HTMLSpanElement)}>
+                <img src={item.image} alt={item.alt || item.label || ''} draggable="false" />
+              </span>
+              <span className="ag-panel__overlay" aria-hidden="true" />
+            </span>
+            {showLabels && (
+              <span className="ag-panel__label" aria-hidden="true">
+                <span className="ag-panel__bar" ref={el => (barRefs.current[i] = el as HTMLSpanElement)} />
+                <span className="ag-panel__text" ref={el => (textRefs.current[i] = el as HTMLSpanElement)}>
+                  {item.label}
+                </span>
+              </span>
+            )}
+          </Tag>
+        );
+      })}
     </div>
-  )
-}
+  );
+};
+
+export default AccordionGallery;

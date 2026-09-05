@@ -1,133 +1,272 @@
-import { useState, useRef, useEffect } from 'react'
-import { motion, useScroll, useTransform } from 'framer-motion'
+import { useCallback, useEffect, useRef } from 'react';
+import './ScrollExpand.css';
 
 interface ScrollExpandProps {
-  title?: string
+  src?: string;
+  mediaType?: 'image' | 'video';
+  poster?: string;
+  alt?: string;
+  title?: string;
+  scrollHint?: string;
+  startWidth?: number;
+  startHeight?: number;
+  startRadius?: number;
+  endRadius?: number;
+  mediaZoom?: number;
+  scrollDistance?: number;
+  holdDistance?: number;
+  smoothing?: number;
+  overlayScrim?: number;
+  useWindowScroll?: boolean;
+  enabled?: boolean;
+  children?: React.ReactNode;
+  className?: string;
+  style?: React.CSSProperties;
 }
 
-// Placeholder images
-const placeholderImages = [
-  'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=400&h=300&fit=crop',
-  'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=400&h=300&fit=crop',
-  'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=400&h=300&fit=crop',
-  'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=300&fit=crop',
-  'https://images.unsplash.com/photo-1520637836862-4d197d17c35a?w=400&h=300&fit=crop',
-  'https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=400&h=300&fit=crop',
-]
+const clamp = (v: number, a: number, b: number) => (v < a ? a : v > b ? b : v);
 
-export function ScrollExpand({ title = 'Scroll Expand Gallery' }: ScrollExpandProps) {
-  const containerRef = useRef<HTMLDivElement>(null)
-  const [images, setImages] = useState<string[]>([])
-  
-  // Load placeholder images
+const smoothstep = (edge0: number, edge1: number, x: number) => {
+  const t = clamp((x - edge0) / (edge1 - edge0 || 1e-6), 0, 1);
+  return t * t * (3 - 2 * t);
+};
+
+const ScrollExpand: React.FC<ScrollExpandProps> = ({
+  src = '',
+  mediaType = 'image',
+  poster = '',
+  alt = '',
+  title = '',
+  scrollHint = '',
+  startWidth = 42,
+  startHeight = 58,
+  startRadius = 24,
+  endRadius = 0,
+  mediaZoom = 1.35,
+  scrollDistance = 1.2,
+  holdDistance = 0.35,
+  smoothing = 0.1,
+  overlayScrim = 0.45,
+  useWindowScroll = false,
+  enabled = true,
+  children,
+  className = '',
+  style,
+  ...rest
+}) => {
+  const rootRef = useRef<HTMLDivElement>(null);
+  const trackRef = useRef<HTMLDivElement>(null);
+  const stageRef = useRef<HTMLDivElement>(null);
+  const frameRef = useRef<HTMLDivElement>(null);
+  const mediaRef = useRef<HTMLImageElement | HTMLVideoElement>(null);
+  const titleRef = useRef<HTMLDivElement>(null);
+  const overlayRef = useRef<HTMLDivElement>(null);
+  const scrimRef = useRef<HTMLDivElement>(null);
+  const hintRef = useRef<HTMLDivElement>(null);
+
+  const propsRef = useRef({
+    startWidth,
+    startHeight,
+    startRadius,
+    endRadius,
+    mediaZoom,
+    scrollDistance,
+    holdDistance,
+    smoothing,
+    overlayScrim,
+    useWindowScroll,
+    enabled
+  });
+
+  propsRef.current = {
+    startWidth,
+    startHeight,
+    startRadius,
+    endRadius,
+    mediaZoom,
+    scrollDistance,
+    holdDistance,
+    smoothing,
+    overlayScrim,
+    useWindowScroll,
+    enabled
+  };
+
+  const applyProgress = useCallback((p: number) => {
+    const frame = frameRef.current;
+    const media = mediaRef.current;
+    if (!frame || !media) return;
+    const c = propsRef.current;
+
+    const e = smoothstep(0, 1, p);
+
+    const w = c.startWidth + (100 - c.startWidth) * e;
+    const h = c.startHeight + (100 - c.startHeight) * e;
+    const ix = Math.max(0, (100 - w) / 2);
+    const iy = Math.max(0, (100 - h) / 2);
+    const r = c.startRadius + (c.endRadius - c.startRadius) * e;
+    (frame as any).style.clipPath = `inset(${iy}% ${ix}% ${iy}% ${ix}% round ${r}px)`;
+
+    (media as any).style.transform = `scale(${c.mediaZoom + (1 - c.mediaZoom) * e})`;
+
+    if (scrimRef.current) (scrimRef.current as any).style.opacity = `${c.overlayScrim * e}`;
+
+    if (titleRef.current) {
+      const out = smoothstep(0.4, 0.88, p);
+      (titleRef.current as any).style.opacity = `${1 - out}`;
+      (titleRef.current as any).style.transform = `translate3d(0, ${-28 * out}px, 0) scale(${1 + 0.06 * out})`;
+    }
+
+    if (hintRef.current) {
+      const gone = smoothstep(0, 0.12, p);
+      (hintRef.current as any).style.opacity = `${1 - gone}`;
+      (hintRef.current as any).style.transform = `translate3d(0, ${8 * gone}px, 0)`;
+    }
+
+    if (overlayRef.current) {
+      const inn = smoothstep(0.68, 1, p);
+      (overlayRef.current as any).style.opacity = `${inn}`;
+      (overlayRef.current as any).style.transform = `translate3d(0, ${18 * (1 - inn)}px, 0)`;
+    }
+  }, []);
+
   useEffect(() => {
-    setImages(placeholderImages)
-  }, [])
-  
-  // Scroll animation
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ['start start', 'end start']
-  })
-  
-  // Transform scroll progress to scale
-  const scale = useTransform(scrollYProgress, [0, 1], [1, 1.1])
-  const opacity = useTransform(scrollYProgress, [0, 0.5, 1], [1, 0.5, 1])
-  
+    const root = rootRef.current;
+    const track = trackRef.current;
+    const stage = stageRef.current;
+    if (!root || !track || !stage) return;
+
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    let raf = 0;
+    let current = 0;
+    let target = 0;
+    let stageH = 0;
+    let running = false;
+
+    const measure = () => {
+      const c = propsRef.current;
+      stageH = c.useWindowScroll ? window.innerHeight : root.clientHeight;
+      if (stageH <= 0) return;
+      (stage as any).style.height = `${stageH}px`;
+      (track as any).style.height = `${stageH * (1 + Math.max(0, c.scrollDistance) + Math.max(0, c.holdDistance))}px`;
+
+      const w = root.clientWidth || stageH;
+      (stage as any).style.setProperty('--se-title-size', `${clamp(w * 0.075, 20, 84)}px`);
+    };
+
+    const readProgress = () => {
+      const c = propsRef.current;
+      if (!c.enabled) return 1;
+      const span = stageH * Math.max(0.01, c.scrollDistance);
+      if (c.useWindowScroll) {
+        const top = track.getBoundingClientRect().top;
+        return clamp(-top / span, 0, 1);
+      }
+      return clamp(root.scrollTop / span, 0, 1);
+    };
+
+    const tick = () => {
+      const c = propsRef.current;
+      const k = c.smoothing <= 0 ? 1 : 1 - Math.exp(-1 / (60 * c.smoothing));
+      current += (target - current) * k;
+      if (Math.abs(target - current) < 0.0004) {
+        current = target;
+        running = false;
+      }
+      applyProgress(current);
+      raf = running ? requestAnimationFrame(tick) : 0;
+    };
+
+    const kick = () => {
+      if (running) return;
+      running = true;
+      if (!raf) raf = requestAnimationFrame(tick);
+    };
+
+    const onScroll = () => {
+      target = readProgress();
+      if (propsRef.current.smoothing <= 0 || reduceMotion) {
+        current = target;
+        applyProgress(current);
+        return;
+      }
+      kick();
+    };
+
+    const onResize = () => {
+      measure();
+      target = readProgress();
+      current = target;
+      applyProgress(current);
+    };
+
+    measure();
+    target = readProgress();
+    current = target;
+    applyProgress(current);
+
+    const scroller = useWindowScroll ? window : root;
+    scroller.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onResize);
+    const ro = new ResizeObserver(onResize);
+    ro.observe(root);
+
+    return () => {
+      if (raf) cancelAnimationFrame(raf);
+      scroller.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onResize);
+      ro.disconnect();
+    };
+  }, [applyProgress, useWindowScroll]);
+
+  const media = mediaType === 'video' ? (
+    <video
+      ref={mediaRef as React.RefObject<HTMLVideoElement>}
+      className="scroll-expand__media"
+      src={src}
+      poster={poster}
+      autoPlay
+      muted
+      loop
+      playsInline
+    />
+  ) : (
+    <img ref={mediaRef as React.RefObject<HTMLImageElement>} className="scroll-expand__media" src={src} alt={alt} draggable={false} />
+  );
+
   return (
-    <div className="w-full">
-      {/* Header */}
-      <motion.div 
-        className="mb-8"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-      >
-        <h2 className="text-3xl font-bold text-white mb-2">{title}</h2>
-        <p className="text-white/60 text-sm">
-          Scroll to expand and explore the gallery
-        </p>
-      </motion.div>
-      
-      {/* Gallery Container */}
-      <div 
-        ref={containerRef}
-        className="relative h-[400vh] w-full overflow-hidden"
-      >
-        {/* Scroll-triggered content */}
-        <motion.div 
-          className="sticky top-0 h-screen w-full flex items-center justify-center"
-          style={{ scale, opacity }}
-        >
-          <div className="relative w-full max-w-6xl mx-auto px-6">
-            {/* Expanding Image Grid */}
-            <motion.div 
-              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-              style={{ scale: useTransform(scrollYProgress, [0, 1], [0.8, 1.2]) }}
-            >
-              {images.map((src, index) => {
-                // Calculate position based on scroll
-                const yOffset = useTransform(
-                  scrollYProgress,
-                  [0, 1],
-                  [100, -100 * index]
-                )
-                
-                return (
-                  <motion.div
-                    key={index}
-                    className="relative overflow-hidden rounded-2xl"
-                    style={{ y: yOffset }}
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ 
-                      duration: 0.8, 
-                      delay: index * 0.1 
-                    }}
-                    whileHover={{ scale: 1.05 }}
-                  >
-                    <motion.img
-                      src={src}
-                      alt={`Gallery item ${index + 1}`}
-                      className="w-full h-64 object-cover"
-                      whileHover={{ scale: 1.1 }}
-                      transition={{ duration: 0.4 }}
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
-                    <div className="absolute bottom-4 left-4 right-4">
-                      <motion.div 
-                        className="bg-white/90 backdrop-blur-md rounded-lg p-4 text-black"
-                        initial={{ y: 100 }}
-                        whileHover={{ y: 0 }}
-                        transition={{ duration: 0.3 }}
-                      >
-                        <h3 className="font-semibold text-lg">Project {index + 1}</h3>
-                        <p className="text-sm text-black/60">Architecture Portfolio</p>
-                      </motion.div>
-                    </div>
-                  </motion.div>
-                )
-              })}
-            </motion.div>
+    <div
+      ref={rootRef}
+      className={`scroll-expand ${useWindowScroll ? '' : 'scroll-expand--scroller'} ${className}`.trim()}
+      style={style}
+      {...rest}
+    >
+      <div ref={trackRef} className="scroll-expand__track">
+        <div ref={stageRef} className="scroll-expand__stage">
+          <div ref={frameRef} className="scroll-expand__frame">
+            {media}
+            <div ref={scrimRef} className="scroll-expand__scrim" />
+            {children ? (
+              <div ref={overlayRef} className="scroll-expand__overlay">
+                {children}
+              </div>
+            ) : null}
           </div>
-        </motion.div>
-        
-        {/* Spacer for scroll */}
-        <div className="h-screen" />
+          {title ? (
+            <div ref={titleRef} className="scroll-expand__title">
+              {title}
+            </div>
+          ) : null}
+          {scrollHint ? (
+            <div ref={hintRef} className="scroll-expand__hint">
+              {scrollHint}
+            </div>
+          ) : null}
+        </div>
       </div>
-      
-      {/* Footer */}
-      <motion.div 
-        className="mt-12 pt-8 border-t border-white/10"
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.5 }}
-      >
-        <p className="text-white/40 text-sm text-center">
-          Scroll Expand Animation - ReactBits inspired
-        </p>
-      </motion.div>
     </div>
-  )
-}
+  );
+};
+
+export default ScrollExpand;
