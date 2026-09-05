@@ -87,14 +87,10 @@
   line-height: 1;
 }
 
-.sm-toggle-text {
+.sm-toggle-line {
   display: block;
   height: 1em;
   line-height: 1;
-}
-
-.sm-line {
-  display: none !important;
 }
 
 .sm-icon {
@@ -136,9 +132,9 @@
   right: 0;
   width: clamp(260px, 38vw, 420px);
   height: 100%;
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   display: flex;
   flex-direction: column;
   padding: 6em 2em 2em 2em;
@@ -254,24 +250,6 @@
   color: var(--sm-accent, #ff0000);
 }
 
-.staggered-menu-panel .sm-socials-list .sm-socials-link {
-  opacity: 1;
-  transition: opacity 0.3s ease;
-}
-
-.staggered-menu-panel .sm-socials-list:hover .sm-socials-link:not(:hover) {
-  opacity: 0.35;
-}
-
-.staggered-menu-panel .sm-socials-list:focus-within .sm-socials-link:not(:focus-visible) {
-  opacity: 0.35;
-}
-
-.staggered-menu-panel .sm-socials-list .sm-socials-link:hover,
-.staggered-menu-panel .sm-socials-list .sm-socials-link:focus-visible {
-  opacity: 1;
-}
-
 .sm-panel-title {
   margin: 0;
   font-size: 1rem;
@@ -306,6 +284,30 @@
   padding-right: 1.4em;
 }
 
+.staggered-menu-panel .sm-socials-list .sm-socials-link {
+  opacity: 1;
+  transition: opacity 0.3s ease;
+}
+
+.staggered-menu-panel .sm-socials-list:hover .sm-socials-link:not(:hover) {
+  opacity: 0.35;
+}
+
+.staggered-menu-panel .sm-socials-list:focus-within .sm-socials-link:not(:focus-visible) {
+  opacity: 0.35;
+}
+
+.staggered-menu-panel .sm-socials-list .sm-socials-link:hover,
+.staggered-menu-panel .sm-socials-list .sm-socials-link:focus-visible {
+  opacity: 1;
+}
+
+.sm-panel-itemLabel {
+  display: inline-block;
+  will-change: transform;
+  transform-origin: 50% 100%;
+}
+
 .sm-panel-item:hover {
   color: var(--sm-accent, #5227ff);
 }
@@ -327,12 +329,6 @@
   pointer-events: none;
   user-select: none;
   opacity: var(--sm-num-opacity, 0);
-}
-
-.sm-panel-itemLabel {
-  display: inline-block;
-  will-change: transform;
-  transform-origin: 50% 100%;
 }
 
 @media (max-width: 1024px) {

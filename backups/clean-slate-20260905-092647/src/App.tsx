@@ -1,25 +1,25 @@
 import { useState, useRef, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import Beams from './components/Beams.jsx'
-import InfiniteSpiral from './components/InfiniteSpiral.jsx'
-import StaggeredMenu from './components/StaggeredMenu.jsx'
-import ScrollExpand from './components/ScrollExpand.jsx'
-import DomeGallery from './components/DomeGallery.jsx'
-import MorphSlider from './components/MorphSlider.jsx'
-import AccordionGallery from './components/AccordionGallery.jsx'
+import Beams from './components/Beams'
+import InfiniteSpiral from './components/InfiniteSpiral'
+import StaggeredMenu from './components/StaggeredMenu'
+import ScrollExpand from './components/ScrollExpand'
+import DomeGallery from './components/DomeGallery'
+import MorphSlider from './components/MorphSlider'
+import AccordionGallery from './components/AccordionGallery'
 import './index.css'
 
-// Spiral items configuration with 9 placeholder projects
+// Spiral items configuration with placeholder images
 const spiralItems = [
-  { id: 1, src: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=200&h=200&fit=crop', alt: 'Project 1 - Scroll Expand', component: 'scroll-expand', label: 'Project 1' },
-  { id: 2, src: 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=200&h=200&fit=crop', alt: 'Project 2 - Dome Gallery', component: 'dome-gallery', label: 'Project 2' },
-  { id: 3, src: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=200&h=200&fit=crop', alt: 'Project 3 - Morph Slider', component: 'morph-slider', label: 'Project 3' },
-  { id: 4, src: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=200&h=200&fit=crop', alt: 'Project 4 - Accordion Gallery', component: 'accordion-gallery', label: 'Project 4' },
-  { id: 5, src: 'https://images.unsplash.com/photo-1520637836862-4d197d17c35a?w=200&h=200&fit=crop', alt: 'Project 5 - Scroll Expand', component: 'scroll-expand', label: 'Project 5' },
-  { id: 6, src: 'https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=200&h=200&fit=crop', alt: 'Project 6 - Dome Gallery', component: 'dome-gallery', label: 'Project 6' },
-  { id: 7, src: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=200&h=200&fit=crop', alt: 'Project 7 - Morph Slider', component: 'morph-slider', label: 'Project 7' },
-  { id: 8, src: 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=200&h=200&fit=crop', alt: 'Project 8 - Accordion Gallery', component: 'accordion-gallery', label: 'Project 8' },
-  { id: 9, src: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=200&h=200&fit=crop', alt: 'Project 9 - Scroll Expand', component: 'scroll-expand', label: 'Project 9' },
+  { id: 1, src: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=200&h=200&fit=crop', alt: 'Project 1', component: 'scroll-expand' },
+  { id: 2, src: 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=200&h=200&fit=crop', alt: 'Project 2', component: 'dome-gallery' },
+  { id: 3, src: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=200&h=200&fit=crop', alt: 'Project 3', component: 'morph-slider' },
+  { id: 4, src: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=200&h=200&fit=crop', alt: 'Project 4', component: 'accordion-gallery' },
+  { id: 5, src: 'https://images.unsplash.com/photo-1520637836862-4d197d17c35a?w=200&h=200&fit=crop', alt: 'Project 5', component: 'scroll-expand' },
+  { id: 6, src: 'https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=200&h=200&fit=crop', alt: 'Project 6', component: 'dome-gallery' },
+  { id: 7, src: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=200&h=200&fit=crop', alt: 'Project 7', component: 'morph-slider' },
+  { id: 8, src: 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=200&h=200&fit=crop', alt: 'Project 8', component: 'accordion-gallery' },
+  { id: 9, src: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=200&h=200&fit=crop', alt: 'Project 9', component: 'scroll-expand' },
 ]
 
 // Navigation items for StaggeredMenu

@@ -28,8 +28,7 @@ const InfiniteSpiral = ({
   pauseOnHover = true,
   imageFit = 'cover',
   grayscale = 0,
-  className = '',
-  onClick
+  className = ''
 }) => {
   const rootRef = useRef(null);
   const cardRefs = useRef([]);
@@ -231,6 +230,7 @@ const InfiniteSpiral = ({
       <div className="infinite-spiral__stage" role="list" aria-label="Infinite spiral gallery">
         {normalizedItems.map((item, index) => {
           const Card = item.href ? 'a' : 'div';
+          const hasOnClick = typeof item.onClick === 'function';
           return (
             <Card
               key={item.id ?? `${item.src}-${index}`}
@@ -238,15 +238,16 @@ const InfiniteSpiral = ({
                 cardRefs.current[index] = node;
               }}
               className="infinite-spiral__item"
-              style={{ width: cardWidth, height: cardHeight, borderRadius: cardRadius }}
+              style={{ width: cardWidth, height: cardHeight, borderRadius: cardRadius, cursor: hasOnClick || item.href ? 'pointer' : 'default' }}
               href={item.href}
               target={item.target}
               rel={item.target === '_blank' ? 'noreferrer' : undefined}
               role="listitem"
               aria-label={item.label ?? item.alt}
-              onClick={e => {
-                if (onClick && !dragMovedRef.current) {
-                  onClick(item);
+              onClick={(e) => {
+                if (hasOnClick) {
+                  e.preventDefault();
+                  item.onClick(item);
                 }
               }}
             >
