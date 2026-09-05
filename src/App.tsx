@@ -176,8 +176,8 @@ function App() {
         />
       </div>
 
-      {/* GooeyNav - SCROLLS with content, always visible, centered */}
-      <div className="relative z-50 w-full">
+      {/* GooeyNav - SCROLLS with content, centered at top */}
+      <div className="w-full">
         <GooeyNav
           items={navItems.map((item, index) => ({
             ...item,
@@ -194,7 +194,7 @@ function App() {
       </div>
 
       {/* Main Content Container with breathing room */}
-      <main className="relative z-10">
+      <main className="relative z-10 pt-4">
         
         {/* Hero Section - Split 2/3 left, 1/3 right with breathing room */}
         <section className="flex flex-col lg:flex-row min-h-screen py-8 px-4 lg:px-8 gap-6 lg:gap-12">
