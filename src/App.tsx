@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Beams from './components/Beams.jsx'
 import InfiniteSpiral from './components/InfiniteSpiral.jsx'
@@ -139,8 +139,8 @@ function App() {
 
   return (
     <div ref={containerRef} className="w-full h-screen relative overflow-hidden">
-      {/* Background */}
-      <div style={{ width: '100%', height: '100%', position: 'fixed', top: 0, left: 0, zIndex: -1 }}>
+      {/* Background - Fixed position, full viewport */}
+      <div className="fixed inset-0 z-0">
         <Beams
           beamWidth={2}
           beamHeight={25}
@@ -155,8 +155,8 @@ function App() {
         />
       </div>
       
-      {/* Navigation - StaggeredMenu with milky glass effect */}
-      <div className="fixed top-0 left-0 right-0 z-50 pointer-events-none">
+      {/* Navigation - StaggeredMenu with milky glass effect - HIGH z-index */}
+      <div className="fixed top-0 left-0 right-0 z-50">
         <StaggeredMenu
           position="right"
           items={navItems}
@@ -172,30 +172,31 @@ function App() {
           closeOnClickAway={true}
           onMenuOpen={() => setMenuOpen(true)}
           onMenuClose={() => setMenuOpen(false)}
-          className="pointer-events-auto"
         />
       </div>
       
-      {/* Main Content */}
-      <main className="w-full h-full relative">
-        {/* Infinite Spiral */}
-        <div style={{ height: '600px', position: 'relative', width: '100%' }}>
-          <InfiniteSpiral
-            items={spiralItems}
-            animationMode="drag"
-            speed={0.55}
-            radius={170}
-            cardWidth={100}
-            cardHeight={100}
-            verticalSpacing={60}
-            perspective={1000}
-            cardRadius={10}
-            centerScale={1.2}
-            edgeBlur={6}
-            cardsPerTurn={7}
-            pauseOnHover
-            onClick={handleSpiralItemClick}
-          />
+      {/* Main Content - z-index 1, above background but below menu */}
+      <main className="fixed inset-0 z-10">
+        {/* Infinite Spiral - Centered in viewport */}
+        <div className="w-full h-full flex items-center justify-center">
+          <div style={{ height: '600px', width: '100%' }}>
+            <InfiniteSpiral
+              items={spiralItems}
+              animationMode="drag"
+              speed={0.55}
+              radius={170}
+              cardWidth={100}
+              cardHeight={100}
+              verticalSpacing={60}
+              perspective={1000}
+              cardRadius={10}
+              centerScale={1.2}
+              edgeBlur={6}
+              cardsPerTurn={7}
+              pauseOnHover
+              onClick={handleSpiralItemClick}
+            />
+          </div>
         </div>
         
         {/* Component Viewer */}
