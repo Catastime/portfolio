@@ -1,0 +1,130 @@
+/* Portrait Component - Blobby transparency with minimal frame */
+
+.portrait-container {
+  position: relative;
+  display: inline-block;
+}
+
+.portrait-wrapper {
+  position: relative;
+  width: var(--portrait-width, 400px);
+  height: var(--portrait-height, 500px);
+}
+
+.portrait-image-wrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  border-radius: 12px;
+}
+
+.portrait-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+  user-select: none;
+  -webkit-user-drag: none;
+  user-drag: none;
+  opacity: 1;
+  transition: opacity 0.3s ease;
+}
+
+.portrait-image:not(.loaded) {
+  opacity: 0;
+}
+
+/* Blobby transparency overlay
+   Creates organic, flowing transparency pattern from center to edges
+   Uses multiple radial gradients with transparency to create blobby effect */
+.portrait-blob-mask {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  z-index: 5;
+  
+  /* Background with blobby transparency pattern
+     White areas = opaque, transparent areas = see-through to Dither background */
+  background: 
+    /* Main blobby shapes - white with soft edges */
+    radial-gradient(circle at 25% 20%, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.6) 25%, transparent 40%),
+    radial-gradient(circle at 75% 15%, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.6) 30%, transparent 45%),
+    radial-gradient(circle at 15% 70%, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.6) 20%, transparent 35%),
+    radial-gradient(circle at 85% 65%, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.6) 25%, transparent 40%),
+    radial-gradient(circle at 50% 85%, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.6) 15%, transparent 30%);
+  
+  /* Mix mode: multiply to blend with image */
+  mix-blend-mode: lighten;
+}
+
+/* Minimal 1px rounded corner frame */
+.portrait-frame {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border: 1px solid var(--frame-color, rgba(255, 255, 255, 0.3));
+  border-radius: 12px;
+  pointer-events: none;
+  z-index: 10;
+}
+
+/* Subtle pulse animation for the mask */
+@keyframes blobPulse {
+  0%, 100% {
+    background-position: center;
+  }
+  25% {
+    background-position: 1% 1%;
+  }
+  50% {
+    background-position: -1% -1%;
+  }
+  75% {
+    background-position: 0.5% 0.5%;
+  }
+}
+
+.portrait-blob-mask {
+  animation: blobPulse 15s ease-in-out infinite;
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .portrait-container {
+    max-width: 100%;
+  }
+  
+  .portrait-wrapper {
+    width: 100%;
+    max-width: 300px;
+    height: auto;
+    aspect-ratio: 4/5;
+  }
+  
+  .portrait-blob-mask {
+    background: 
+      radial-gradient(circle at 20% 20%, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.6) 25%, transparent 35%),
+      radial-gradient(circle at 80% 20%, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.6) 30%, transparent 40%),
+      radial-gradient(circle at 50% 70%, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.6) 20%, transparent 30%);
+  }
+}
+
+/* Reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  .portrait-blob-mask {
+    animation: none;
+  }
+}

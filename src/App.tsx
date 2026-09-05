@@ -7,6 +7,7 @@ import ScrollExpand from './components/ScrollExpand.jsx'
 import DomeGallery from './components/DomeGallery.jsx'
 import MorphSlider from './components/MorphSlider.jsx'
 import AccordionGallery from './components/AccordionGallery.jsx'
+import Portrait from './components/Portrait.jsx'
 import './index.css'
 
 // Navigation items
@@ -159,7 +160,7 @@ function App() {
       </div>
 
       {/* GooeyNav - scrolls with content, always at top */}
-      <div className="relative z-50">
+      <div className="relative z-50 w-full">
         <GooeyNav
           items={navItems}
           particleCount={15}
@@ -172,77 +173,99 @@ function App() {
         />
       </div>
 
-      {/* Hero Section - Split 2/3 left, 1/3 right */}
-      <section className="relative z-10 min-h-screen flex">
-        {/* Left Side - 2/3 width: Intro with photo, text, and capsule tower graphic */}
-        <div className="w-2/3 p-8 flex flex-col justify-center relative">
-          {/* Semi-transparent capsule tower graphic overlay */}
-          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-            <div className="w-96 h-96 rounded-full border-4 border-white/20 bg-white/5 backdrop-blur-sm" 
-                 style={{ backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%)' }}>
-            </div>
-          </div>
+      {/* Main Content Container with breathing room */}
+      <main className="relative z-10">
+        
+        {/* Hero Section - Split 2/3 left, 1/3 right with breathing room */}
+        <section className="flex flex-col lg:flex-row min-h-screen py-16 px-8 lg:px-16 gap-12 lg:gap-0">
           
-          <div className="relative z-10 max-w-lg">
-            <img 
-              src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=face"
-              alt="Profile"
-              className="w-48 h-48 rounded-full object-cover mb-6 border-4 border-white/30"
-            />
-            <h1 className="text-5xl font-bold mb-4">TM Architecture</h1>
-            <p className="text-xl text-white/80 leading-relaxed">
-              Innovative architectural designs that blend form, function, and sustainability.
-              Specializing in modern structures that inspire.
-            </p>
-          </div>
-        </div>
-
-        {/* Right Side - 1/3 width: Infinite Spiral */}
-        <div className="w-1/3 flex items-center justify-center p-4">
-          <div className="w-full h-[600px]">
-            <InfiniteSpiral
-              items={spiralItems}
-              animationMode="drag"
-              speed={0.55}
-              radius={170}
-              cardWidth={100}
-              cardHeight={100}
-              verticalSpacing={60}
-              perspective={1000}
-              cardRadius={10}
-              centerScale={1.2}
-              edgeBlur={6}
-              cardsPerTurn={7}
-              pauseOnHover
-              onClick={handleSpiralItemClick}
-            />
-          </div>
-        </div>
-      </section>
-
-      {/* 3x3 Gallery Section */}
-      <section id="projects" className="relative z-10 p-8">
-        <h2 className="text-4xl font-bold mb-8 text-center">Featured Projects</h2>
-        <div className="grid grid-cols-3 gap-4 max-w-6xl mx-auto">
-          {galleryItems.map((item) => (
-            <div 
-              key={item.id}
-              className="aspect-[4/3] rounded-xl overflow-hidden cursor-pointer group"
-              onClick={() => handleSpiralItemClick(spiralItems[item.id - 1])}
-            >
-              <img 
-                src={item.src} 
-                alt={item.alt}
-                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
-              <div className="absolute bottom-4 left-4 right-4">
-                <h3 className="text-xl font-bold">{item.alt}</h3>
+          {/* Left Side - 2/3 width on desktop, full on mobile */}
+          <div className="flex-1 lg:w-2/3 flex flex-col justify-center relative py-8 lg:py-0">
+            
+            {/* Content with breathing room */}
+            <div className="relative z-10 max-w-2xl mx-auto lg:mx-0">
+              {/* Portrait with blobby transparency and minimal frame */}
+              <div className="mb-8" style={{ pointerEvents: 'auto' }}>
+                <Portrait 
+                  src="/media/portrait/portrait.jpg"
+                  alt="TM Architecture Portrait"
+                  width={400}
+                  height={500}
+                  frameColor="rgba(255, 255, 255, 0.3)"
+                />
+              </div>
+              
+              {/* Text content with breathing room */}
+              <div className="space-y-6">
+                <h1 className="text-5xl lg:text-6xl font-bold leading-tight">
+                  TM Architecture
+                </h1>
+                <p className="text-xl lg:text-2xl text-white/80 leading-relaxed max-w-xl">
+                  Innovative architectural designs that blend form, function, and sustainability.
+                  Specializing in modern structures that inspire.
+                </p>
               </div>
             </div>
-          ))}
-        </div>
-      </section>
+          </div>
+
+          {/* Right Side - 1/3 width: Infinite Spiral */}
+          <div className="flex-1 lg:w-1/3 flex items-center justify-center p-4 lg:p-8">
+            <div className="w-full h-[500px] lg:h-[700px] min-h-[400px]" style={{ pointerEvents: 'auto' }}>
+              <InfiniteSpiral
+                items={spiralItems}
+                animationMode="drag"
+                speed={0.55}
+                radius={170}
+                cardWidth={100}
+                cardHeight={100}
+                verticalSpacing={60}
+                perspective={1000}
+                cardRadius={10}
+                centerScale={1.2}
+                edgeBlur={6}
+                cardsPerTurn={7}
+                pauseOnHover
+                onClick={handleSpiralItemClick}
+              />
+            </div>
+          </div>
+        </section>
+
+        {/* 3x3 Gallery Section with breathing room */}
+        <section id="projects" className="relative z-10 px-8 lg:px-16 py-16">
+          <div className="max-w-7xl mx-auto">
+            <h2 className="text-4xl lg:text-5xl font-bold mb-12 text-center">
+              Featured Projects
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+              {galleryItems.map((item) => (
+                <div 
+                  key={item.id}
+                  className="aspect-[4/3] rounded-xl overflow-hidden cursor-pointer group transition-all duration-300 hover:shadow-2xl hover:scale-[1.02]"
+                  onClick={() => handleSpiralItemClick(spiralItems[item.id - 1])}
+                  style={{ pointerEvents: 'auto' }}
+                >
+                  <img 
+                    src={item.src} 
+                    alt={item.alt}
+                    className="w-full h-full object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
+                  <div className="absolute bottom-6 left-6 right-6">
+                    <h3 className="text-xl lg:text-2xl font-bold text-white drop-shadow-lg">
+                      {item.alt}
+                    </h3>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Spacer for breathing room at bottom */}
+        <div className="h-32" />
+
+      </main>
 
       {/* Component Viewer Modal */}
       <AnimatePresence>
@@ -252,16 +275,18 @@ function App() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-lg"
+            style={{ pointerEvents: 'auto' }}
           >
             <motion.div
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
-              className="w-full max-w-6xl mx-auto p-8 relative h-[90vh] flex flex-col"
+              className="w-full max-w-6xl mx-auto p-6 lg:p-8 relative h-[90vh] flex flex-col"
             >
               <button
                 onClick={closeComponent}
-                className="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 transition-colors flex items-center justify-center text-white text-2xl z-50"
+                className="absolute top-4 right-4 w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 transition-all duration-300 flex items-center justify-center text-white text-2xl z-50"
+                style={{ pointerEvents: 'auto' }}
               >
                 &times;
               </button>
