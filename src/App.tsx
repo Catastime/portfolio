@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Dither from './components/Dither.jsx'
 import GooeyNav from './components/GooeyNav.jsx'
@@ -129,6 +129,7 @@ const componentRegistry: Record<string, React.ReactNode> = {
 function App() {
   const [selectedComponent, setSelectedComponent] = useState<string | null>(null)
   const [selectedProject, setSelectedProject] = useState<number | null>(null)
+  const navRef = useRef<HTMLDivElement>(null)
 
   // Handle spiral item click
   const handleSpiralItemClick = (item: typeof spiralItems[0]) => {
@@ -141,6 +142,30 @@ function App() {
     setSelectedComponent(null)
     setSelectedProject(null)
   }
+
+  // Handle navigation - prevent default hash behavior
+  const handleNavClick = (href: string, e?: React.MouseEvent) => {
+    if (e) {
+      e.preventDefault()
+    }
+    if (href === '#') {
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+    } else if (href.startsWith('#')) {
+      const element = document.querySelector(href)
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      }
+    }
+  }
+
+  // Prevent page reload on hash change
+  useEffect(() => {
+    const handleHashChange = () => {
+      // Do nothing - we handle navigation manually
+    }
+    window.addEventListener('hashchange', handleHashChange, false)
+    return () => window.removeEventListener('hashchange', handleHashChange)
+  }, [])
 
   return (
     <div className="min-h-screen bg-black text-white">
@@ -159,33 +184,38 @@ function App() {
         />
       </div>
 
-      {/* GooeyNav - scrolls with content, always at top */}
-      <div className="relative z-50 w-full">
-        <GooeyNav
-          items={navItems}
-          particleCount={15}
-          particleDistances={[90, 10]}
-          particleR={100}
-          initialActiveIndex={0}
-          animationTime={600}
-          timeVariance={300}
-          colors={[1, 2, 3, 1, 2, 3, 1, 4]}
-        />
-      </div>
+      {/* GooeyNav - FIXED at top, always visible */}
+      <header className="fixed top-0 left-0 right-0 z-50" ref={navRef}>
+        <div className="w-full">
+          <GooeyNav
+            items={navItems.map(item => ({
+              ...item,
+              onClick: (e: React.MouseEvent) => handleNavClick(item.href, e)
+            }))}
+            particleCount={15}
+            particleDistances={[90, 10]}
+            particleR={100}
+            initialActiveIndex={0}
+            animationTime={600}
+            timeVariance={300}
+            colors={[1, 2, 3, 1, 2, 3, 1, 4]}
+          />
+        </div>
+      </header>
 
-      {/* Main Content Container with breathing room */}
-      <main className="relative z-10">
+      {/* Main Content Container with breathing room - starts below nav */}
+      <main className="relative z-10 pt-24">
         
         {/* Hero Section - Split 2/3 left, 1/3 right with breathing room */}
-        <section className="flex flex-col lg:flex-row min-h-screen py-16 px-8 lg:px-16 gap-12 lg:gap-0">
+        <section className="flex flex-col lg:flex-row min-h-[calc(100vh-100px)] py-12 px-6 lg:px-16 gap-8 lg:gap-12">
           
           {/* Left Side - 2/3 width on desktop, full on mobile */}
-          <div className="flex-1 lg:w-2/3 flex flex-col justify-center relative py-8 lg:py-0">
+          <div className="flex-1 lg:w-2/3 flex flex-col justify-center relative">
             
             {/* Content with breathing room */}
             <div className="relative z-10 max-w-2xl mx-auto lg:mx-0">
               {/* Portrait with blobby transparency and minimal frame */}
-              <div className="mb-8" style={{ pointerEvents: 'auto' }}>
+              <div className="mb-8">
                 <Portrait 
                   src="/media/portrait/portrait.jpg"
                   alt="TM Architecture Portrait"
@@ -197,10 +227,10 @@ function App() {
               
               {/* Text content with breathing room */}
               <div className="space-y-6">
-                <h1 className="text-5xl lg:text-6xl font-bold leading-tight">
+                <h1 className="text-4xl lg:text-6xl font-bold leading-tight text-white">
                   TM Architecture
                 </h1>
-                <p className="text-xl lg:text-2xl text-white/80 leading-relaxed max-w-xl">
+                <p className="text-lg lg:text-xl text-white/80 leading-relaxed max-w-xl">
                   Innovative architectural designs that blend form, function, and sustainability.
                   Specializing in modern structures that inspire.
                 </p>
@@ -210,19 +240,19 @@ function App() {
 
           {/* Right Side - 1/3 width: Infinite Spiral */}
           <div className="flex-1 lg:w-1/3 flex items-center justify-center p-4 lg:p-8">
-            <div className="w-full h-[500px] lg:h-[700px] min-h-[400px]" style={{ pointerEvents: 'auto' }}>
+            <div className="w-full h-[400px] lg:h-[600px] min-h-[400px] max-w-md">
               <InfiniteSpiral
                 items={spiralItems}
                 animationMode="drag"
                 speed={0.55}
-                radius={170}
-                cardWidth={100}
-                cardHeight={100}
-                verticalSpacing={60}
+                radius={150}
+                cardWidth={90}
+                cardHeight={90}
+                verticalSpacing={50}
                 perspective={1000}
-                cardRadius={10}
+                cardRadius={8}
                 centerScale={1.2}
-                edgeBlur={6}
+                edgeBlur={4}
                 cardsPerTurn={7}
                 pauseOnHover
                 onClick={handleSpiralItemClick}
@@ -232,18 +262,17 @@ function App() {
         </section>
 
         {/* 3x3 Gallery Section with breathing room */}
-        <section id="projects" className="relative z-10 px-8 lg:px-16 py-16">
+        <section id="projects" className="relative z-10 px-6 lg:px-16 py-16">
           <div className="max-w-7xl mx-auto">
-            <h2 className="text-4xl lg:text-5xl font-bold mb-12 text-center">
+            <h2 className="text-3xl lg:text-5xl font-bold mb-12 text-center text-white">
               Featured Projects
             </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
               {galleryItems.map((item) => (
                 <div 
                   key={item.id}
                   className="aspect-[4/3] rounded-xl overflow-hidden cursor-pointer group transition-all duration-300 hover:shadow-2xl hover:scale-[1.02]"
                   onClick={() => handleSpiralItemClick(spiralItems[item.id - 1])}
-                  style={{ pointerEvents: 'auto' }}
                 >
                   <img 
                     src={item.src} 
@@ -251,8 +280,8 @@ function App() {
                     className="w-full h-full object-cover"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
-                  <div className="absolute bottom-6 left-6 right-6">
-                    <h3 className="text-xl lg:text-2xl font-bold text-white drop-shadow-lg">
+                  <div className="absolute bottom-4 left-4 right-4">
+                    <h3 className="text-lg lg:text-xl font-bold text-white drop-shadow-lg">
                       {item.alt}
                     </h3>
                   </div>
@@ -263,7 +292,7 @@ function App() {
         </section>
 
         {/* Spacer for breathing room at bottom */}
-        <div className="h-32" />
+        <div className="h-24" />
 
       </main>
 
@@ -275,23 +304,21 @@ function App() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-lg"
-            style={{ pointerEvents: 'auto' }}
           >
             <motion.div
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
-              className="w-full max-w-6xl mx-auto p-6 lg:p-8 relative h-[90vh] flex flex-col"
+              className="w-full max-w-6xl mx-auto p-4 lg:p-6 relative h-[90vh] flex flex-col"
             >
               <button
                 onClick={closeComponent}
-                className="absolute top-4 right-4 w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 transition-all duration-300 flex items-center justify-center text-white text-2xl z-50"
-                style={{ pointerEvents: 'auto' }}
+                className="absolute top-4 right-4 w-10 h-10 lg:w-12 lg:h-12 rounded-full bg-white/10 hover:bg-white/20 transition-all duration-300 flex items-center justify-center text-white text-2xl z-50"
               >
                 &times;
               </button>
               
-              <div className="bg-white/5 backdrop-blur-xl rounded-2xl p-6 border border-white/10 flex-1 overflow-auto">
+              <div className="bg-white/5 backdrop-blur-xl rounded-2xl p-4 lg:p-6 border border-white/10 flex-1 overflow-auto">
                 {componentRegistry[selectedComponent]}
               </div>
             </motion.div>

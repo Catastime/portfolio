@@ -39,9 +39,9 @@
   opacity: 0;
 }
 
-/* Blobby transparency overlay
-   Creates organic, flowing transparency pattern from center to edges
-   Uses multiple radial gradients with transparency to create blobby effect */
+/* Blobby transparency mask using CSS mask
+   Creates organic pattern where image fades to transparent
+   Uses mask-image with radial gradients */
 .portrait-blob-mask {
   position: absolute;
   top: 0;
@@ -51,18 +51,30 @@
   pointer-events: none;
   z-index: 5;
   
-  /* Background with blobby transparency pattern
-     White areas = opaque, transparent areas = see-through to Dither background */
-  background: 
-    /* Main blobby shapes - white with soft edges */
-    radial-gradient(circle at 25% 20%, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.6) 25%, transparent 40%),
-    radial-gradient(circle at 75% 15%, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.6) 30%, transparent 45%),
-    radial-gradient(circle at 15% 70%, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.6) 20%, transparent 35%),
-    radial-gradient(circle at 85% 65%, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.6) 25%, transparent 40%),
-    radial-gradient(circle at 50% 85%, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.6) 15%, transparent 30%);
+  /* Mask: black = visible, transparent = see-through
+     Multiple overlapping circles create organic blobby pattern */
+  -webkit-mask-image: 
+    radial-gradient(circle at 25% 20%, black 0%, transparent 35%),
+    radial-gradient(circle at 75% 15%, black 0%, transparent 40%),
+    radial-gradient(circle at 15% 70%, black 0%, transparent 30%),
+    radial-gradient(circle at 85% 65%, black 0%, transparent 35%),
+    radial-gradient(circle at 50% 85%, black 0%, transparent 25%);
   
-  /* Mix mode: multiply to blend with image */
-  mix-blend-mode: lighten;
+  mask-image: 
+    radial-gradient(circle at 25% 20%, black 0%, transparent 35%),
+    radial-gradient(circle at 75% 15%, black 0%, transparent 40%),
+    radial-gradient(circle at 15% 70%, black 0%, transparent 30%),
+    radial-gradient(circle at 85% 65%, black 0%, transparent 35%),
+    radial-gradient(circle at 50% 85%, black 0%, transparent 25%);
+  
+  /* Composite: only show where ALL masks are black (intersect) */
+  -webkit-mask-composite: destination-in;
+  mask-composite: intersect;
+  
+  /* Ensure mask covers entire area */
+  mask-size: 100% 100%;
+  mask-repeat: no-repeat;
+  mask-position: center;
 }
 
 /* Minimal 1px rounded corner frame */
@@ -81,24 +93,25 @@
 /* Subtle pulse animation for the mask */
 @keyframes blobPulse {
   0%, 100% {
-    background-position: center;
+    -webkit-mask-position: center;
+    mask-position: center;
   }
   25% {
-    background-position: 1% 1%;
+    -webkit-mask-position: 1% 1%;
+    mask-position: 1% 1%;
   }
   50% {
-    background-position: -1% -1%;
+    -webkit-mask-position: -1% -1%;
+    mask-position: -1% -1%;
   }
   75% {
-    background-position: 0.5% 0.5%;
+    -webkit-mask-position: 0.5% 0.5%;
+    mask-position: 0.5% 0.5%;
   }
 }
 
 .portrait-blob-mask {
   animation: blobPulse 15s ease-in-out infinite;
-  background-size: 100% 100%;
-  background-repeat: no-repeat;
-  background-position: center;
 }
 
 /* Responsive adjustments */
@@ -115,10 +128,14 @@
   }
   
   .portrait-blob-mask {
-    background: 
-      radial-gradient(circle at 20% 20%, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.6) 25%, transparent 35%),
-      radial-gradient(circle at 80% 20%, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.6) 30%, transparent 40%),
-      radial-gradient(circle at 50% 70%, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.6) 20%, transparent 30%);
+    -webkit-mask-image: 
+      radial-gradient(circle at 20% 20%, black 0%, transparent 30%),
+      radial-gradient(circle at 80% 20%, black 0%, transparent 35%),
+      radial-gradient(circle at 50% 70%, black 0%, transparent 25%);
+    mask-image: 
+      radial-gradient(circle at 20% 20%, black 0%, transparent 30%),
+      radial-gradient(circle at 80% 20%, black 0%, transparent 35%),
+      radial-gradient(circle at 50% 70%, black 0%, transparent 25%);
   }
 }
 

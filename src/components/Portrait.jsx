@@ -18,7 +18,6 @@ const Portrait = ({
     
     const handleLoad = () => setImageLoaded(true);
     const handleError = () => {
-      // Fallback to placeholder
       img.src = 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=500&fit=crop&crop=face';
     };
     
@@ -53,7 +52,7 @@ const Portrait = ({
             draggable={false}
           />
           
-          {/* Blobby mask overlay using CSS mask */}
+          {/* Blobby mask overlay - creates transparency pattern */}
           <div className="portrait-blob-mask" />
         </div>
         
