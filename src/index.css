@@ -40,7 +40,7 @@ html, body, #root {
 .z-40 { z-index: 40; }
 .z-50 { z-index: 50; }
 
-/* GooeyNav styling */
+/* GooeyNav styling - CENTERED */
 .gooey-nav-container {
   position: relative;
   width: 100%;
@@ -51,20 +51,21 @@ html, body, #root {
   display: flex;
   position: relative;
   transform: translate3d(0, 0, 0.01px);
+  justify-content: center;
 }
 
 .gooey-nav-container nav ul {
   display: flex;
   gap: 2em;
   list-style: none;
-  padding: 0 1em;
-  margin: 0;
+  padding: 0;
+  margin: 0 auto;
   position: relative;
   z-index: 3;
   color: white;
   text-shadow: 0 1px 1px hsl(205deg 30% 10% / 0.2);
   justify-content: center;
-  width: 100%;
+  width: fit-content;
 }
 
 .gooey-nav-container nav ul li {
@@ -503,7 +504,7 @@ img {
   
   .gooey-nav-container nav ul {
     gap: 1em;
-    padding: 0 0.5em;
+    padding: 0;
   }
   
   .gooey-nav-container nav ul li a {

@@ -16,6 +16,7 @@ const GooeyNav = ({
   const filterRef = useRef(null);
   const textRef = useRef(null);
   const [activeIndex, setActiveIndex] = useState(initialActiveIndex);
+  const [isInitialized, setIsInitialized] = useState(false);
 
   const noise = (n = 1) => n / 2 - Math.random() * n;
 
@@ -146,13 +147,34 @@ const GooeyNav = ({
     return () => resizeObserver.disconnect();
   }, [activeIndex]);
 
+  // Initialize only once after component mounts
+  useEffect(() => {
+    if (isInitialized) return;
+    setIsInitialized(true);
+    
+    // Set initial active state
+    if (navRef.current && activeIndex >= 0) {
+      const activeLi = navRef.current.querySelectorAll('li')[activeIndex];
+      if (activeLi) {
+        updateEffectPosition(activeLi);
+        if (textRef.current) {
+          textRef.current.classList.add('active');
+        }
+      }
+    }
+  }, [isInitialized, activeIndex]);
+
   return (
     <div className="gooey-nav-container" ref={containerRef}>
       <nav>
         <ul ref={navRef}>
           {items.map((item, index) => (
             <li key={index} className={activeIndex === index ? 'active' : ''}>
-              <a href={item.href} onClick={e => handleClick(e, index)} onKeyDown={e => handleKeyDown(e, index)}>
+              <a href={item.href} onClick={e => {
+                e.preventDefault();
+                handleClick(e, index);
+                if (item.onClick) item.onClick(e);
+              }} onKeyDown={e => handleKeyDown(e, index)}>
                 {item.label}
               </a>
             </li>

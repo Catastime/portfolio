@@ -129,7 +129,7 @@ const componentRegistry: Record<string, React.ReactNode> = {
 function App() {
   const [selectedComponent, setSelectedComponent] = useState<string | null>(null)
   const [selectedProject, setSelectedProject] = useState<number | null>(null)
-  const navRef = useRef<HTMLDivElement>(null)
+  const [activeNavIndex, setActiveNavIndex] = useState(0)
 
   // Handle spiral item click
   const handleSpiralItemClick = (item: typeof spiralItems[0]) => {
@@ -143,11 +143,12 @@ function App() {
     setSelectedProject(null)
   }
 
-  // Handle navigation - prevent default hash behavior
-  const handleNavClick = (href: string, e?: React.MouseEvent) => {
+  // Handle navigation
+  const handleNavClick = (index: number, href: string, e?: React.MouseEvent) => {
     if (e) {
       e.preventDefault()
     }
+    setActiveNavIndex(index)
     if (href === '#') {
       window.scrollTo({ top: 0, behavior: 'smooth' })
     } else if (href.startsWith('#')) {
@@ -160,11 +161,11 @@ function App() {
 
   // Prevent page reload on hash change
   useEffect(() => {
-    const handleHashChange = () => {
-      // Do nothing - we handle navigation manually
+    const handleHashChange = (e: HashChangeEvent) => {
+      e.preventDefault()
     }
-    window.addEventListener('hashchange', handleHashChange, false)
-    return () => window.removeEventListener('hashchange', handleHashChange)
+    window.addEventListener('hashchange', handleHashChange as any, false)
+    return () => window.removeEventListener('hashchange', handleHashChange as any)
   }, [])
 
   return (
@@ -184,18 +185,18 @@ function App() {
         />
       </div>
 
-      {/* GooeyNav - FIXED at top, always visible */}
-      <header className="fixed top-0 left-0 right-0 z-50" ref={navRef}>
+      {/* GooeyNav - FIXED at top, always visible, centered */}
+      <header className="fixed top-0 left-0 right-0 z-50">
         <div className="w-full">
           <GooeyNav
-            items={navItems.map(item => ({
+            items={navItems.map((item, index) => ({
               ...item,
-              onClick: (e: React.MouseEvent) => handleNavClick(item.href, e)
+              onClick: (e: React.MouseEvent) => handleNavClick(index, item.href, e)
             }))}
             particleCount={15}
             particleDistances={[90, 10]}
             particleR={100}
-            initialActiveIndex={0}
+            initialActiveIndex={activeNavIndex}
             animationTime={600}
             timeVariance={300}
             colors={[1, 2, 3, 1, 2, 3, 1, 4]}
@@ -204,10 +205,10 @@ function App() {
       </header>
 
       {/* Main Content Container with breathing room - starts below nav */}
-      <main className="relative z-10 pt-24">
+      <main className="relative z-10 pt-20">
         
         {/* Hero Section - Split 2/3 left, 1/3 right with breathing room */}
-        <section className="flex flex-col lg:flex-row min-h-[calc(100vh-100px)] py-12 px-6 lg:px-16 gap-8 lg:gap-12">
+        <section className="flex flex-col lg:flex-row min-h-[calc(100vh-80px)] py-8 px-4 lg:px-8 gap-6 lg:gap-12">
           
           {/* Left Side - 2/3 width on desktop, full on mobile */}
           <div className="flex-1 lg:w-2/3 flex flex-col justify-center relative">
@@ -262,7 +263,7 @@ function App() {
         </section>
 
         {/* 3x3 Gallery Section with breathing room */}
-        <section id="projects" className="relative z-10 px-6 lg:px-16 py-16">
+        <section id="projects" className="relative z-10 px-4 lg:px-8 py-16">
           <div className="max-w-7xl mx-auto">
             <h2 className="text-3xl lg:text-5xl font-bold mb-12 text-center text-white">
               Featured Projects
@@ -292,7 +293,7 @@ function App() {
         </section>
 
         {/* Spacer for breathing room at bottom */}
-        <div className="h-24" />
+        <div className="h-20" />
 
       </main>
 
