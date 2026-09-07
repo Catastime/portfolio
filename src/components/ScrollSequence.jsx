@@ -66,9 +66,9 @@ export default function ScrollSequence({ onMatVisible, onBookVisible }) {
   }, [progress]);
 
   // The image layer starts at viewport size with object-fit: cover (image fills screen, cropped).
-  // As we zoom out, we shrink the layer AND transition its aspect ratio from the
-  // viewport's to the image's natural aspect ratio. The image ends centered on the
-  // right page of the sketchbook, matching the glued-in item.
+  // As we zoom out, it shrinks and moves to land exactly on the first image item
+  // of the book's right page. The target position/size is computed to match the
+  // book's layout (same formula as Sketchbook) and the item's position within the page.
   const layerStyle = useMemo(() => {
     const vw = viewport.w;
     const vh = viewport.h;
@@ -85,46 +85,58 @@ export default function ScrollSequence({ onMatVisible, onBookVisible }) {
     const ease = zoomT < 0.5 ? 4 * zoomT * zoomT * zoomT : 1 - Math.pow(-2 * zoomT + 2, 3) / 2;
 
     // Compute book dimensions the same way as Sketchbook
-    const A5_ASPECT = 1 / 1.414;
+    const A4_ASPECT = 210 / 297;
+    const gapFraction = 0.04;
     const maxBookH = vh * 0.80;
-    const maxBookW = vw * 0.75;
-    let bookH = maxBookH;
-    let bookW = bookH * A5_ASPECT * 2;
-    if (bookW > maxBookW) {
-      bookW = maxBookW;
-      bookH = bookW / (A5_ASPECT * 2);
+    const maxBookW = vw * 0.78;
+    let pH = maxBookH;
+    let pW = pH * A4_ASPECT;
+    let g = pW * gapFraction;
+    let totalW = pW * 2 + g;
+    if (totalW > maxBookW) {
+      pW = maxBookW / (2 + gapFraction);
+      pH = pW / A4_ASPECT;
+      g = pW * gapFraction;
+      totalW = pW * 2 + g;
     }
 
-    // Target: image centered on the right page of the book
-    // Right page center: x = vw/2 + bookW/4, y = vh/2
-    // Image size: ~60% of page width, preserving aspect ratio
-    const pageW = bookW / 2;
-    const imgW = pageW * 0.60;
-    let targetW, targetH;
+    // The book is centered in the viewport
+    const bookLeft = (vw - totalW) / 2;
+    const bookTop = (vh - pH) / 2;
+
+    // Right page starts after left page + gap
+    const rightPageLeft = bookLeft + pW + g;
+    const rightPageTop = bookTop;
+
+    // First image item on right page: x:20%, y:12%, w:60%, rotation:-3
+    const itemX = 0.20; // 20% of page width
+    const itemY = 0.12; // 12% of page height
+    const itemW = 0.60; // 60% of page width
+
+    // Item pixel position and size
+    const itemPxX = rightPageLeft + itemX * pW;
+    const itemPxY = rightPageTop + itemY * pH;
+    const itemPxW = itemW * pW;
+    // Image aspect ratio determines height
+    let itemPxH;
     if (imgAspect > 0) {
-      targetW = imgW;
-      targetH = targetW / imgAspect;
-      // If too tall, fit by height instead
-      if (targetH > bookH * 0.50) {
-        targetH = bookH * 0.50;
-        targetW = targetH * imgAspect;
-      }
+      itemPxH = itemPxW / imgAspect;
     } else {
-      targetW = imgW;
-      targetH = imgW;
+      itemPxH = itemPxW;
     }
 
-    // Target center position (center of right page)
-    const targetCenterX = vw / 2 + bookW / 4;
-    const targetCenterY = vh / 2;
+    // Target: the image layer should match the item's bounding box
+    // (the image inside has object-fit: cover, so it fills the layer)
+    const targetW = itemPxW;
+    const targetH = itemPxH;
+    const targetLeft = itemPxX;
+    const targetTop = itemPxY;
 
     // Interpolate from fullscreen to target
     const currentW = vw + (targetW - vw) * ease;
     const currentH = vh + (targetH - vh) * ease;
-
-    // Interpolate center position from viewport center to right page center
-    const currentCenterX = vw / 2 + (targetCenterX - vw / 2) * ease;
-    const currentCenterY = vh / 2 + (targetCenterY - vh / 2) * ease;
+    const currentLeft = 0 + (targetLeft - 0) * ease;
+    const currentTop = 0 + (targetTop - 0) * ease;
 
     // Slight rotation as the image "lands" on the sketchbook page
     const rotation = ease * -3;
@@ -133,8 +145,8 @@ export default function ScrollSequence({ onMatVisible, onBookVisible }) {
       transform: `translateY(${translateY}) rotate(${rotation}deg)`,
       width: `${currentW}px`,
       height: `${currentH}px`,
-      left: `${currentCenterX - currentW / 2}px`,
-      top: `${currentCenterY - currentH / 2}px`,
+      left: `${currentLeft}px`,
+      top: `${currentTop}px`,
     };
   }, [zoomT, translateY, imgAspect, viewport]);
 
@@ -155,7 +167,11 @@ export default function ScrollSequence({ onMatVisible, onBookVisible }) {
   return (
     <div
       className="scroll-image-layer"
-      style={layerStyle}
+      style={{
+        ...layerStyle,
+        opacity: zoomT >= 1 ? 0 : 1,
+        transition: 'opacity 0.15s ease',
+      }}
     >
       <img
         ref={imgRef}

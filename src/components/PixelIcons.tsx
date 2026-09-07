@@ -70,6 +70,24 @@ const arrowDownGrid = [
   [0, 0, 1, 0, 0],
 ]
 
+// Right arrow: pixel arrow pointing right
+const arrowRightGrid = [
+  [0, 0, 1, 0, 0],
+  [0, 0, 1, 1, 0],
+  [1, 1, 1, 1, 1],
+  [0, 0, 1, 1, 0],
+  [0, 0, 1, 0, 0],
+]
+
+// Left arrow: pixel arrow pointing left
+const arrowLeftGrid = [
+  [0, 0, 1, 0, 0],
+  [0, 1, 1, 0, 0],
+  [1, 1, 1, 1, 1],
+  [0, 1, 1, 0, 0],
+  [0, 0, 1, 0, 0],
+]
+
 export function PixelHome({ size = 18 }) {
   return <PixelIcon grid={homeGrid} size={size} />
 }
@@ -84,4 +102,12 @@ export function PixelContact({ size = 18 }) {
 
 export function PixelArrowDown({ size = 18 }) {
   return <PixelIcon grid={arrowDownGrid} size={size} />
+}
+
+export function PixelArrowRight({ size = 18 }) {
+  return <PixelIcon grid={arrowRightGrid} size={size} />
+}
+
+export function PixelArrowLeft({ size = 18 }) {
+  return <PixelIcon grid={arrowLeftGrid} size={size} />
 }

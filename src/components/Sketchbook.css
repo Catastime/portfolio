@@ -11,7 +11,15 @@
 .sketchbook {
   position: relative;
   display: flex;
+  align-items: flex-start;
   perspective: 2000px;
+}
+
+/* Page stacks — two separate A4 pads with a gap */
+.sketchbook-page-stack {
+  position: relative;
+  background: #ededed;
+  overflow: hidden;
   box-shadow:
     0 20px 60px -10px rgba(0, 0, 0, 0.6),
     0 8px 20px -4px rgba(0, 0, 0, 0.4);
@@ -19,23 +27,14 @@
 
 /* Pages — white with slight gray hue, like scanned paper */
 .sketchbook-page {
-  position: relative;
-  width: 50%;
-  height: 100%;
+  position: absolute;
+  inset: 0;
   background: #ededed;
   overflow: hidden;
 }
 
 .sketchbook-page-empty {
   background: #ededed;
-}
-
-.sketchbook-page:first-child {
-  box-shadow: inset -8px 0 16px -8px rgba(0, 0, 0, 0.15);
-}
-
-.sketchbook-page:last-child {
-  box-shadow: inset 8px 0 16px -8px rgba(0, 0, 0, 0.15);
 }
 
 /* Items glued/drawn on pages */
@@ -67,25 +66,10 @@
   z-index: 2;
 }
 
-.sketch-dot-tl {
-  top: -3px;
-  left: -3px;
-}
-
-.sketch-dot-tr {
-  top: -3px;
-  right: -3px;
-}
-
-.sketch-dot-bl {
-  bottom: -3px;
-  left: -3px;
-}
-
-.sketch-dot-br {
-  bottom: -3px;
-  right: -3px;
-}
+.sketch-dot-tl { top: 4px; left: 4px; }
+.sketch-dot-tr { top: 4px; right: 4px; }
+.sketch-dot-bl { bottom: 4px; left: 4px; }
+.sketch-dot-br { bottom: 4px; right: 4px; }
 
 /* Sketch items */
 .sketch-item-sketch {
@@ -118,31 +102,10 @@
   white-space: pre-wrap;
 }
 
-/* Spine shadow */
-.sketchbook-spine {
-  position: absolute;
-  left: 50%;
-  top: 0;
-  bottom: 0;
-  width: 12px;
-  transform: translateX(-50%);
-  background: linear-gradient(
-    to right,
-    rgba(0, 0, 0, 0.15),
-    rgba(0, 0, 0, 0.3),
-    rgba(0, 0, 0, 0.15)
-  );
-  pointer-events: none;
-  z-index: 5;
-}
-
-/* Turning page */
+/* Turning page — 3D flip, positioned over the right stack */
 .sketchbook-page-turning {
   position: absolute;
-  left: 50%;
   top: 0;
-  width: 50%;
-  height: 100%;
   transform-origin: left center;
   transform-style: preserve-3d;
   z-index: 10;
@@ -156,6 +119,9 @@
   backface-visibility: hidden;
   background: #ededed;
   overflow: hidden;
+  box-shadow:
+    0 20px 60px -10px rgba(0, 0, 0, 0.6),
+    0 8px 20px -4px rgba(0, 0, 0, 0.4);
 }
 
 .sketchbook-page-turning-back {

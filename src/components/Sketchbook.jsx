@@ -2,30 +2,34 @@ import { useState, useEffect, useMemo, useRef } from 'react';
 import './Sketchbook.css';
 
 /**
- * Sketchbook — an A5-format open sketch block laying on the cutting mat.
+ * Sketchbook — two stacks of A4 pages with a gap between them, laying on
+ * the cutting mat. Content is glued/drawn onto pages: images at slight
+ * angles with black corner dots, architectural sketches, and text blocks.
  *
- * Content is glued/drawn onto the pages: images at slight angles with tape
- * corners, hand-drawn sketches, and text blocks. The first image (the one
- * that zoomed out in ScrollSequence) is glued onto the first right page.
+ * Scroll progress drives page turns with flat zones (page settled) and
+ * turn zones (page flipping). The right page only updates after a turn
+ * completes, not when it starts.
  *
- * On mobile, only one page is shown at a time with swipe/tap to turn.
+ * On mobile, one page is shown at a time with swipe/tap to turn.
  *
  * Props:
- * - visible: boolean — whether the book should be shown
+ * - visible: boolean
  * - scrollProgress: number (0-1) — drives page turns on desktop
+ * - onTurnForward: callback when user wants to turn forward (arrow click)
+ * - onTurnBack: callback when user wants to turn back (arrow click)
  */
 
 /**
  * @typedef {Object} SketchbookItem
  * @property {string} type - 'image' | 'sketch' | 'text'
- * @property {string} [img] - image URL (for type 'image')
- * @property {string} [text] - text content (for type 'text')
- * @property {string} [title] - heading text (for type 'text')
+ * @property {string} [img]
+ * @property {string} [text]
+ * @property {string} [title]
  * @property {number} x - x position as % of page width (0-100)
  * @property {number} y - y position as % of page height (0-100)
  * @property {number} w - width as % of page width (0-100)
  * @property {number} rotation - rotation in degrees
- * @property {boolean} [taped] - show black corner dots (for images)
+ * @property {boolean} [taped] - show black corner dots
  */
 
 /**
@@ -40,7 +44,7 @@ import './Sketchbook.css';
  * @property {number} [scrollProgress]
  */
 
-const A5_ASPECT = 1 / 1.414; // width / height
+const A4_ASPECT = 210 / 297; // width / height (portrait)
 
 /** @param {SketchbookProps} props */
 export default function Sketchbook({
@@ -61,50 +65,71 @@ export default function Sketchbook({
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // Desktop: page turns driven by scroll progress (0.60 - 1.00 range)
+  // Scroll-driven page turns with flat zones and turn zones.
+  // bookStart = 0.60, bookEnd = 1.00
+  // Each spread gets: flat zone (settled) + turn zone (flipping)
+  // The last spread has no turn zone after it.
   const bookStart = 0.60;
   const bookEnd = 1.00;
   const bookRange = bookEnd - bookStart;
 
-  const totalSpreads = Math.ceil(pages.length / 2);
-  const turns = Math.max(1, totalSpreads - 1);
+  const totalSpreads = Math.max(1, Math.ceil(pages.length / 2));
+
+  // Each spread gets an equal slice. Within each slice:
+  //   first 35% = flat (settled), last 65% = turn (flipping to next)
+  // The last spread is 100% flat (no turn after it).
+  const flatRatio = 0.35;
 
   const scrollSpread = useMemo(() => {
     if (scrollProgress <= bookStart) return 0;
     if (scrollProgress >= bookEnd) return totalSpreads - 1;
     const t = (scrollProgress - bookStart) / bookRange;
-    return Math.min(totalSpreads - 1, Math.floor(t * turns));
-  }, [scrollProgress, totalSpreads, turns]);
+    const sliceSize = 1 / totalSpreads;
+    return Math.min(totalSpreads - 1, Math.floor(t / sliceSize));
+  }, [scrollProgress, totalSpreads]);
 
+  // Turn progress within the current spread's turn zone (0 = flat, 1 = fully turned)
   const turnProgress = useMemo(() => {
     if (scrollProgress <= bookStart) return 0;
-    if (scrollProgress >= bookEnd) return 1;
+    if (scrollProgress >= bookEnd) return 0;
     const t = (scrollProgress - bookStart) / bookRange;
-    const turnIndex = Math.floor(t * turns);
-    const turnStart = turnIndex / turns;
-    const turnEnd = (turnIndex + 1) / turns;
-    return Math.min(1, Math.max(0, (t - turnStart) / (turnEnd - turnStart)));
-  }, [scrollProgress, turns]);
+    const sliceSize = 1 / totalSpreads;
+    const sliceStart = scrollSpread * sliceSize;
+    const sliceT = (t - sliceStart) / sliceSize; // 0-1 within this spread's slice
 
-  // Book dimensions — A5 spread (296mm x 210mm), portrait pages
-  const bookStyle = useMemo(() => {
+    // Flat during first flatRatio, then turn during the rest
+    if (scrollSpread >= totalSpreads - 1) return 0; // last spread, no turn
+    if (sliceT <= flatRatio) return 0;
+    const raw = Math.min(1, Math.max(0, (sliceT - flatRatio) / (1 - flatRatio)));
+    // Ease-in-out for smoother turn
+    return raw < 0.5 ? 4 * raw * raw * raw : 1 - Math.pow(-2 * raw + 2, 3) / 2;
+  }, [scrollProgress, scrollSpread, totalSpreads]);
+
+  // Book dimensions — two A4 pages with a gap between them
+  const { bookW, bookH, pageW, pageH, gap } = useMemo(() => {
     const vw = viewport.w;
     const vh = viewport.h;
     const maxBookH = vh * 0.80;
-    const maxBookW = vw * (isMobile ? 0.80 : 0.75);
+    const gapFraction = 0.04; // gap is 4% of page width
+    const maxBookW = vw * (isMobile ? 0.80 : 0.78);
 
-    let bookH = maxBookH;
-    let bookW = isMobile ? bookH * A5_ASPECT : bookH * A5_ASPECT * 2;
+    // Try fitting by height first
+    let pH = maxBookH;
+    let pW = pH * A4_ASPECT;
+    let g = pW * gapFraction;
+    let totalW = pW * 2 + g;
 
-    if (bookW > maxBookW) {
-      bookW = maxBookW;
-      bookH = isMobile ? bookW / A5_ASPECT : bookW / (A5_ASPECT * 2);
+    // If too wide, fit by width
+    if (totalW > maxBookW) {
+      // pW * 2 + pW * gapFraction = maxBookW
+      // pW * (2 + gapFraction) = maxBookW
+      pW = maxBookW / (2 + gapFraction);
+      pH = pW / A4_ASPECT;
+      g = pW * gapFraction;
+      totalW = pW * 2 + g;
     }
 
-    return {
-      width: `${bookW}px`,
-      height: `${bookH}px`,
-    };
+    return { bookW: totalW, bookH: pH, pageW: pW, pageH: pH, gap: g };
   }, [viewport, isMobile]);
 
   // Mobile: swipe/tap
@@ -167,22 +192,18 @@ export default function Sketchbook({
         <div key={key} className="sketch-item sketch-item-sketch" style={style}>
           <svg viewBox="0 0 200 150" className="sketch-svg" preserveAspectRatio="xMidYMid meet">
             <g stroke="#2a2a2a" strokeWidth="0.8" fill="none" strokeLinecap="round" strokeLinejoin="round">
-              {/* Floor plan sketch */}
               <rect x="30" y="30" width="140" height="90" strokeWidth="1" />
               <line x1="30" y1="70" x2="100" y2="70" />
               <line x1="100" y1="30" x2="100" y2="120" />
               <line x1="100" y1="70" x2="170" y2="70" />
-              {/* Door arcs */}
               <path d="M60 70 Q60 55 75 55" strokeWidth="0.5" />
               <path d="M100 95 Q115 95 115 80" strokeWidth="0.5" />
-              {/* Dimension lines */}
               <line x1="30" y1="20" x2="170" y2="20" strokeWidth="0.4" />
               <line x1="30" y1="16" x2="30" y2="24" strokeWidth="0.4" />
               <line x1="170" y1="16" x2="170" y2="24" strokeWidth="0.4" />
               <line x1="20" y1="30" x2="20" y2="120" strokeWidth="0.4" />
               <line x1="16" y1="30" x2="24" y2="30" strokeWidth="0.4" />
               <line x1="16" y1="120" x2="24" y2="120" strokeWidth="0.4" />
-              {/* Annotations */}
               <line x1="50" y1="135" x2="80" y2="135" strokeWidth="0.3" strokeDasharray="2 2" />
             </g>
           </svg>
@@ -202,7 +223,6 @@ export default function Sketchbook({
     return null;
   };
 
-  // Render a page's content
   const renderPage = (page, key) => {
     if (!page) return <div key={key} className="sketchbook-page sketchbook-page-empty" />;
     return (
@@ -217,7 +237,7 @@ export default function Sketchbook({
       <div className="sketchbook-container">
         <div
           className="sketchbook-mobile"
-          style={bookStyle}
+          style={{ width: `${pageW}px`, height: `${pageH}px` }}
           onClick={handleClick}
           onTouchStart={handleTouchStart}
           onTouchEnd={handleTouchEnd}
@@ -231,42 +251,83 @@ export default function Sketchbook({
     );
   }
 
-  // Desktop: open spread
+  // Desktop: two page stacks with a gap.
+  // During a turn, the turning page flips from right to left:
+  //   - front shows current right page (being flipped away)
+  //   - back shows next left page (revealed as it lands)
+  // Underneath, both stacks show the destination spread.
   const leftIndex = scrollSpread * 2;
   const rightIndex = leftIndex + 1;
 
+  const nextSpread = Math.min(totalSpreads - 1, scrollSpread + 1);
+  const nextLeftIndex = nextSpread * 2;
+  const nextRightIndex = nextLeftIndex + 1;
+
+  const isTurning = turnProgress > 0 && turnProgress < 1 && scrollSpread < totalSpreads - 1;
+
+  // During a turn:
+  //   - Left page underneath: crossfades from current left to next left
+  //   - Right page underneath: shows next right page (destination)
+  //   - Turning page front: current right page (being flipped away)
+  //   - Turning page back: next left page (revealed as it lands on left)
+  const displayRightUnderneath = isTurning ? nextRightIndex : rightIndex;
+
   return (
     <div className="sketchbook-container">
-      <div className="sketchbook" style={bookStyle}>
-        {renderPage(pages[leftIndex], 'left')}
-        {renderPage(pages[rightIndex], 'right')}
+      <div
+        className="sketchbook"
+        style={{ width: `${bookW}px`, height: `${bookH}px` }}
+      >
+        {/* Left page stack — crossfades from current to next left during turn */}
+        <div
+          className="sketchbook-page-stack"
+          style={{ width: `${pageW}px`, height: `${pageH}px` }}
+        >
+          {isTurning ? (
+            <>
+              <div style={{ position: 'absolute', inset: 0, opacity: 1 - turnProgress }}>
+                {renderPage(pages[leftIndex], 'left-current')}
+              </div>
+              <div style={{ position: 'absolute', inset: 0, opacity: turnProgress }}>
+                {renderPage(pages[nextLeftIndex], 'left-next')}
+              </div>
+            </>
+          ) : (
+            renderPage(pages[leftIndex], 'left')
+          )}
+        </div>
 
-        {/* Turning page overlay */}
-        {turnProgress > 0 && turnProgress < 1 && scrollSpread < totalSpreads - 1 && (
+        {/* Gap between stacks */}
+        <div style={{ width: `${gap}px` }} />
+
+        {/* Right page stack */}
+        <div
+          className="sketchbook-page-stack"
+          style={{ width: `${pageW}px`, height: `${pageH}px` }}
+        >
+          {/* Underneath: the destination right page */}
+          {renderPage(pages[displayRightUnderneath], 'right-under')}
+        </div>
+
+        {/* Turning page — positioned over the right stack, not clipped by it */}
+        {isTurning && (
           <div
             className="sketchbook-page-turning"
             style={{
               transform: `perspective(2000px) rotateY(${-turnProgress * 180}deg)`,
+              width: `${pageW}px`,
+              height: `${pageH}px`,
+              left: `${pageW + gap}px`,
             }}
           >
             <div className="sketchbook-page-turning-front">
-              {pages[scrollSpread * 2] && (
-                <div className="sketchbook-page">
-                  {pages[scrollSpread * 2].items?.map((item, i) => renderItem(item, `tf-${i}`))}
-                </div>
-              )}
+              {renderPage(pages[rightIndex], 'turn-front')}
             </div>
             <div className="sketchbook-page-turning-back">
-              {pages[scrollSpread * 2 + 1] && (
-                <div className="sketchbook-page">
-                  {pages[scrollSpread * 2 + 1].items?.map((item, i) => renderItem(item, `tb-${i}`))}
-                </div>
-              )}
+              {renderPage(pages[nextLeftIndex], 'turn-back')}
             </div>
           </div>
         )}
-
-        <div className="sketchbook-spine" />
       </div>
     </div>
   );

@@ -6,7 +6,7 @@ import DecryptedText from '@/components/DecryptedText'
 import CuttingMat from '@/components/CuttingMat'
 import ScrollSequence from '@/components/ScrollSequence'
 import Sketchbook from '@/components/Sketchbook'
-import { PixelHome, PixelProjects, PixelContact, PixelArrowDown } from '@/components/PixelIcons'
+import { PixelHome, PixelProjects, PixelContact, PixelArrowDown, PixelArrowRight, PixelArrowLeft } from '@/components/PixelIcons'
 
 const projectItems = [
   { id: '1', img: 'https://picsum.photos/id/1015/600/900?grayscale', url: 'https://example.com/one', height: 400 },
@@ -98,6 +98,47 @@ function App() {
   const atImageStop = scrollProgress >= 0.30 && scrollProgress <= 0.36
   const arrowOpacity = !arrowVisible ? 0 : (atLanding || atImageStop) ? 1 : 0
 
+  // Book page turn arrows — visible when the book is visible
+  // The book scroll range is 0.60-1.00, with flat zones and turn zones
+  const bookStart = 0.60
+  const bookEnd = 1.00
+  const bookRange = bookEnd - bookStart
+  const totalSpreads = Math.ceil(bookPages.length / 2)
+  const flatRatio = 0.35
+
+  // Determine which spread we're on and whether we're in a flat zone
+  const bookT = Math.max(0, Math.min(1, (scrollProgress - bookStart) / bookRange))
+  const sliceSize = 1 / totalSpreads
+  const currentSpread = Math.min(totalSpreads - 1, Math.floor(bookT / sliceSize))
+  const sliceStart = currentSpread * sliceSize
+  const sliceT = (bookT - sliceStart) / sliceSize
+  const inFlatZone = sliceT <= flatRatio || currentSpread >= totalSpreads - 1
+
+  // Show book arrows when in the book's flat zone
+  const bookArrowVisible = bookVisible && inFlatZone && scrollProgress >= bookStart && scrollProgress <= bookEnd
+  const canTurnForward = bookArrowVisible && currentSpread < totalSpreads - 1
+  const canTurnBack = bookArrowVisible && currentSpread > 0
+
+  // Scroll to a specific spread's flat zone center
+  const scrollToSpreadFlat = (spread: number) => {
+    const max = document.documentElement.scrollHeight - window.innerHeight
+    const sStart = bookStart + spread * sliceSize * bookRange
+    const flatCenter = sStart + sliceSize * flatRatio * 0.5 * bookRange
+    smoothScrollTo(max * flatCenter, 1500)
+  }
+
+  const turnPageForward = () => {
+    if (canTurnForward) {
+      scrollToSpreadFlat(currentSpread + 1)
+    }
+  }
+
+  const turnPageBack = () => {
+    if (canTurnBack) {
+      scrollToSpreadFlat(currentSpread - 1)
+    }
+  }
+
   const scrollAnimRef = useRef<number | null>(null)
 
   const smoothScrollTo = (target: number, duration = 4000) => {
@@ -169,10 +210,18 @@ function App() {
         e.preventDefault()
         autoPlay()
       }
+      if (e.key === 'ArrowRight' && canTurnForward) {
+        e.preventDefault()
+        turnPageForward()
+      }
+      if (e.key === 'ArrowLeft' && canTurnBack) {
+        e.preventDefault()
+        turnPageBack()
+      }
     }
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [arrowVisible, atLanding, atImageStop])
+  }, [arrowVisible, atLanding, atImageStop, canTurnForward, canTurnBack])
   const handleMatVisible = useCallback((show: boolean) => {
     setMatVisible(show)
   }, [])
@@ -248,9 +297,10 @@ function App() {
         scrollProgress={scrollProgress}
       />
 
-      {/* Title — starts centered, moves to top on scroll */}
+      {/* Title — starts centered, moves to top on scroll.
+          Underneath the cutting mat (z-5) so it shows through the translucent mat. */}
       <div
-        className="pointer-events-none fixed inset-x-0 top-0 z-20 flex justify-center px-4 pt-10"
+        className="pointer-events-none fixed inset-x-0 top-0 z-1 flex justify-center px-4 pt-10"
         style={{ transform: `translateY(${titleTranslateY})` }}
       >
         <div className="w-full max-w-5xl">
@@ -281,6 +331,39 @@ function App() {
           aria-label="Scroll to explore"
         >
           <PixelArrowDown size={48} />
+        </button>
+      )}
+
+      {/* Book page turn arrows — right arrow for forward, left arrow for back */}
+      {canTurnForward && (
+        <button
+          onClick={turnPageForward}
+          className="fixed bottom-8 right-8 z-20 flex cursor-pointer items-center justify-center border-none bg-transparent p-2 text-white"
+          style={{
+            opacity: 1,
+            transition: 'opacity 0.3s ease',
+            lineHeight: 0,
+            paddingBottom: '48px',
+          }}
+          aria-label="Next page"
+        >
+          <PixelArrowRight size={48} />
+        </button>
+      )}
+
+      {canTurnBack && (
+        <button
+          onClick={turnPageBack}
+          className="fixed bottom-8 left-8 z-20 flex cursor-pointer items-center justify-center border-none bg-transparent p-2 text-white"
+          style={{
+            opacity: 1,
+            transition: 'opacity 0.3s ease',
+            lineHeight: 0,
+            paddingBottom: '48px',
+          }}
+          aria-label="Previous page"
+        >
+          <PixelArrowLeft size={48} />
         </button>
       )}
 
