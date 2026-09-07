@@ -1,30 +1,27 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 
 /**
- * Tracks scroll progress of a scroll container as a 0-1 value.
- * Returns the ref to attach to the scrollable element and the current progress.
+ * Tracks window scroll progress as a 0-1 value.
+ * Uses the document body for scrolling (native browser scroll).
+ * Returns the current progress.
  */
 export default function useScrollProgress() {
-  const ref = useRef<HTMLDivElement>(null);
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-
     const handleScroll = () => {
-      const max = el.scrollHeight - el.clientHeight;
+      const max = document.documentElement.scrollHeight - window.innerHeight;
       if (max <= 0) {
         setProgress(0);
         return;
       }
-      setProgress(Math.min(1, Math.max(0, el.scrollTop / max)));
+      setProgress(Math.min(1, Math.max(0, window.scrollY / max)));
     };
 
-    el.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener('scroll', handleScroll, { passive: true });
     handleScroll();
-    return () => el.removeEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  return { ref, progress };
+  return { progress };
 }

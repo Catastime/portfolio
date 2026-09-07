@@ -3,13 +3,16 @@
 
 function PixelIcon({ grid, size = 18 }: { grid: number[][]; size?: number }) {
   const cellSize = 4
-  const dim = 5 * cellSize
+  const cols = grid[0]?.length ?? 5
+  const rows = grid.length
+  const w = cols * cellSize
+  const h = rows * cellSize
 
   return (
     <svg
       width={size}
-      height={size}
-      viewBox={`0 0 ${dim} ${dim}`}
+      height={size * (rows / cols)}
+      viewBox={`0 0 ${w} ${h}`}
       fill="currentColor"
       shapeRendering="crispEdges"
     >
@@ -57,6 +60,16 @@ const contactGrid = [
   [1, 1, 1, 1, 1],
 ]
 
+// Down arrow: pixel arrow pointing down
+const arrowDownGrid = [
+  [0, 0, 1, 0, 0],
+  [0, 0, 1, 0, 0],
+  [0, 0, 1, 0, 0],
+  [1, 0, 1, 0, 1],
+  [0, 1, 1, 1, 0],
+  [0, 0, 1, 0, 0],
+]
+
 export function PixelHome({ size = 18 }) {
   return <PixelIcon grid={homeGrid} size={size} />
 }
@@ -67,4 +80,8 @@ export function PixelProjects({ size = 18 }) {
 
 export function PixelContact({ size = 18 }) {
   return <PixelIcon grid={contactGrid} size={size} />
+}
+
+export function PixelArrowDown({ size = 18 }) {
+  return <PixelIcon grid={arrowDownGrid} size={size} />
 }

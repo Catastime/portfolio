@@ -1,46 +1,56 @@
-import { useMemo, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import './ScrollSequence.css';
 
 /**
- * ScrollSequence — scroll-driven animation sequence.
+ * ScrollSequence — simple scroll-driven animation.
  *
- * Phases (mapped from scroll progress 0-1):
- * 0.00 - 0.15: Landing (title visible, nothing else)
- * 0.15 - 0.30: Full-screen image fades in
- * 0.30 - 0.55: Image zooms out to reveal sketchbook on cutting mat
- * 0.55 - 1.00: Sketchbook pages turn on continued scroll
+ * The image is a fixed-position layer. Scroll progress (0-1) directly
+ * controls its position and scale:
+ * 0.00 - 0.33: Image slides up from below into full view
+ * 0.33 - 0.50: Image holds fullscreen
+ * 0.50 - 1.00: Image zooms out, cutting mat appears behind it
  *
  * Props:
- * - progress: 0-1 scroll progress
  * - onMatVisible: callback when cutting mat should become visible
  */
-export default function ScrollSequence({ progress, onMatVisible }) {
+export default function ScrollSequence({ onMatVisible }) {
+  const [progress, setProgress] = useState(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const max = document.documentElement.scrollHeight - window.innerHeight;
+      if (max <= 0) { setProgress(0); return; }
+      setProgress(Math.min(1, Math.max(0, window.scrollY / max)));
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   // Phase boundaries
-  const phases = useMemo(() => ({
-    landingEnd: 0.15,
-    imageFadeEnd: 0.30,
-    zoomOutEnd: 0.55,
-  }), []);
+  const slideEnd = 0.33;
+  const holdEnd = 0.50;
 
-  // Image opacity: fades in during 0.15-0.30
-  const imageOpacity = useMemo(() => {
-    if (progress <= phases.landingEnd) return 0;
-    if (progress >= phases.imageFadeEnd) return 1;
-    return (progress - phases.landingEnd) / (phases.imageFadeEnd - phases.landingEnd);
-  }, [progress, phases]);
+  // Image translateY: slides from 100vh (below viewport) to 0 (filling viewport)
+  const translateY = useMemo(() => {
+    if (progress <= slideEnd) {
+      const t = progress / slideEnd;
+      return `${(1 - t) * 100}vh`;
+    }
+    return '0vh';
+  }, [progress]);
 
-  // Image scale: 1 (full screen) at imageFadeEnd, zooms out to 0.3 at zoomOutEnd
-  const imageScale = useMemo(() => {
-    if (progress <= phases.imageFadeEnd) return 1;
-    if (progress >= phases.zoomOutEnd) return 0.3;
-    const t = (progress - phases.imageFadeEnd) / (phases.zoomOutEnd - phases.imageFadeEnd);
+  // Image scale: 1 until holdEnd, then zoom out to 0.3
+  const scale = useMemo(() => {
+    if (progress <= holdEnd) return 1;
+    if (progress >= 1) return 0.3;
+    const t = (progress - holdEnd) / (1 - holdEnd);
     return 1 - t * 0.7;
-  }, [progress, phases]);
+  }, [progress]);
 
-  // Cutting mat visibility: appears at zoomOutEnd
-  const matShouldShow = progress >= phases.zoomOutEnd;
+  // Cutting mat appears when zoom-out starts
+  const matShouldShow = progress > holdEnd;
 
-  // Trigger mat visibility callback
   useEffect(() => {
     onMatVisible?.(matShouldShow);
   }, [matShouldShow, onMatVisible]);
@@ -49,8 +59,7 @@ export default function ScrollSequence({ progress, onMatVisible }) {
     <div
       className="scroll-image-layer"
       style={{
-        opacity: imageOpacity,
-        transform: `scale(${imageScale})`,
+        transform: `translateY(${translateY}) scale(${scale})`,
       }}
     >
       <img
