@@ -21,38 +21,39 @@ const projectItems = [
   { id: '10', img: 'https://picsum.photos/id/1035/600/850?grayscale', url: 'https://example.com/ten', height: 550 },
 ]
 
-// Sketchbook pages — content glued/drawn into a sketch block
+// Sketchbook pages — content arranged in a clean, editorial architecture layout
 // First right page has the image that zoomed out (at -3deg to match ScrollSequence)
 const bookPages = [
   // Left page of first spread
   {
     items: [
-      { type: 'image', img: 'https://picsum.photos/id/1015/800/600?grayscale', x: 8, y: 10, w: 55, rotation: -4, taped: true },
-      { type: 'image', img: 'https://picsum.photos/id/1011/800/500?grayscale', x: 35, y: 55, w: 50, rotation: 3, taped: true },
-      { type: 'text', title: 'Concept', text: 'Early studies exploring\nform and light.', x: 10, y: 75, w: 35, rotation: 1 },
+      { type: 'image', img: 'https://picsum.photos/id/1015/800/600?grayscale', x: 10, y: 8, w: 52, rotation: -2, taped: true },
+      { type: 'image', img: 'https://picsum.photos/id/1011/800/500?grayscale', x: 30, y: 52, w: 48, rotation: 1, taped: true },
+      { type: 'text', title: '01 — Concept', text: 'Early studies exploring\nform, light, and the\nrelationship between\nstructure and context.', x: 8, y: 78, w: 40, rotation: 0 },
     ],
   },
   // Right page of first spread — the zoomed-out image lands here, centered
   {
     items: [
-      { type: 'image', img: 'https://picsum.photos/id/1036/1920/1080?grayscale', x: 20, y: 15, w: 60, rotation: -3, taped: true },
-      { type: 'sketch', x: 55, y: 60, w: 30, rotation: 2 },
-      { type: 'text', title: 'Notes', text: 'The interplay of\nstructure and space\ndefines the work.', x: 10, y: 65, w: 35, rotation: -1 },
+      { type: 'image', img: 'https://picsum.photos/id/1036/1920/1080?grayscale', x: 20, y: 12, w: 60, rotation: -3, taped: true },
+      { type: 'sketch', x: 58, y: 58, w: 28, rotation: 1 },
+      { type: 'text', title: 'Fig. 01', text: 'The interplay of\nstructure and space\ndefines the work.', x: 8, y: 62, w: 32, rotation: 0 },
     ],
   },
   // Left page of second spread
   {
     items: [
-      { type: 'image', img: 'https://picsum.photos/id/1020/800/600?grayscale', x: 10, y: 8, w: 50, rotation: 2, taped: true },
-      { type: 'text', title: 'Process', text: 'Iterative sketches\ninformed the final\ndesign.', x: 15, y: 65, w: 40, rotation: -2 },
+      { type: 'sketch', x: 10, y: 8, w: 38, rotation: -2 },
+      { type: 'image', img: 'https://picsum.photos/id/1020/800/600?grayscale', x: 35, y: 12, w: 50, rotation: 2, taped: true },
+      { type: 'text', title: '02 — Process', text: 'Iterative sketches\ninformed the final\ndesign decisions.', x: 8, y: 72, w: 38, rotation: 0 },
     ],
   },
   // Right page of second spread
   {
     items: [
-      { type: 'sketch', x: 8, y: 10, w: 40, rotation: -3 },
-      { type: 'image', img: 'https://picsum.photos/id/1018/800/600?grayscale', x: 40, y: 15, w: 50, rotation: 4, taped: true },
-      { type: 'text', title: 'Detail', text: 'Material study —\nconcrete and glass.', x: 10, y: 70, w: 35, rotation: 1 },
+      { type: 'image', img: 'https://picsum.photos/id/1018/800/600?grayscale', x: 12, y: 10, w: 52, rotation: -1, taped: true },
+      { type: 'text', title: 'Fig. 02', text: 'Material study —\nconcrete and glass\nin dialogue.', x: 15, y: 68, w: 35, rotation: 0 },
+      { type: 'sketch', x: 55, y: 55, w: 30, rotation: 3 },
     ],
   },
 ]

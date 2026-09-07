@@ -97,24 +97,24 @@
   height: auto;
 }
 
-/* Text blocks — handwriting style */
+/* Text blocks — Epoch typeface */
 .sketch-item-text {
-  color: #3a3530;
-  font-family: 'Hitobito', 'Segoe Script', 'Comic Sans MS', cursive;
+  color: #2a2a2a;
+  font-family: 'Epoch', 'Hitobito', sans-serif;
 }
 
 .sketch-text-title {
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   font-weight: 600;
   margin-bottom: 0.3em;
   text-decoration: underline;
-  text-decoration-color: rgba(58, 53, 48, 0.4);
+  text-decoration-color: rgba(42, 42, 42, 0.4);
   text-underline-offset: 3px;
 }
 
 .sketch-text-body {
-  font-size: 0.75rem;
-  line-height: 1.5;
+  font-size: 0.7rem;
+  line-height: 1.6;
   white-space: pre-wrap;
 }
 

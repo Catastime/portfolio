@@ -166,19 +166,24 @@ export default function Sketchbook({
       return (
         <div key={key} className="sketch-item sketch-item-sketch" style={style}>
           <svg viewBox="0 0 200 150" className="sketch-svg" preserveAspectRatio="xMidYMid meet">
-            <g stroke="#3a3530" strokeWidth="1.2" fill="none" strokeLinecap="round" strokeLinejoin="round">
-              {/* Simple house sketch */}
-              <path d="M40 120 L40 70 L100 30 L160 70 L160 120 Z" />
-              <path d="M70 120 L70 85 L130 85 L130 120" />
-              <path d="M90 85 L90 120 M110 85 L110 120" />
-              <path d="M100 30 L100 15 L110 15 L110 22" />
-              {/* Ground line */}
-              <path d="M20 120 L180 120" strokeWidth="0.8" />
-              {/* Tree */}
-              <path d="M170 120 L170 90" />
-              <circle cx="170" cy="80" r="15" strokeWidth="1" />
+            <g stroke="#2a2a2a" strokeWidth="0.8" fill="none" strokeLinecap="round" strokeLinejoin="round">
+              {/* Floor plan sketch */}
+              <rect x="30" y="30" width="140" height="90" strokeWidth="1" />
+              <line x1="30" y1="70" x2="100" y2="70" />
+              <line x1="100" y1="30" x2="100" y2="120" />
+              <line x1="100" y1="70" x2="170" y2="70" />
+              {/* Door arcs */}
+              <path d="M60 70 Q60 55 75 55" strokeWidth="0.5" />
+              <path d="M100 95 Q115 95 115 80" strokeWidth="0.5" />
+              {/* Dimension lines */}
+              <line x1="30" y1="20" x2="170" y2="20" strokeWidth="0.4" />
+              <line x1="30" y1="16" x2="30" y2="24" strokeWidth="0.4" />
+              <line x1="170" y1="16" x2="170" y2="24" strokeWidth="0.4" />
+              <line x1="20" y1="30" x2="20" y2="120" strokeWidth="0.4" />
+              <line x1="16" y1="30" x2="24" y2="30" strokeWidth="0.4" />
+              <line x1="16" y1="120" x2="24" y2="120" strokeWidth="0.4" />
               {/* Annotations */}
-              <path d="M50 135 L80 135" strokeWidth="0.5" strokeDasharray="2 2" />
+              <line x1="50" y1="135" x2="80" y2="135" strokeWidth="0.3" strokeDasharray="2 2" />
             </g>
           </svg>
         </div>
