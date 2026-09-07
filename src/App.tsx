@@ -5,6 +5,7 @@ import Masonry from '@/components/Masonry'
 import DecryptedText from '@/components/DecryptedText'
 import CuttingMat from '@/components/CuttingMat'
 import ScrollSequence from '@/components/ScrollSequence'
+import Sketchbook from '@/components/Sketchbook'
 import { PixelHome, PixelProjects, PixelContact, PixelArrowDown } from '@/components/PixelIcons'
 
 const projectItems = [
@@ -20,10 +21,47 @@ const projectItems = [
   { id: '10', img: 'https://picsum.photos/id/1035/600/850?grayscale', url: 'https://example.com/ten', height: 550 },
 ]
 
+// Sketchbook pages — content glued/drawn into a sketch block
+// First right page has the image that zoomed out (at -3deg to match ScrollSequence)
+const bookPages = [
+  // Left page of first spread
+  {
+    items: [
+      { type: 'image', img: 'https://picsum.photos/id/1015/800/600?grayscale', x: 8, y: 10, w: 55, rotation: -4, taped: true },
+      { type: 'image', img: 'https://picsum.photos/id/1011/800/500?grayscale', x: 35, y: 55, w: 50, rotation: 3, taped: true },
+      { type: 'text', title: 'Concept', text: 'Early studies exploring\nform and light.', x: 10, y: 75, w: 35, rotation: 1 },
+    ],
+  },
+  // Right page of first spread — the zoomed-out image lands here
+  {
+    items: [
+      { type: 'image', img: 'https://picsum.photos/id/1036/1920/1080?grayscale', x: 15, y: 8, w: 60, rotation: -3, taped: true },
+      { type: 'sketch', x: 55, y: 55, w: 35, rotation: 2 },
+      { type: 'text', title: 'Notes', text: 'The interplay of\nstructure and space\ndefines the work.', x: 10, y: 60, w: 35, rotation: -1 },
+    ],
+  },
+  // Left page of second spread
+  {
+    items: [
+      { type: 'image', img: 'https://picsum.photos/id/1020/800/600?grayscale', x: 10, y: 8, w: 50, rotation: 2, taped: true },
+      { type: 'text', title: 'Process', text: 'Iterative sketches\ninformed the final\ndesign.', x: 15, y: 65, w: 40, rotation: -2 },
+    ],
+  },
+  // Right page of second spread
+  {
+    items: [
+      { type: 'sketch', x: 8, y: 10, w: 40, rotation: -3 },
+      { type: 'image', img: 'https://picsum.photos/id/1018/800/600?grayscale', x: 40, y: 15, w: 50, rotation: 4, taped: true },
+      { type: 'text', title: 'Detail', text: 'Material study —\nconcrete and glass.', x: 10, y: 70, w: 35, rotation: 1 },
+    ],
+  },
+]
+
 function App() {
   const [showProjects, setShowProjects] = useState(false)
   const [overlayVisible, setOverlayVisible] = useState(false)
   const [matVisible, setMatVisible] = useState(false)
+  const [bookVisible, setBookVisible] = useState(false)
   const [scrollProgress, setScrollProgress] = useState(0)
   const [arrowVisible, setArrowVisible] = useState(false)
   const [fadingHome, setFadingHome] = useState(false)
@@ -93,19 +131,20 @@ function App() {
   }
 
   // Two-phase auto-play: first click scrolls to the image, second click
-  // scrolls from there to the cutting mat
+  // scrolls from there to the book on the cutting mat (zoom-out complete)
   const autoPlayPhase = useRef(0)
   const autoPlay = () => {
     const max = document.documentElement.scrollHeight - window.innerHeight
     const slideEnd = 0.33
+    const bookEnd = 0.60
     const slideTarget = max * slideEnd
-    const finalTarget = max
+    const bookTarget = max * bookEnd
 
     if (autoPlayPhase.current === 0) {
       smoothScrollTo(slideTarget, 1500)
       autoPlayPhase.current = 1
     } else {
-      smoothScrollTo(finalTarget, 2500)
+      smoothScrollTo(bookTarget, 2500)
       autoPlayPhase.current = 0
     }
   }
@@ -137,6 +176,10 @@ function App() {
     setMatVisible(show)
   }, [])
 
+  const handleBookVisible = useCallback((show: boolean) => {
+    setBookVisible(show)
+  }, [])
+
   useEffect(() => {
     if (showProjects) {
       const t = setTimeout(() => setOverlayVisible(true), 10)
@@ -165,7 +208,7 @@ function App() {
       />
 
       {/* Scroll spacer — gives the document scrollable height for the sequence */}
-      <div className="h-[400vh] w-full" />
+      <div className="h-[700vh] w-full" />
 
       {/* Fixed background layers */}
       <div className="fixed inset-0 z-0 pointer-events-none">
@@ -183,7 +226,7 @@ function App() {
       </div>
 
       {/* Scroll-driven image — fixed layer, moves/scales with scroll */}
-      <ScrollSequence onMatVisible={handleMatVisible} />
+      <ScrollSequence onMatVisible={handleMatVisible} onBookVisible={handleBookVisible} />
 
       {/* Cutting mat — behind the image, appears when zoom-out starts */}
       <div
@@ -196,6 +239,13 @@ function App() {
       >
         <CuttingMat startCm={7} />
       </div>
+
+      {/* Sketchbook — appears on the cutting mat after zoom-out completes */}
+      <Sketchbook
+        pages={bookPages}
+        visible={bookVisible}
+        scrollProgress={scrollProgress}
+      />
 
       {/* Title — starts centered, moves to top on scroll */}
       <div

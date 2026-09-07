@@ -8,12 +8,14 @@ import './ScrollSequence.css';
  * controls its position and scale:
  * 0.00 - 0.33: Image slides up from below into full view
  * 0.33 - 0.50: Image holds fullscreen
- * 0.50 - 1.00: Image zooms out to its original aspect ratio, cutting mat appears behind it
+ * 0.50 - 0.60: Image zooms out to its original aspect ratio, cutting mat appears behind it
+ * 0.60 - 1.00: Book is visible, pages turn (handled by Sketchbook component)
  *
  * Props:
  * - onMatVisible: callback when cutting mat should become visible
+ * - onBookVisible: callback when zoom-out is complete and book should appear
  */
-export default function ScrollSequence({ onMatVisible }) {
+export default function ScrollSequence({ onMatVisible, onBookVisible }) {
   const [progress, setProgress] = useState(0);
   const [imgAspect, setImgAspect] = useState(0);
   const [viewport, setViewport] = useState({
@@ -42,6 +44,7 @@ export default function ScrollSequence({ onMatVisible }) {
   // Phase boundaries
   const slideEnd = 0.33;
   const holdEnd = 0.50;
+  const zoomEnd = 0.60;
 
   // Image translateY: slides from 100vh (below viewport) to 0 (filling viewport)
   const translateY = useMemo(() => {
@@ -58,8 +61,8 @@ export default function ScrollSequence({ onMatVisible }) {
   // for tall images), preserving its natural aspect ratio.
   const zoomT = useMemo(() => {
     if (progress <= holdEnd) return 0;
-    if (progress >= 1) return 1;
-    return (progress - holdEnd) / (1 - holdEnd);
+    if (progress >= zoomEnd) return 1;
+    return (progress - holdEnd) / (zoomEnd - holdEnd);
   }, [progress]);
 
   // The image layer starts at viewport size with object-fit: cover (image fills screen, cropped).
@@ -104,8 +107,12 @@ export default function ScrollSequence({ onMatVisible }) {
     const currentW = vw + (targetW - vw) * ease;
     const currentH = vh + (targetH - vh) * ease;
 
+    // Slight rotation as the image "lands" on the sketchbook page,
+    // like it's being glued in at a casual angle
+    const rotation = ease * -3; // -3 degrees at full zoom-out
+
     return {
-      transform: `translateY(${translateY})`,
+      transform: `translateY(${translateY}) rotate(${rotation}deg)`,
       width: `${currentW}px`,
       height: `${currentH}px`,
       left: `${(vw - currentW) / 2}px`,
@@ -116,14 +123,25 @@ export default function ScrollSequence({ onMatVisible }) {
   // Cutting mat appears when zoom-out starts
   const matShouldShow = progress > holdEnd;
 
+  // Book is fully visible when zoom-out completes
+  const bookShouldShow = progress >= zoomEnd;
+
   useEffect(() => {
     onMatVisible?.(matShouldShow);
   }, [matShouldShow, onMatVisible]);
 
+  useEffect(() => {
+    onBookVisible?.(bookShouldShow);
+  }, [bookShouldShow, onBookVisible]);
+
   return (
     <div
       className="scroll-image-layer"
-      style={layerStyle}
+      style={{
+        ...layerStyle,
+        opacity: bookShouldShow ? 0 : 1,
+        transition: 'opacity 0.4s ease',
+      }}
     >
       <img
         ref={imgRef}
