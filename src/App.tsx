@@ -32,12 +32,12 @@ const bookPages = [
       { type: 'text', title: 'Concept', text: 'Early studies exploring\nform and light.', x: 10, y: 75, w: 35, rotation: 1 },
     ],
   },
-  // Right page of first spread — the zoomed-out image lands here
+  // Right page of first spread — the zoomed-out image lands here, centered
   {
     items: [
-      { type: 'image', img: 'https://picsum.photos/id/1036/1920/1080?grayscale', x: 15, y: 8, w: 60, rotation: -3, taped: true },
-      { type: 'sketch', x: 55, y: 55, w: 35, rotation: 2 },
-      { type: 'text', title: 'Notes', text: 'The interplay of\nstructure and space\ndefines the work.', x: 10, y: 60, w: 35, rotation: -1 },
+      { type: 'image', img: 'https://picsum.photos/id/1036/1920/1080?grayscale', x: 20, y: 15, w: 60, rotation: -3, taped: true },
+      { type: 'sketch', x: 55, y: 60, w: 30, rotation: 2 },
+      { type: 'text', title: 'Notes', text: 'The interplay of\nstructure and space\ndefines the work.', x: 10, y: 65, w: 35, rotation: -1 },
     ],
   },
   // Left page of second spread

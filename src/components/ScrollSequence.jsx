@@ -67,10 +67,8 @@ export default function ScrollSequence({ onMatVisible, onBookVisible }) {
 
   // The image layer starts at viewport size with object-fit: cover (image fills screen, cropped).
   // As we zoom out, we shrink the layer AND transition its aspect ratio from the
-  // viewport's to the image's natural aspect ratio. Since the layer ends up matching
-  // the image's aspect ratio, object-fit: cover == contain at the final state, so
-  // there's no jump. The transition is smooth because both size and aspect ratio
-  // interpolate continuously.
+  // viewport's to the image's natural aspect ratio. The image ends centered on the
+  // right page of the sketchbook, matching the glued-in item.
   const layerStyle = useMemo(() => {
     const vw = viewport.w;
     const vh = viewport.h;
@@ -86,45 +84,65 @@ export default function ScrollSequence({ onMatVisible, onBookVisible }) {
     // Eased zoom
     const ease = zoomT < 0.5 ? 4 * zoomT * zoomT * zoomT : 1 - Math.pow(-2 * zoomT + 2, 3) / 2;
 
-    // Target: image at ~55% of viewport, preserving aspect ratio
-    const targetFraction = 0.35;
+    // Compute book dimensions the same way as Sketchbook
+    const A5_ASPECT = 1 / 1.414;
+    const maxBookH = vh * 0.80;
+    const maxBookW = vw * 0.75;
+    let bookH = maxBookH;
+    let bookW = bookH * A5_ASPECT * 2;
+    if (bookW > maxBookW) {
+      bookW = maxBookW;
+      bookH = bookW / (A5_ASPECT * 2);
+    }
 
+    // Target: image centered on the right page of the book
+    // Right page center: x = vw/2 + bookW/4, y = vh/2
+    // Image size: ~60% of page width, preserving aspect ratio
+    const pageW = bookW / 2;
+    const imgW = pageW * 0.60;
     let targetW, targetH;
     if (imgAspect > 0) {
-      if (imgAspect >= vw / vh) {
-        targetW = vw * targetFraction;
-        targetH = targetW / imgAspect;
-      } else {
-        targetH = vh * targetFraction;
+      targetW = imgW;
+      targetH = targetW / imgAspect;
+      // If too tall, fit by height instead
+      if (targetH > bookH * 0.50) {
+        targetH = bookH * 0.50;
         targetW = targetH * imgAspect;
       }
     } else {
-      targetW = vw * targetFraction;
-      targetH = vh * targetFraction;
+      targetW = imgW;
+      targetH = imgW;
     }
+
+    // Target center position (center of right page)
+    const targetCenterX = vw / 2 + bookW / 4;
+    const targetCenterY = vh / 2;
 
     // Interpolate from fullscreen to target
     const currentW = vw + (targetW - vw) * ease;
     const currentH = vh + (targetH - vh) * ease;
 
-    // Slight rotation as the image "lands" on the sketchbook page,
-    // like it's being glued in at a casual angle
-    const rotation = ease * -3; // -3 degrees at full zoom-out
+    // Interpolate center position from viewport center to right page center
+    const currentCenterX = vw / 2 + (targetCenterX - vw / 2) * ease;
+    const currentCenterY = vh / 2 + (targetCenterY - vh / 2) * ease;
+
+    // Slight rotation as the image "lands" on the sketchbook page
+    const rotation = ease * -3;
 
     return {
       transform: `translateY(${translateY}) rotate(${rotation}deg)`,
       width: `${currentW}px`,
       height: `${currentH}px`,
-      left: `${(vw - currentW) / 2}px`,
-      top: `${(vh - currentH) / 2}px`,
+      left: `${currentCenterX - currentW / 2}px`,
+      top: `${currentCenterY - currentH / 2}px`,
     };
   }, [zoomT, translateY, imgAspect, viewport]);
 
   // Cutting mat appears when zoom-out starts
   const matShouldShow = progress > holdEnd;
 
-  // Book is fully visible when zoom-out completes
-  const bookShouldShow = progress >= zoomEnd;
+  // Book appears when zoom-out starts so the image lands onto the page
+  const bookShouldShow = progress > holdEnd;
 
   useEffect(() => {
     onMatVisible?.(matShouldShow);
@@ -137,11 +155,7 @@ export default function ScrollSequence({ onMatVisible, onBookVisible }) {
   return (
     <div
       className="scroll-image-layer"
-      style={{
-        ...layerStyle,
-        opacity: bookShouldShow ? 0 : 1,
-        transition: 'opacity 0.4s ease',
-      }}
+      style={layerStyle}
     >
       <img
         ref={imgRef}

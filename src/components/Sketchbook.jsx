@@ -25,7 +25,7 @@ import './Sketchbook.css';
  * @property {number} y - y position as % of page height (0-100)
  * @property {number} w - width as % of page width (0-100)
  * @property {number} rotation - rotation in degrees
- * @property {boolean} [taped] - show tape corners (for images)
+ * @property {boolean} [taped] - show black corner dots (for images)
  */
 
 /**
@@ -86,12 +86,12 @@ export default function Sketchbook({
     return Math.min(1, Math.max(0, (t - turnStart) / (turnEnd - turnStart)));
   }, [scrollProgress, turns]);
 
-  // Book dimensions
+  // Book dimensions — A5 spread (296mm x 210mm), portrait pages
   const bookStyle = useMemo(() => {
     const vw = viewport.w;
     const vh = viewport.h;
-    const maxBookH = vh * 0.65;
-    const maxBookW = vw * (isMobile ? 0.75 : 0.7);
+    const maxBookH = vh * 0.80;
+    const maxBookW = vw * (isMobile ? 0.80 : 0.75);
 
     let bookH = maxBookH;
     let bookW = isMobile ? bookH * A5_ASPECT : bookH * A5_ASPECT * 2;
@@ -151,10 +151,10 @@ export default function Sketchbook({
         <div key={key} className="sketch-item sketch-item-image" style={style}>
           {item.taped && (
             <>
-              <div className="sketch-tape sketch-tape-tl" />
-              <div className="sketch-tape sketch-tape-tr" />
-              <div className="sketch-tape sketch-tape-bl" />
-              <div className="sketch-tape sketch-tape-br" />
+              <div className="sketch-dot sketch-dot-tl" />
+              <div className="sketch-dot sketch-dot-tr" />
+              <div className="sketch-dot sketch-dot-bl" />
+              <div className="sketch-dot sketch-dot-br" />
             </>
           )}
           <img src={item.img} alt="" className="sketch-image" />
