@@ -105,7 +105,7 @@ function App() {
       smoothScrollTo(slideTarget, 1500)
       autoPlayPhase.current = 1
     } else {
-      smoothScrollTo(finalTarget, 1500)
+      smoothScrollTo(finalTarget, 2500)
       autoPlayPhase.current = 0
     }
   }

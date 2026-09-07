@@ -84,7 +84,7 @@ export default function ScrollSequence({ onMatVisible }) {
     const ease = zoomT < 0.5 ? 4 * zoomT * zoomT * zoomT : 1 - Math.pow(-2 * zoomT + 2, 3) / 2;
 
     // Target: image at ~55% of viewport, preserving aspect ratio
-    const targetFraction = 0.55;
+    const targetFraction = 0.35;
 
     let targetW, targetH;
     if (imgAspect > 0) {
