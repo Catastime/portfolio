@@ -62,10 +62,16 @@ export default function ScrollSequence({ onMatVisible }) {
     return (progress - holdEnd) / (1 - holdEnd);
   }, [progress]);
 
-  // The image layer starts at 100% x 100vh with object-fit: cover.
-  // As we zoom out, we shrink the layer and switch to object-fit: contain
-  // so the full image is visible at its original aspect ratio.
+  // The image layer starts at viewport size with object-fit: cover (image fills screen, cropped).
+  // As we zoom out, we shrink the layer AND transition its aspect ratio from the
+  // viewport's to the image's natural aspect ratio. Since the layer ends up matching
+  // the image's aspect ratio, object-fit: cover == contain at the final state, so
+  // there's no jump. The transition is smooth because both size and aspect ratio
+  // interpolate continuously.
   const layerStyle = useMemo(() => {
+    const vw = viewport.w;
+    const vh = viewport.h;
+
     if (zoomT === 0) {
       return {
         transform: `translateY(${translateY})`,
@@ -78,18 +84,14 @@ export default function ScrollSequence({ onMatVisible }) {
     const ease = zoomT < 0.5 ? 4 * zoomT * zoomT * zoomT : 1 - Math.pow(-2 * zoomT + 2, 3) / 2;
 
     // Target: image at ~55% of viewport, preserving aspect ratio
-    const vw = viewport.w;
-    const vh = viewport.h;
     const targetFraction = 0.55;
 
     let targetW, targetH;
     if (imgAspect > 0) {
       if (imgAspect >= vw / vh) {
-        // Image is wider than viewport ratio — fit to width
         targetW = vw * targetFraction;
         targetH = targetW / imgAspect;
       } else {
-        // Image is taller — fit to height
         targetH = vh * targetFraction;
         targetW = targetH * imgAspect;
       }
@@ -128,7 +130,6 @@ export default function ScrollSequence({ onMatVisible }) {
         src="https://picsum.photos/id/1036/1920/1080?grayscale"
         alt="Featured work"
         className="scroll-image"
-        style={{ objectFit: zoomT > 0 ? 'contain' : 'cover' }}
         onLoad={(e) => setImgAspect(e.target.naturalWidth / e.target.naturalHeight)}
       />
     </div>
