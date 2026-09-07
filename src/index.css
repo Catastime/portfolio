@@ -1,5 +1,13 @@
 @import "tailwindcss";
 
+@font-face {
+  font-family: "Hitobito";
+  src: url("/portfolio/fonts/Hitobito.otf") format("opentype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   color-scheme: dark;
 }
@@ -13,7 +21,16 @@ body,
   width: 100%;
   background-color: #050505;
   color: #f5f5f5;
-  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-family: "Hitobito", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.decrypted-title {
+  font-family: "Hitobito", sans-serif;
+  font-size: clamp(1rem, min(5.2vw, 3.4rem), 3.4rem);
+  font-weight: 800;
+  letter-spacing: -0.06em;
+  line-height: 0.9;
+  white-space: nowrap;
 }

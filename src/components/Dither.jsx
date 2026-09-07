@@ -208,6 +208,17 @@ function DitheredWaves({
     }
   }, [size, gl]);
 
+  useEffect(() => {
+    if (!enableMouseInteraction) return;
+    const handleWindowPointerMove = e => {
+      const rect = gl.domElement.getBoundingClientRect();
+      const dpr = gl.getPixelRatio();
+      mouseRef.current.set((e.clientX - rect.left) * dpr, (e.clientY - rect.top) * dpr);
+    };
+    window.addEventListener('pointermove', handleWindowPointerMove);
+    return () => window.removeEventListener('pointermove', handleWindowPointerMove);
+  }, [enableMouseInteraction, gl]);
+
   const prevColor = useRef([...waveColor]);
   const prevBackgroundColor = useRef([...backgroundColor]);
   useFrame(({ clock }) => {

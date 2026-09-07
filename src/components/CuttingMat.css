@@ -1,0 +1,68 @@
+.cutting-mat {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background-color: rgba(20, 22, 26, 0.55);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+}
+
+.cutting-mat-vlines {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.cutting-mat-hlines {
+  position: absolute;
+  left: 0;
+  right: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.cutting-mat-vline {
+  position: absolute;
+  width: 1px;
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+.cutting-mat-hline {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+.cutting-mat-hline-thick {
+  height: 2px;
+  background-color: rgba(255, 255, 255, 0.12);
+}
+
+.cutting-mat-bottom-edge {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.cutting-mat-cm-row {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.cutting-mat-cm-label {
+  font-size: 11px;
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  color: rgba(255, 255, 255, 0.4);
+  letter-spacing: 0.05em;
+}
+
+.cutting-mat-edge-line {
+  height: 2px;
+  background-color: rgba(255, 255, 255, 0.15);
+}
