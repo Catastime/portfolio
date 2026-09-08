@@ -44,7 +44,8 @@ import './Sketchbook.css';
  * @property {number} [scrollProgress]
  */
 
-const A4_ASPECT = 210 / 297; // width / height (portrait)
+// Measured from the scanned paper textures (width / height)
+const PAGE_ASPECT = 1510 / 2153; // average of left (1505) and right (1515) page textures
 
 /** @param {SketchbookProps} props */
 export default function Sketchbook({
@@ -110,12 +111,12 @@ export default function Sketchbook({
     const vw = viewport.w;
     const vh = viewport.h;
     const maxBookH = vh * 0.80;
-    const gapFraction = 0.04; // gap is 4% of page width
+    const gapFraction = 0;
     const maxBookW = vw * (isMobile ? 0.80 : 0.78);
 
     // Try fitting by height first
     let pH = maxBookH;
-    let pW = pH * A4_ASPECT;
+    let pW = pH * PAGE_ASPECT;
     let g = pW * gapFraction;
     let totalW = pW * 2 + g;
 
@@ -124,7 +125,7 @@ export default function Sketchbook({
       // pW * 2 + pW * gapFraction = maxBookW
       // pW * (2 + gapFraction) = maxBookW
       pW = maxBookW / (2 + gapFraction);
-      pH = pW / A4_ASPECT;
+      pH = pW / PAGE_ASPECT;
       g = pW * gapFraction;
       totalW = pW * 2 + g;
     }
@@ -172,8 +173,11 @@ export default function Sketchbook({
     };
 
     if (item.type === 'image') {
+      const imgClassName = item.noBg
+        ? 'sketch-item sketch-item-image sketch-item-image-nobg'
+        : 'sketch-item sketch-item-image';
       return (
-        <div key={key} className="sketch-item sketch-item-image" style={style}>
+        <div key={key} className={imgClassName} style={style}>
           {item.taped && (
             <>
               <div className="sketch-dot sketch-dot-tl" />
@@ -212,10 +216,54 @@ export default function Sketchbook({
     }
 
     if (item.type === 'text') {
+      const textStyle = { ...style };
+      if (item.font) textStyle.fontFamily = item.font;
+      if (item.fontSize) textStyle.fontSize = `${item.fontSize}rem`;
+      if (item.align) textStyle.textAlign = item.align;
+      const floatImg = item.floatImage;
       return (
-        <div key={key} className="sketch-item sketch-item-text" style={style}>
+        <div key={key} className="sketch-item sketch-item-text" style={textStyle}>
           {item.title && <div className="sketch-text-title">{item.title}</div>}
-          <div className="sketch-text-body">{item.text}</div>
+          {floatImg && (
+            <img
+              src={floatImg.img}
+              alt=""
+              className="sketch-float-image"
+              style={{
+                float: floatImg.side || 'right',
+                width: `${floatImg.w}%`,
+                margin: floatImg.side === 'left' ? '0 0.5em 0 0' : '0 0 0.5em 0',
+                marginTop: `${floatImg.marginTop || 0}%`,
+              }}
+            />
+          )}
+          {item.sizes ? (
+            item.sizes.map((s, i) => (
+              <div key={i} className="sketch-text-body" style={{ fontSize: `${s}rem` }}>
+                {item.text}
+              </div>
+            ))
+          ) : (
+            <div className="sketch-text-body">{item.text}</div>
+          )}
+        </div>
+      );
+    }
+
+    if (item.type === 'corner-text') {
+      const align = item.align || 'left';
+      const offset = item.x || 5;
+      const cornerStyle = {
+        ...style,
+        textAlign: align,
+        right: align === 'right' ? `${offset}%` : undefined,
+        left: align === 'left' ? `${offset}%` : undefined,
+        width: 'auto',
+        maxWidth: '45%',
+      };
+      return (
+        <div key={key} className="sketch-item sketch-corner-text" style={cornerStyle}>
+          {item.text}
         </div>
       );
     }
@@ -223,26 +271,70 @@ export default function Sketchbook({
     return null;
   };
 
-  const renderPage = (page, key) => {
+  // Font for all pages
+  const fontForPage = () => "'Epoch', 'Futura', sans-serif";
+
+  // Inject corner text items for a page based on spread metadata
+  // Spread 0 (intro) has no corner text. All other spreads get:
+  //   Left page:  top-left = "WORK.NN/13", top-right = year
+  //   Right page: top-left = place, top-right = project title
+  const cornerItemsForPage = (pageIndex, pages) => {
+    const spread = Math.floor(pageIndex / 2);
+    if (spread === 0) return [];
+    const meta = pages[pageIndex]?.meta || pages[spread * 2]?.meta;
+    if (!meta) return [];
+    const isLeft = pageIndex % 2 === 0;
+    const spreadNum = String(spread).padStart(2, '0');
+    if (isLeft) {
+      return [
+        { type: 'corner-text', text: `WORK.${spreadNum}/13`, x: 5, y: 2.5, align: 'left' },
+        { type: 'corner-text', text: meta.year || '', x: 5, y: 2.5, align: 'right' },
+      ];
+    } else {
+      return [
+        { type: 'corner-text', text: meta.place || '', x: 5, y: 2.5, align: 'left' },
+        { type: 'corner-text', text: meta.title || '', x: 5, y: 2.5, align: 'right' },
+      ];
+    }
+  };
+
+  const renderCorners = (pageIndex) => {
+    if (pageIndex === undefined) return null;
+    const corners = cornerItemsForPage(pageIndex, pages);
+    if (corners.length === 0) return null;
+    return (
+      <div className="sketchbook-corners">
+        {corners.map((item, i) => renderItem(item, `corner-${i}`))}
+      </div>
+    );
+  };
+
+  const renderPage = (page, key, fontFamily, pageIndex) => {
     if (!page) return <div key={key} className="sketchbook-page sketchbook-page-empty" />;
     return (
-      <div key={key} className="sketchbook-page">
+      <div key={key} className="sketchbook-page" style={fontFamily ? { fontFamily } : undefined}>
         {page.items?.map((item, i) => renderItem(item, i))}
       </div>
     );
   };
 
   if (isMobile) {
+    const mobileTexture = currentPage % 2 === 0 ? 'left_page' : 'right_page';
     return (
       <div className="sketchbook-container">
         <div
           className="sketchbook-mobile"
-          style={{ width: `${pageW}px`, height: `${pageH}px` }}
+          style={{
+            width: `${pageW}px`,
+            height: `${pageH}px`,
+            backgroundImage: `url('/portfolio/textures/${mobileTexture}.png')`,
+          }}
           onClick={handleClick}
           onTouchStart={handleTouchStart}
           onTouchEnd={handleTouchEnd}
         >
-          {renderPage(pages[currentPage], 'mobile')}
+          {renderPage(pages[currentPage], 'mobile', fontForPage(currentPage), currentPage)}
+          {renderCorners(currentPage)}
           <div className="sketchbook-page-indicator">
             {currentPage + 1} / {pages.length}
           </div>
@@ -280,21 +372,22 @@ export default function Sketchbook({
       >
         {/* Left page stack — crossfades from current to next left during turn */}
         <div
-          className="sketchbook-page-stack"
+          className="sketchbook-page-stack sketchbook-page-stack-left"
           style={{ width: `${pageW}px`, height: `${pageH}px` }}
         >
           {isTurning ? (
             <>
               <div style={{ position: 'absolute', inset: 0, opacity: 1 - turnProgress }}>
-                {renderPage(pages[leftIndex], 'left-current')}
+                {renderPage(pages[leftIndex], 'left-current', fontForPage(leftIndex), leftIndex)}
               </div>
               <div style={{ position: 'absolute', inset: 0, opacity: turnProgress }}>
-                {renderPage(pages[nextLeftIndex], 'left-next')}
+                {renderPage(pages[nextLeftIndex], 'left-next', fontForPage(nextLeftIndex), nextLeftIndex)}
               </div>
             </>
           ) : (
-            renderPage(pages[leftIndex], 'left')
+            renderPage(pages[leftIndex], 'left', fontForPage(leftIndex), leftIndex)
           )}
+          {renderCorners(leftIndex)}
         </div>
 
         {/* Gap between stacks */}
@@ -302,11 +395,12 @@ export default function Sketchbook({
 
         {/* Right page stack */}
         <div
-          className="sketchbook-page-stack"
+          className="sketchbook-page-stack sketchbook-page-stack-right"
           style={{ width: `${pageW}px`, height: `${pageH}px` }}
         >
           {/* Underneath: the destination right page */}
-          {renderPage(pages[displayRightUnderneath], 'right-under')}
+          {renderPage(pages[displayRightUnderneath], 'right-under', fontForPage(displayRightUnderneath), displayRightUnderneath)}
+          {renderCorners(displayRightUnderneath)}
         </div>
 
         {/* Turning page — positioned over the right stack, not clipped by it */}
@@ -321,10 +415,10 @@ export default function Sketchbook({
             }}
           >
             <div className="sketchbook-page-turning-front">
-              {renderPage(pages[rightIndex], 'turn-front')}
+              {renderPage(pages[rightIndex], 'turn-front', fontForPage(rightIndex), rightIndex)}
             </div>
             <div className="sketchbook-page-turning-back">
-              {renderPage(pages[nextLeftIndex], 'turn-back')}
+              {renderPage(pages[nextLeftIndex], 'turn-back', fontForPage(nextLeftIndex), nextLeftIndex)}
             </div>
           </div>
         )}

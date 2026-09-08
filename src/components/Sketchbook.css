@@ -15,26 +15,38 @@
   perspective: 2000px;
 }
 
-/* Page stacks — two separate A4 pads with a gap */
+/* Page stacks — two separate A4 pads with a gap, using scanned paper textures */
 .sketchbook-page-stack {
   position: relative;
-  background: #ededed;
   overflow: hidden;
   box-shadow:
     0 20px 60px -10px rgba(0, 0, 0, 0.6),
     0 8px 20px -4px rgba(0, 0, 0, 0.4);
 }
 
-/* Pages — white with slight gray hue, like scanned paper */
+.sketchbook-page-stack-left {
+  background-image: url('/portfolio/textures/left_page.png');
+  background-size: 100% 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.sketchbook-page-stack-right {
+  background-image: url('/portfolio/textures/right_page.png');
+  background-size: 100% 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+/* Pages — content layer on top of the paper texture, inset 5% for paper border */
 .sketchbook-page {
   position: absolute;
-  inset: 0;
-  background: #ededed;
-  overflow: hidden;
+  inset: 5%;
+  overflow: visible;
 }
 
 .sketchbook-page-empty {
-  background: #ededed;
+  background: transparent;
 }
 
 /* Items glued/drawn on pages */
@@ -50,6 +62,12 @@
     0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
+.sketch-item-image-nobg {
+  background: transparent;
+  padding: 0;
+  box-shadow: none;
+}
+
 .sketch-image {
   width: 100%;
   height: auto;
@@ -59,17 +77,17 @@
 /* Black corner dots on glued images */
 .sketch-dot {
   position: absolute;
-  width: 6px;
-  height: 6px;
+  width: 18px;
+  height: 18px;
   border-radius: 50%;
   background: #1a1a1a;
   z-index: 2;
 }
 
-.sketch-dot-tl { top: 4px; left: 4px; }
-.sketch-dot-tr { top: 4px; right: 4px; }
-.sketch-dot-bl { bottom: 4px; left: 4px; }
-.sketch-dot-br { bottom: 4px; right: 4px; }
+.sketch-dot-tl { top: 10px; left: 10px; }
+.sketch-dot-tr { top: 10px; right: 10px; }
+.sketch-dot-bl { bottom: 10px; left: 10px; }
+.sketch-dot-br { bottom: 10px; right: 10px; }
 
 /* Sketch items */
 .sketch-item-sketch {
@@ -84,7 +102,24 @@
 /* Text blocks — Epoch typeface */
 .sketch-item-text {
   color: #2a2a2a;
-  font-family: 'Epoch', 'Hitobito', sans-serif;
+  font-family: 'Epoch', 'Futura', sans-serif;
+}
+
+/* Corner text — page headers in upper corners, positioned at page stack level */
+.sketchbook-corners {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 3;
+}
+
+.sketch-corner-text {
+  color: #2a2a2a;
+  font-family: 'Epoch', 'Futura', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 500;
+  line-height: 1.2;
+  white-space: nowrap;
 }
 
 .sketch-text-title {
@@ -102,6 +137,12 @@
   white-space: pre-wrap;
 }
 
+/* Float image inside text block — text wraps around it */
+.sketch-float-image {
+  display: block;
+  height: auto;
+}
+
 /* Turning page — 3D flip, positioned over the right stack */
 .sketchbook-page-turning {
   position: absolute;
@@ -117,21 +158,30 @@
   position: absolute;
   inset: 0;
   backface-visibility: hidden;
-  background: #ededed;
+  background-size: 100% 100%;
+  background-position: center;
+  background-repeat: no-repeat;
   overflow: hidden;
   box-shadow:
     0 20px 60px -10px rgba(0, 0, 0, 0.6),
     0 8px 20px -4px rgba(0, 0, 0, 0.4);
 }
 
+.sketchbook-page-turning-front {
+  background-image: url('/portfolio/textures/right_page.png');
+}
+
 .sketchbook-page-turning-back {
+  background-image: url('/portfolio/textures/left_page.png');
   transform: rotateY(180deg);
 }
 
 /* Mobile */
 .sketchbook-mobile {
   position: relative;
-  background: #ededed;
+  background-size: 100% 100%;
+  background-position: center;
+  background-repeat: no-repeat;
   box-shadow:
     0 20px 60px -10px rgba(0, 0, 0, 0.6),
     0 8px 20px -4px rgba(0, 0, 0, 0.4);

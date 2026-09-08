@@ -16,8 +16,20 @@
   font-display: swap;
 }
 
+@font-face {
+  font-family: "Endless";
+  src: url("/portfolio/fonts/ENDLESS.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   color-scheme: dark;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 html,

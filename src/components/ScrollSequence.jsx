@@ -43,7 +43,7 @@ export default function ScrollSequence({ onMatVisible, onBookVisible }) {
 
   // Phase boundaries
   const slideEnd = 0.33;
-  const holdEnd = 0.50;
+  const holdEnd = 0.36;
   const zoomEnd = 0.60;
 
   // Image translateY: slides from 100vh (below viewport) to 0 (filling viewport)
@@ -85,17 +85,17 @@ export default function ScrollSequence({ onMatVisible, onBookVisible }) {
     const ease = zoomT < 0.5 ? 4 * zoomT * zoomT * zoomT : 1 - Math.pow(-2 * zoomT + 2, 3) / 2;
 
     // Compute book dimensions the same way as Sketchbook
-    const A4_ASPECT = 210 / 297;
-    const gapFraction = 0.04;
+    const PAGE_ASPECT = 1510 / 2153; // matches scanned paper textures
+    const gapFraction = 0;
     const maxBookH = vh * 0.80;
     const maxBookW = vw * 0.78;
     let pH = maxBookH;
-    let pW = pH * A4_ASPECT;
+    let pW = pH * PAGE_ASPECT;
     let g = pW * gapFraction;
     let totalW = pW * 2 + g;
     if (totalW > maxBookW) {
       pW = maxBookW / (2 + gapFraction);
-      pH = pW / A4_ASPECT;
+      pH = pW / PAGE_ASPECT;
       g = pW * gapFraction;
       totalW = pW * 2 + g;
     }
