@@ -52,6 +52,7 @@
 /* Items glued/drawn on pages */
 .sketch-item {
   position: absolute;
+  z-index: 1;
 }
 
 .sketch-item-image {
@@ -68,6 +69,32 @@
   box-shadow: none;
 }
 
+/* Polaroid style — white border, thicker at bottom */
+.sketch-item-image-polaroid {
+  background: white;
+  padding: 4px 4px 20px 4px;
+  box-shadow:
+    0 4px 12px rgba(0, 0, 0, 0.25),
+    0 2px 4px rgba(0, 0, 0, 0.15);
+}
+
+/* Bring to front on hover */
+.sketch-item-bring-to-front {
+  cursor: pointer;
+  pointer-events: auto !important;
+  z-index: 2;
+}
+
+.sketch-item-bring-to-front:hover {
+  z-index: 100;
+}
+
+/* Clickable image — opens video overlay */
+.sketch-item-clickable {
+  cursor: pointer;
+  pointer-events: auto;
+}
+
 .sketch-image {
   width: 100%;
   height: auto;
@@ -77,17 +104,17 @@
 /* Black corner dots on glued images */
 .sketch-dot {
   position: absolute;
-  width: 18px;
-  height: 18px;
+  width: 13.5px;
+  height: 13.5px;
   border-radius: 50%;
   background: #1a1a1a;
   z-index: 2;
 }
 
-.sketch-dot-tl { top: 10px; left: 10px; }
-.sketch-dot-tr { top: 10px; right: 10px; }
-.sketch-dot-bl { bottom: 10px; left: 10px; }
-.sketch-dot-br { bottom: 10px; right: 10px; }
+.sketch-dot-tl { top: 7.5px; left: 7.5px; }
+.sketch-dot-tr { top: 7.5px; right: 7.5px; }
+.sketch-dot-bl { bottom: 7.5px; left: 7.5px; }
+.sketch-dot-br { bottom: 7.5px; right: 7.5px; }
 
 /* Sketch items */
 .sketch-item-sketch {
@@ -103,6 +130,8 @@
 .sketch-item-text {
   color: #2a2a2a;
   font-family: 'Epoch', 'Futura', sans-serif;
+  pointer-events: none !important;
+  z-index: 0 !important;
 }
 
 /* Corner text — page headers in upper corners, positioned at page stack level */

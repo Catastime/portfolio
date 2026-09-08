@@ -50,16 +50,16 @@ const bookPages = [
   // ===== SPREAD 1: Master Thesis =====
   // Left page
   {
-    meta: { year: '2024', place: 'Hannover', title: 'Artificial Intelligence in Architectural Design' },
+    meta: { year: '2023', place: 'Hannover', title: 'Artificial Intelligence in Architectural Design' },
     items: [
       // Upper text block — narrowed to make room for comics on the right
       { type: 'text', text: 'The current development in the field of artificial intelligence promises unprecedented potentials for creative fields such as architecture. Instead of mere automation of simple processes and efficiency improvement through enhanced tools, it could herald the beginning of a true symbiosis between humans and machines, a vision pursued in the 20th century by researchers like John McCarthy and later Nicolas Negroponte.', x: 8, y: 10, w: 58, rotation: 0, font: "'Epoch', sans-serif", fontSize: 0.55 },
       // Comics image — right side, 10% smaller, slightly more right
-      { type: 'image', img: `${THESIS_IMG}/comics-pipelineRendering.png`, x: 74, y: 10, w: 18, rotation: 2, noBg: true },
+      { type: 'image', img: `${THESIS_IMG}/comics-pipelineRendering.png`, x: 74, y: 10, w: 18, rotation: 0, noBg: true },
       // thesis-starter — between the two text blocks, 20% bigger than original w:28
-      { type: 'image', img: `${THESIS_IMG}/thesis-starter.jpeg`, x: 8, y: 27, w: 42, rotation: -2, taped: true },
+      { type: 'image', img: `${THESIS_IMG}/thesis-starter.jpeg`, x: 8, y: 27, w: 42, rotation: 0, taped: true, noBg: true },
       // website-concept — below the lower text, poking into it, 20% bigger than original w:38
-      { type: 'image', img: `${THESIS_IMG}/website-concept.png`, x: 48, y: 76, w: 46, rotation: 1, noBg: true },
+      { type: 'image', img: `${THESIS_IMG}/website-concept.png`, x: 48, y: 76, w: 46, rotation: 0, noBg: true },
       // Second text block — part 1: below comic, right of starter, above concept
       { type: 'text', text: 'However, the concept of artificial intelligence has undergone significant changes since its inception in the 1950s by John McCarthy. While he viewed AI as the understanding and reproduction of human intelligence, the term has now become vastly expansive, encompassing various categories of programs, from personal assistants to deep learning algorithms.', x: 52, y: 60, w: 38, rotation: 0, font: "'Epoch', sans-serif", fontSize: 0.5, align: 'right' },
       // Second text block — part 2: left of concept, below starter
@@ -68,14 +68,18 @@ const bookPages = [
   },
   // Right page
   {
-    meta: { year: '2024', place: 'Hannover', title: 'Artificial Intelligence in Architectural Design' },
+    meta: { year: '2023', place: 'Hannover', title: 'Artificial Intelligence in Architectural Design' },
     items: [
       // Top text block
       { type: 'text', text: 'The rapid development in this renaissance of artificial intelligence has ignited in me a desire to delve into this topic through a master\'s thesis. The goal of this work is to examine the connections between past and current developments, describe the theoretical ideas and aspirations of these developments and their instigators, and develop a simple tool that showcases current possibilities of generative deep learning artificial intelligence in a user-friendly and helpful manner.', x: 8, y: 10, w: 84, rotation: 0, font: "'Epoch', sans-serif", fontSize: 0.55 },
       // Three images — positioned below the text (y:30 to y:95)
-      { type: 'image', img: `${THESIS_IMG}/Example_start.png`, x: 8, y: 32, w: 35, rotation: -1, taped: true },
-      { type: 'image', img: `${THESIS_IMG}/Example_finished.png`, x: 50, y: 32, w: 38, rotation: 1, taped: true },
-      { type: 'image', img: `${THESIS_IMG}/website.png`, x: 12, y: 62, w: 72, rotation: -2, taped: true },
+      { type: 'image', img: `${THESIS_IMG}/Example_start.png`, x: 8, y: 32, w: 35, rotation: 0, taped: true, noBg: true },
+      // Cityhotel Polaroid stack — slightly overlapping like stickers
+      { type: 'image', img: `${THESIS_IMG}/Cityhotel_Sketch.jpg`, x: 48, y: 24, w: 28, rotation: -3, polaroid: true, bringToFront: true },
+      { type: 'image', img: `${THESIS_IMG}/Cityhotel_Concrete.jpg`, x: 60, y: 29, w: 28, rotation: 2, polaroid: true, bringToFront: true },
+      { type: 'image', img: `${THESIS_IMG}/Cityhotel_Scandi.jpg`, x: 52, y: 38, w: 28, rotation: -1, polaroid: true, bringToFront: true },
+      { type: 'image', img: `${THESIS_IMG}/Cityhotel_Blade-Runner.jpg`, x: 64, y: 43, w: 28, rotation: 4, polaroid: true, bringToFront: true },
+      { type: 'image', img: `${THESIS_IMG}/website.png`, x: 12, y: 72, w: 72, rotation: 0, taped: true, noBg: true, video: `${THESIS_IMG}/FinalVideo.mp4` },
     ],
   },
 
@@ -118,6 +122,7 @@ const bookPages = [
 function App() {
   const [showProjects, setShowProjects] = useState(false)
   const [overlayVisible, setOverlayVisible] = useState(false)
+  const [videoOverlay, setVideoOverlay] = useState<string | null>(null)
   const [matVisible, setMatVisible] = useState(false)
   const [bookVisible, setBookVisible] = useState(false)
   const [scrollProgress, setScrollProgress] = useState(0)
@@ -263,6 +268,7 @@ function App() {
 
   const goHome = () => {
     setShowProjects(false)
+    setVideoOverlay(null)
     setFadingHome(true)
     autoPlayPhase.current = 0
     // Scroll up while fading to black, then cut scroll, jump to top and fade in
@@ -276,6 +282,14 @@ function App() {
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
+      // ESC closes any open overlay
+      if (e.key === 'Escape') {
+        if (videoOverlay) { setVideoOverlay(null); return }
+        if (showProjects) { setShowProjects(false); return }
+        return
+      }
+      // Block arrow interactions while any overlay is open
+      if (showProjects || videoOverlay) return
       if (e.key === 'ArrowDown' && arrowVisible && (atLanding || atImageStop)) {
         e.preventDefault()
         autoPlay()
@@ -295,13 +309,13 @@ function App() {
     }
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [arrowVisible, atLanding, atImageStop, canGoUp, canTurnForward, canTurnBack])
+  }, [arrowVisible, atLanding, atImageStop, canGoUp, canTurnForward, canTurnBack, showProjects, videoOverlay])
 
   // Trigger autoPlay/goBack after 2 wheel ticks in the appropriate direction
   const wheelTickRef = useRef(0)
   useEffect(() => {
     const handleWheel = (e: WheelEvent) => {
-      if (showProjects) return
+      if (showProjects || videoOverlay) return
       if (scrollAnimRef.current !== null) return
       if (!arrowVisible) return
 
@@ -336,7 +350,7 @@ function App() {
     }
     window.addEventListener('wheel', handleWheel, { passive: false })
     return () => window.removeEventListener('wheel', handleWheel)
-  }, [arrowVisible, atLanding, atImageStop, canGoUp, showProjects])
+  }, [arrowVisible, atLanding, atImageStop, canGoUp, showProjects, videoOverlay])
 
   const handleMatVisible = useCallback((show: boolean) => {
     setMatVisible(show)
@@ -352,13 +366,23 @@ function App() {
       document.body.style.overflow = 'hidden'
       return () => {
         clearTimeout(t)
-        document.body.style.overflow = ''
+        if (!videoOverlay) document.body.style.overflow = ''
       }
     } else {
       setOverlayVisible(false)
-      document.body.style.overflow = ''
+      if (!videoOverlay) document.body.style.overflow = ''
     }
-  }, [showProjects])
+  }, [showProjects, videoOverlay])
+
+  // Lock scroll when video overlay is open
+  useEffect(() => {
+    if (videoOverlay) {
+      document.body.style.overflow = 'hidden'
+      return () => {
+        if (!showProjects) document.body.style.overflow = ''
+      }
+    }
+  }, [videoOverlay, showProjects])
 
   const dockItems = [
     { icon: <PixelHome size={18} />, label: 'Home', onClick: goHome },
@@ -416,6 +440,7 @@ function App() {
         pages={bookPages}
         visible={bookVisible}
         scrollProgress={scrollProgress}
+        onVideoOpen={setVideoOverlay}
       />
 
       {/* Title — starts centered, moves to top on scroll.
@@ -535,6 +560,32 @@ function App() {
               colorShiftOnHover={false}
             />
           </div>
+        </div>
+      )}
+
+      {/* Video overlay — above all content, click outside or ESC to close */}
+      {videoOverlay && (
+        <div
+          className="fixed inset-0 flex items-center justify-center"
+          onClick={() => setVideoOverlay(null)}
+          style={{
+            zIndex: 60,
+            backgroundColor: 'rgba(0, 0, 0, 0.9)',
+          }}
+        >
+          <video
+            src={videoOverlay}
+            autoPlay
+            loop
+            muted
+            playsInline
+            controls
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              maxWidth: '90vw',
+              maxHeight: '90vh',
+            }}
+          />
         </div>
       )}
 

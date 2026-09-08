@@ -42,6 +42,7 @@ import './Sketchbook.css';
  * @property {SketchbookPage[]} [pages]
  * @property {boolean} [visible]
  * @property {number} [scrollProgress]
+ * @property {(src: string) => void} [onVideoOpen]
  */
 
 // Measured from the scanned paper textures (width / height)
@@ -52,6 +53,7 @@ export default function Sketchbook({
   pages = [],
   visible = false,
   scrollProgress = 0,
+  onVideoOpen,
 }) {
   const [viewport, setViewport] = useState({
     w: typeof window !== 'undefined' ? window.innerWidth : 1920,
@@ -173,11 +175,18 @@ export default function Sketchbook({
     };
 
     if (item.type === 'image') {
-      const imgClassName = item.noBg
-        ? 'sketch-item sketch-item-image sketch-item-image-nobg'
-        : 'sketch-item sketch-item-image';
+      const classes = ['sketch-item', 'sketch-item-image'];
+      if (item.noBg) classes.push('sketch-item-image-nobg');
+      if (item.polaroid) classes.push('sketch-item-image-polaroid');
+      if (item.bringToFront) classes.push('sketch-item-bring-to-front');
+      if (item.video) classes.push('sketch-item-clickable');
       return (
-        <div key={key} className={imgClassName} style={style}>
+        <div
+          key={key}
+          className={classes.join(' ')}
+          style={style}
+          onClick={item.video ? () => onVideoOpen?.(item.video) : undefined}
+        >
           {item.taped && (
             <>
               <div className="sketch-dot sketch-dot-tl" />
@@ -187,6 +196,19 @@ export default function Sketchbook({
             </>
           )}
           <img src={item.img} alt="" className="sketch-image" />
+        </div>
+      );
+    }
+
+    if (item.type === 'arrow') {
+      return (
+        <div key={key} className="sketch-item sketch-item-arrow" style={style}>
+          <svg viewBox="0 0 100 100" className="sketch-svg" preserveAspectRatio="none">
+            <g stroke="#2a2a2a" strokeWidth="1.5" fill="none" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M5 50 C 20 40, 40 55, 60 45 S 85 50, 95 50" />
+              <path d="M88 44 L 95 50 L 88 56" />
+            </g>
+          </svg>
         </div>
       );
     }
