@@ -42,6 +42,8 @@ import './Sketchbook.css';
  * @property {SketchbookPage[]} [pages]
  * @property {boolean} [visible]
  * @property {number} [scrollProgress]
+ * @property {number} [bookZoom] - 0 to 1, scales book from zoomed-in on image to resting size
+ * @property {number} [imgAspect] - natural aspect ratio of the zoom image (w/h)
  * @property {(src: string) => void} [onVideoOpen]
  */
 
@@ -53,6 +55,8 @@ export default function Sketchbook({
   pages = [],
   visible = false,
   scrollProgress = 0,
+  bookZoom = 1,
+  imgAspect = 0,
   onVideoOpen,
 }) {
   const [viewport, setViewport] = useState({
@@ -135,6 +139,68 @@ export default function Sketchbook({
     return { bookW: totalW, bookH: pH, pageW: pW, pageH: pH, gap: g };
   }, [viewport, isMobile]);
 
+  // Book zoom-out: at bookZoom=0 the book is scaled and translated so the
+  // left-page image item fills the viewport (we're "zoomed in" on it).
+  // At bookZoom=1 the book is at resting size, centered.
+  // The image item on the left page: x:2%, y:45%, w:96% (Atelier Anthrazit).
+  const bookTransform = useMemo(() => {
+    if (bookZoom >= 1 || bookH === 0 || pageW === 0) {
+      return { transform: 'scale(1)', transformOrigin: 'center center' };
+    }
+
+    // Item position and size on the left page (in book-local px)
+    // Account for the 5% page inset (.sketchbook-page has inset: 5%)
+    const pageInset = 0.05;
+    const contentW = pageW * (1 - 2 * pageInset);
+    const contentH = pageH * (1 - 2 * pageInset);
+    const itemX = (pageInset + 0.02 * (1 - 2 * pageInset)) * pageW;
+    const itemY = (pageInset + 0.45 * (1 - 2 * pageInset)) * pageH;
+    const itemW = 0.96 * contentW;
+    // Item height depends on image aspect; use the item's natural aspect
+    // from the loaded image. Fall back to square if unknown.
+    const itemH = imgAspect > 0
+      ? itemW / imgAspect
+      : itemW;
+
+    // Item center relative to book center (book-local coords)
+    const itemCenterX = itemX + itemW / 2;
+    const itemCenterY = itemY + itemH / 2;
+    const bookCenterX = bookW / 2;
+    const bookCenterY = bookH / 2;
+    const offsetX = itemCenterX - bookCenterX;
+    const offsetY = itemCenterY - bookCenterY;
+
+    // Scale so the image fills the viewport completely (cover, not contain).
+    // Use the larger scale so the image overflows — no paper visible at max zoom.
+    const scaleByW = viewport.w / itemW;
+    const scaleByH = viewport.h / itemH;
+    const maxScale = Math.max(scaleByW, scaleByH);
+
+    // At maxScale, the item fills the viewport. We need to translate so
+    // the item center maps to the viewport center. Since the book is
+    // centered by flexbox, the book center is already at viewport center.
+    // After scaling around book center, the item center is at:
+    //   viewportCenter + maxScale * offset
+    // We need to translate by -maxScale * offset to bring it to viewport center.
+    const maxTranslateX = -maxScale * offsetX;
+    const maxTranslateY = -maxScale * offsetY;
+
+    // Ease the zoom-out
+    const ease = bookZoom < 0.5
+      ? 4 * bookZoom * bookZoom * bookZoom
+      : 1 - Math.pow(-2 * bookZoom + 2, 3) / 2;
+
+    // Interpolate from max zoom to resting
+    const scale = 1 + (maxScale - 1) * (1 - ease);
+    const translateX = maxTranslateX * (1 - ease);
+    const translateY = maxTranslateY * (1 - ease);
+
+    return {
+      transform: `translate(${translateX}px, ${translateY}px) scale(${scale})`,
+      transformOrigin: 'center center',
+    };
+  }, [bookZoom, bookW, bookH, pageW, pageH, viewport.w, viewport.h, imgAspect]);
+
   // Mobile: swipe/tap
   const touchStartX = useRef(0);
 
@@ -180,21 +246,26 @@ export default function Sketchbook({
       if (item.polaroid) classes.push('sketch-item-image-polaroid');
       if (item.bringToFront) classes.push('sketch-item-bring-to-front');
       if (item.video) classes.push('sketch-item-clickable');
+      const imageStyle = { ...style };
+      if (item.shadow) imageStyle.boxShadow = item.shadow;
       return (
         <div
           key={key}
           className={classes.join(' ')}
-          style={style}
+          style={imageStyle}
           onClick={item.video ? () => onVideoOpen?.(item.video) : undefined}
         >
-          {item.taped && (
-            <>
-              <div className="sketch-dot sketch-dot-tl" />
-              <div className="sketch-dot sketch-dot-tr" />
-              <div className="sketch-dot sketch-dot-bl" />
-              <div className="sketch-dot sketch-dot-br" />
-            </>
-          )}
+          {item.taped && (() => {
+            const t = item.tackers || [1, 2, 3, 4];
+            return (
+              <>
+                <img src={`/portfolio/textures/tacker_${t[0]}.png`} alt="" className="sketch-tacker sketch-tacker-tl" />
+                <img src={`/portfolio/textures/tacker_${t[1]}.png`} alt="" className="sketch-tacker sketch-tacker-tr" />
+                <img src={`/portfolio/textures/tacker_${t[2]}.png`} alt="" className="sketch-tacker sketch-tacker-bl" />
+                <img src={`/portfolio/textures/tacker_${t[3]}.png`} alt="" className="sketch-tacker sketch-tacker-br" />
+              </>
+            );
+          })()}
           <img src={item.img} alt="" className="sketch-image" />
         </div>
       );
@@ -350,6 +421,7 @@ export default function Sketchbook({
             width: `${pageW}px`,
             height: `${pageH}px`,
             backgroundImage: `url('/portfolio/textures/${mobileTexture}.png')`,
+            ...bookTransform,
           }}
           onClick={handleClick}
           onTouchStart={handleTouchStart}
@@ -390,7 +462,11 @@ export default function Sketchbook({
     <div className="sketchbook-container">
       <div
         className="sketchbook"
-        style={{ width: `${bookW}px`, height: `${bookH}px` }}
+        style={{
+          width: `${bookW}px`,
+          height: `${bookH}px`,
+          ...bookTransform,
+        }}
       >
         {/* Left page stack — crossfades from current to next left during turn */}
         <div

@@ -32,10 +32,12 @@ const THESIS_IMG = '/portfolio/master-thesis'
 
 const bookPages = [
   // ===== SPREAD 0: Introduction & CV =====
-  // Left page — intro text
+  // Left page — intro text + Anthrazit image
   {
     items: [
       { type: 'text', title: 'Introduction', text: 'Architecture Portfolio of Tim.Mkr\nMaster of Architecture, 2024\n\nThis collection presents selected\nworks from my academic and\nprofessional journey, exploring\nthe intersection of design,\ntechnology, and the built\nenvironment.', x: 8, y: 10, w: 80, rotation: 0, font: "'Epoch', sans-serif", fontSize: 0.7 },
+      // Atelier Anthrazit — the image we zoom out from
+      { type: 'image', img: '/portfolio/tim/Atelier Anthrazit-039-breit.png', x: 2, y: 45, w: 96, rotation: 0, taped: true, noBg: true, shadow: '0 2px 8px rgba(0, 0, 0, 0.15)', tackers: [3, 1, 4, 2] },
     ],
   },
   // Right page — font comparison test
@@ -55,9 +57,9 @@ const bookPages = [
       // Upper text block — narrowed to make room for comics on the right
       { type: 'text', text: 'The current development in the field of artificial intelligence promises unprecedented potentials for creative fields such as architecture. Instead of mere automation of simple processes and efficiency improvement through enhanced tools, it could herald the beginning of a true symbiosis between humans and machines, a vision pursued in the 20th century by researchers like John McCarthy and later Nicolas Negroponte.', x: 8, y: 10, w: 58, rotation: 0, font: "'Epoch', sans-serif", fontSize: 0.55 },
       // Comics image — right side, 10% smaller, slightly more right
-      { type: 'image', img: `${THESIS_IMG}/comics-pipelineRendering.png`, x: 74, y: 10, w: 18, rotation: 0, noBg: true },
-      // thesis-starter — between the two text blocks, 20% bigger than original w:28
-      { type: 'image', img: `${THESIS_IMG}/thesis-starter.jpeg`, x: 8, y: 27, w: 42, rotation: 0, taped: true, noBg: true },
+      { type: 'image', img: `${THESIS_IMG}/comics-pipelineRendering.png`, x: 74, y: 10, w: 18, rotation: 0, noBg: true, taped: true, tackers: [2, 4, 1, 3] },
+      // thesis-starter — between the two text blocks
+      { type: 'image', img: `${THESIS_IMG}/thesis-starter.jpeg`, x: 8, y: 27, w: 42, rotation: 0, taped: true, noBg: true, tackers: [1, 3, 2, 4] },
       // website-concept — below the lower text, poking into it, 20% bigger than original w:38
       { type: 'image', img: `${THESIS_IMG}/website-concept.png`, x: 48, y: 76, w: 46, rotation: 0, noBg: true },
       // Second text block — part 1: below comic, right of starter, above concept
@@ -73,13 +75,13 @@ const bookPages = [
       // Top text block
       { type: 'text', text: 'The rapid development in this renaissance of artificial intelligence has ignited in me a desire to delve into this topic through a master\'s thesis. The goal of this work is to examine the connections between past and current developments, describe the theoretical ideas and aspirations of these developments and their instigators, and develop a simple tool that showcases current possibilities of generative deep learning artificial intelligence in a user-friendly and helpful manner.', x: 8, y: 10, w: 84, rotation: 0, font: "'Epoch', sans-serif", fontSize: 0.55 },
       // Three images — positioned below the text (y:30 to y:95)
-      { type: 'image', img: `${THESIS_IMG}/Example_start.png`, x: 8, y: 32, w: 35, rotation: 0, taped: true, noBg: true },
+      { type: 'image', img: `${THESIS_IMG}/Example_start.png`, x: 8, y: 32, w: 35, rotation: 0, taped: true, noBg: true, tackers: [1, 3, 2, 4] },
       // Cityhotel Polaroid stack — slightly overlapping like stickers
       { type: 'image', img: `${THESIS_IMG}/Cityhotel_Sketch.jpg`, x: 48, y: 24, w: 28, rotation: -3, polaroid: true, bringToFront: true },
       { type: 'image', img: `${THESIS_IMG}/Cityhotel_Concrete.jpg`, x: 60, y: 29, w: 28, rotation: 2, polaroid: true, bringToFront: true },
       { type: 'image', img: `${THESIS_IMG}/Cityhotel_Scandi.jpg`, x: 52, y: 38, w: 28, rotation: -1, polaroid: true, bringToFront: true },
       { type: 'image', img: `${THESIS_IMG}/Cityhotel_Blade-Runner.jpg`, x: 64, y: 43, w: 28, rotation: 4, polaroid: true, bringToFront: true },
-      { type: 'image', img: `${THESIS_IMG}/website.png`, x: 12, y: 72, w: 72, rotation: 0, taped: true, noBg: true, video: `${THESIS_IMG}/FinalVideo.mp4` },
+      { type: 'image', img: `${THESIS_IMG}/website.png`, x: 12, y: 72, w: 72, rotation: 0, taped: true, noBg: true, video: `${THESIS_IMG}/FinalVideo.mp4`, tackers: [4, 2, 3, 1] },
     ],
   },
 
@@ -125,6 +127,8 @@ function App() {
   const [videoOverlay, setVideoOverlay] = useState<string | null>(null)
   const [matVisible, setMatVisible] = useState(false)
   const [bookVisible, setBookVisible] = useState(false)
+  const [bookZoom, setBookZoom] = useState(0)
+  const [imgAspect, setImgAspect] = useState(0)
   const [scrollProgress, setScrollProgress] = useState(0)
   const [arrowVisible, setArrowVisible] = useState(false)
   const [fadingHome, setFadingHome] = useState(false)
@@ -360,6 +364,19 @@ function App() {
     setBookVisible(show)
   }, [])
 
+  const handleZoomProgress = useCallback((zoom: number) => {
+    setBookZoom(zoom)
+  }, [])
+
+  // Scroll progress at which the first page turn begins (end of spread 0 flat zone)
+  const totalSpreadsForFade = Math.ceil(bookPages.length / 2)
+  const imageFadeStart = bookStart + (1 / totalSpreadsForFade) * flatRatio * bookRange
+  const imageFadeEnd = bookStart + (1 / totalSpreadsForFade) * (flatRatio + 0.05) * bookRange
+
+  const handleImgAspect = useCallback((aspect: number) => {
+    setImgAspect(aspect)
+  }, [])
+
   useEffect(() => {
     if (showProjects) {
       const t = setTimeout(() => setOverlayVisible(true), 10)
@@ -421,7 +438,7 @@ function App() {
       </div>
 
       {/* Scroll-driven image — fixed layer, moves/scales with scroll */}
-      <ScrollSequence onMatVisible={handleMatVisible} onBookVisible={handleBookVisible} />
+      <ScrollSequence onMatVisible={handleMatVisible} onBookVisible={handleBookVisible} onZoomProgress={handleZoomProgress} onImgAspect={handleImgAspect} imageFadeStart={imageFadeStart} imageFadeEnd={imageFadeEnd} />
 
       {/* Cutting mat — behind the image, appears when zoom-out starts */}
       <div
@@ -440,6 +457,8 @@ function App() {
         pages={bookPages}
         visible={bookVisible}
         scrollProgress={scrollProgress}
+        bookZoom={bookZoom}
+        imgAspect={imgAspect}
         onVideoOpen={setVideoOverlay}
       />
 

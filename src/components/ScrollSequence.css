@@ -13,3 +13,16 @@
   height: 100%;
   object-fit: cover;
 }
+
+.scroll-tacker {
+  position: absolute;
+  width: 27px;
+  height: 27px;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.scroll-tacker-tl { top: 6px; left: 6px; }
+.scroll-tacker-tr { top: 6px; right: 6px; }
+.scroll-tacker-bl { bottom: 6px; left: 6px; }
+.scroll-tacker-br { bottom: 6px; right: 6px; }

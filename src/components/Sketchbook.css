@@ -6,6 +6,7 @@
   align-items: center;
   justify-content: center;
   pointer-events: none;
+  overflow: hidden;
 }
 
 .sketchbook {
@@ -101,20 +102,19 @@
   display: block;
 }
 
-/* Black corner dots on glued images */
-.sketch-dot {
+/* Tacker images in the corners of taped images */
+.sketch-tacker {
   position: absolute;
-  width: 13.5px;
-  height: 13.5px;
-  border-radius: 50%;
-  background: #1a1a1a;
+  width: 27px;
+  height: 27px;
   z-index: 2;
+  pointer-events: none;
 }
 
-.sketch-dot-tl { top: 7.5px; left: 7.5px; }
-.sketch-dot-tr { top: 7.5px; right: 7.5px; }
-.sketch-dot-bl { bottom: 7.5px; left: 7.5px; }
-.sketch-dot-br { bottom: 7.5px; right: 7.5px; }
+.sketch-tacker-tl { top: 6px; left: 6px; }
+.sketch-tacker-tr { top: 6px; right: 6px; }
+.sketch-tacker-bl { bottom: 6px; left: 6px; }
+.sketch-tacker-br { bottom: 6px; right: 6px; }
 
 /* Sketch items */
 .sketch-item-sketch {
@@ -128,7 +128,7 @@
 
 /* Text blocks — Epoch typeface */
 .sketch-item-text {
-  color: #2a2a2a;
+  color: #3d3d3d;
   font-family: 'Epoch', 'Futura', sans-serif;
   pointer-events: none !important;
   z-index: 0 !important;
@@ -143,7 +143,7 @@
 }
 
 .sketch-corner-text {
-  color: #2a2a2a;
+  color: #3d3d3d;
   font-family: 'Epoch', 'Futura', sans-serif;
   font-size: 0.75rem;
   font-weight: 500;
@@ -156,7 +156,7 @@
   font-weight: 600;
   margin-bottom: 0.3em;
   text-decoration: underline;
-  text-decoration-color: rgba(42, 42, 42, 0.4);
+  text-decoration-color: rgba(61, 61, 61, 0.4);
   text-underline-offset: 3px;
 }
 
