@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, useMemo } from 'react';
+import { useEffect, useRef, useState, useMemo, memo } from 'react';
 import './CuttingMat.css';
 
 /**
@@ -16,7 +16,7 @@ import './CuttingMat.css';
  */
 
 /** @param {CuttingMatProps} props */
-export default function CuttingMat({
+function CuttingMat({
   startCm = 7,
   className = '',
   style,
@@ -134,3 +134,5 @@ export default function CuttingMat({
     </div>
   );
 }
+
+export default memo(CuttingMat);

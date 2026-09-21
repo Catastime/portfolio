@@ -35,10 +35,18 @@ export default function ScrollSequence({ onMatVisible, onBookVisible, onZoomProg
   const isMobile = viewport.w < 768;
 
   useEffect(() => {
-    const handleScroll = () => {
+    // Coalesce scroll events to one state update per frame
+    let ticking = false;
+    const update = () => {
+      ticking = false;
       const max = document.documentElement.scrollHeight - window.innerHeight;
       if (max <= 0) { setProgress(0); return; }
       setProgress(Math.min(1, Math.max(0, window.scrollY / max)));
+    };
+    const handleScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(update);
     };
     window.addEventListener('scroll', handleScroll, { passive: true });
     handleScroll();
@@ -220,7 +228,9 @@ export default function ScrollSequence({ onMatVisible, onBookVisible, onZoomProg
     >
       <img
         ref={imgRef}
-        src={`${BASE}tim/Atelier%20Anthrazit-039-breit-bw.jpg`}
+        src={isMobile
+          ? `${BASE}tim/Atelier%20Anthrazit-039-breit-bw-mobile.jpg`
+          : `${BASE}tim/Atelier%20Anthrazit-039-breit-bw.jpg`}
         alt="Featured work"
         className="scroll-image"
         style={isMobile ? { objectPosition: '66% 50%' } : undefined}

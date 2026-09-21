@@ -14,9 +14,12 @@ const warmImage = (src: string) => {
  * connections get a head start without competing with the first paint.
  */
 export function startPreload() {
-  // Critical: first reveal + spread 0 surfaces
+  // Critical: first reveal + spread 0 surfaces.
+  // Small screens get the compressed hero variant (the full scan is 21MB).
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768
+  const hero = `${BASE}tim/Atelier Anthrazit-039-breit-bw${isMobile ? '-mobile' : ''}.jpg`
   ;[
-    `${BASE}tim/Atelier Anthrazit-039-breit-bw.jpg`,
+    hero,
     `${BASE}textures/left_page-black.png`,
     `${BASE}textures/right_page.png`,
   ].forEach(warmImage)

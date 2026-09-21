@@ -61,7 +61,7 @@ const bookPages = [
   {
     items: [
       // Atelier Anthrazit — the image we zoom out from
-      { type: 'image', img: `${BASE}tim/Atelier Anthrazit-039-breit-bw.jpg`, x: -4, y: 10, w: 108, rotation: 0, taped: true, noBg: true, shadow: '0 2px 8px rgba(0, 0, 0, 0.15)', tackers: [3, 1, 4, 2] },
+      { type: 'image', img: `${BASE}tim/Atelier Anthrazit-039-breit-bw.jpg`, imgMobile: `${BASE}tim/Atelier Anthrazit-039-breit-bw-mobile.jpg`, x: -4, y: 10, w: 108, rotation: 0, taped: true, noBg: true, shadow: '0 2px 8px rgba(0, 0, 0, 0.15)', tackers: [3, 1, 4, 2] },
       // CV — single column below the image: leader lines to right-aligned dates
       {
         type: 'cv', x: -4, y: 48.5, w: 108, rotation: 0, fontSize: 0.85,
@@ -224,10 +224,18 @@ function App() {
   }, [])
 
   useEffect(() => {
-    const handleScroll = () => {
+    // Coalesce scroll events to one state update per frame
+    let ticking = false
+    const update = () => {
+      ticking = false
       const max = document.documentElement.scrollHeight - window.innerHeight
       if (max <= 0) { setScrollProgress(0); return }
       setScrollProgress(Math.min(1, Math.max(0, window.scrollY / max)))
+    }
+    const handleScroll = () => {
+      if (ticking) return
+      ticking = true
+      requestAnimationFrame(update)
     }
     window.addEventListener('scroll', handleScroll, { passive: true })
     handleScroll()

@@ -320,7 +320,7 @@ export default function Sketchbook({
           {item.video && (
             <div className="sketch-play-btn"><div className="sketch-play-triangle" /></div>
           )}
-          <img src={item.img} alt="" className="sketch-image" />
+          <img src={isMobile && item.imgMobile ? item.imgMobile : item.img} alt="" className="sketch-image" />
         </div>
       );
     }

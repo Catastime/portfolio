@@ -14,6 +14,7 @@
   display: flex;
   align-items: flex-start;
   perspective: 2000px;
+  will-change: transform;
 }
 
 /* Page stacks — two separate A4 pads with a gap, using scanned paper textures */
@@ -213,6 +214,7 @@
 
 .sketchbook-mobile {
   position: relative;
+  will-change: transform, opacity;
   background-size: 100% 100%;
   background-position: center;
   background-repeat: no-repeat;
