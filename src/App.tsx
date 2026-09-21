@@ -32,27 +32,55 @@ const THESIS_IMG = '/portfolio/master-thesis'
 
 const bookPages = [
   // ===== SPREAD 0: Introduction & CV =====
-  // Left page — intro text + Anthrazit image
+  // Left page — Introduction heading on black paper
   {
+    texture: 'left_page-black',
     items: [
-      { type: 'text', title: 'Introduction', text: 'Architecture Portfolio of Tim.Mkr\nMaster of Architecture, 2024\n\nThis collection presents selected\nworks from my academic and\nprofessional journey, exploring\nthe intersection of design,\ntechnology, and the built\nenvironment.', x: 8, y: 10, w: 80, rotation: 0, font: "'Epoch', sans-serif", fontSize: 0.7 },
-      // Atelier Anthrazit — the image we zoom out from
-      { type: 'image', img: '/portfolio/tim/Atelier Anthrazit-039-breit.png', x: 2, y: 45, w: 96, rotation: 0, taped: true, noBg: true, shadow: '0 2px 8px rgba(0, 0, 0, 0.15)', tackers: [3, 1, 4, 2] },
+      // Statement — big white caps in the lower half of the page
+      { type: 'statement', text: 'I\'M TIM MOEDEKER,\nAN ARCHITECT AND LECTURER BASED IN HANNOVER\nWITH A PASSION FOR CUTTING EDGE TECHNOLOGIES OF THE DIGITAL WORLD AND, CONTRADICTORILY, ANALOGUE PHOTOGRAPHY.', x: -4, y: 58.9, w: 108, h: 37.8, rotation: 0 },
+      // Hole marks — mirrored from the Anthrazit image on the right page
+      // (box matches the image box; h follows the image aspect 2.046)
+      { type: 'holes', x: -4, y: 10, w: 108, h: 37, rotation: 0 },
+      // Introduction — centered between the hole marks
+      { type: 'text', text: 'introduction', x: -4, y: 26.8, w: 108, rotation: 0, align: 'center', sizes: [1], weight: 300 },
     ],
   },
-  // Right page — font comparison test
+  // Right page — Anthrazit image + CV
   {
     items: [
-      { type: 'text', title: 'Epoch', text: 'Architecture 0123', x: 8, y: 10, w: 28, rotation: 0, font: "'Epoch', sans-serif", sizes: [0.5, 0.7, 1.0] },
-      { type: 'text', title: 'Endless', text: 'Architecture 0123', x: 36, y: 10, w: 28, rotation: 0, font: "'Endless', sans-serif", sizes: [0.5, 0.7, 1.0] },
-      { type: 'text', title: 'Futura', text: 'Architecture 0123', x: 64, y: 10, w: 28, rotation: 0, font: "'Futura', sans-serif", sizes: [0.5, 0.7, 1.0] },
+      // Atelier Anthrazit — the image we zoom out from
+      { type: 'image', img: '/portfolio/tim/Atelier Anthrazit-039-breit-bw.jpg', x: -4, y: 10, w: 108, rotation: 0, taped: true, noBg: true, shadow: '0 2px 8px rgba(0, 0, 0, 0.15)', tackers: [3, 1, 4, 2] },
+      // CV — single column below the image: leader lines to right-aligned dates
+      {
+        type: 'cv', x: -4, y: 48.5, w: 108, rotation: 0, fontSize: 0.85,
+        sections: [
+          { name: 'EDUCATION', entries: [
+            { head: 'M. Sc. Architecture, Leibniz University Hannover', date: '10.2021 - 01.2024', desc: 'Thesis on AI in architectural design, with a practical AI interface focused on accessibility.' },
+            { head: 'B. Sc. Architecture, Leibniz University Hannover', date: '10.2017 - 01.2021', desc: 'Focus on conceptual, digital work in new formats such as VR and AR, deepened in the bachelor\'s thesis.' },
+          ]},
+          { name: 'EXPERIENCE', entries: [
+            { head: 'Architectural Designer, Mosaik Architekt:innen Hannover', date: '10.2024 - today', desc: 'Competitions for public-sector clients, some currently being realized.' },
+            { head: 'Lecturer, Institute of Digital Methods in Architecture, Leibniz University Hannover', date: '04.2024 - today', desc: 'Teaching "Digital Simulation", researching open-source AI in architecture.' },
+            { head: 'Guest Lecturer, Digital Design Unit, TU Darmstadt', date: '05.2025', desc: 'Weekend Arduino seminar; students built sensor-based musical instruments.' },
+            { head: 'Architectural Intern, Design & Concept, Angelis & Partner', date: '04.2021 - 10.2021', desc: 'Design and concept work on competitions.' },
+            { head: 'Student Assistant - IT, Faculty of Architecture & Landscape, Leibniz University Hannover', date: '01.2018 - 01.2025', desc: 'IT support for teaching staff and students.' },
+          ]},
+          { name: 'SKILLS', entries: [
+            { head: 'Design & BIM: Rhinoceros, Revit, Archicad' },
+            { head: 'Visualization: V-Ray, D5, Unity, Photoshop, Illustrator, InDesign' },
+            { head: 'Other: Python, QGIS, 3D printing, large-format plotting, web/server hosting' },
+            { head: 'Languages: English (fluent)' },
+          ]},
+        ],
+      },
     ],
   },
 
   // ===== SPREAD 1: Master Thesis =====
-  // Left page
+  // Left page — black paper
   {
-    meta: { year: '2023', place: 'Hannover', title: 'Artificial Intelligence in Architectural Design' },
+    texture: 'left_page-black',
+    meta: { year: '2024', place: 'Hannover', title: 'Artificial Intelligence in Architectural Design' },
     items: [
       // Upper text block — narrowed to make room for comics on the right
       { type: 'text', text: 'The current development in the field of artificial intelligence promises unprecedented potentials for creative fields such as architecture. Instead of mere automation of simple processes and efficiency improvement through enhanced tools, it could herald the beginning of a true symbiosis between humans and machines, a vision pursued in the 20th century by researchers like John McCarthy and later Nicolas Negroponte.', x: 8, y: 10, w: 58, rotation: 0, font: "'Epoch', sans-serif", fontSize: 0.55 },
@@ -61,16 +89,17 @@ const bookPages = [
       // thesis-starter — between the two text blocks
       { type: 'image', img: `${THESIS_IMG}/thesis-starter.jpeg`, x: 8, y: 27, w: 42, rotation: 0, taped: true, noBg: true, tackers: [1, 3, 2, 4] },
       // website-concept — below the lower text, poking into it, 20% bigger than original w:38
-      { type: 'image', img: `${THESIS_IMG}/website-concept.png`, x: 48, y: 76, w: 46, rotation: 0, noBg: true },
+      { type: 'image', img: `${THESIS_IMG}/website-concept2.png`, x: 48, y: 80, w: 46, rotation: 0, noBg: true },
       // Second text block — part 1: below comic, right of starter, above concept
       { type: 'text', text: 'However, the concept of artificial intelligence has undergone significant changes since its inception in the 1950s by John McCarthy. While he viewed AI as the understanding and reproduction of human intelligence, the term has now become vastly expansive, encompassing various categories of programs, from personal assistants to deep learning algorithms.', x: 52, y: 60, w: 38, rotation: 0, font: "'Epoch', sans-serif", fontSize: 0.5, align: 'right' },
       // Second text block — part 2: left of concept, below starter
       { type: 'text', text: 'When someone speaks of AI today, it generally refers to a deep learning algorithm attempting to simulate cognitive functions based on vast amounts of data. However, truly autonomous thinking programs, as envisaged in the 1950s, have not been realized yet, as current computers lack the necessary level of perception or self-reflection to develop actual intelligence.', x: 8, y: 78, w: 34, rotation: 0, font: "'Epoch', sans-serif", fontSize: 0.5 },
     ],
   },
-  // Right page
+  // Right page — black paper
   {
-    meta: { year: '2023', place: 'Hannover', title: 'Artificial Intelligence in Architectural Design' },
+    texture: 'right_page-black',
+    meta: { year: '2024', place: 'Hannover', title: 'Artificial Intelligence in Architectural Design' },
     items: [
       // Top text block
       { type: 'text', text: 'The rapid development in this renaissance of artificial intelligence has ignited in me a desire to delve into this topic through a master\'s thesis. The goal of this work is to examine the connections between past and current developments, describe the theoretical ideas and aspirations of these developments and their instigators, and develop a simple tool that showcases current possibilities of generative deep learning artificial intelligence in a user-friendly and helpful manner.', x: 8, y: 10, w: 84, rotation: 0, font: "'Epoch', sans-serif", fontSize: 0.55 },

@@ -11,7 +11,7 @@ import './ScrollSequence.css';
  * 0.00 - 0.33: Image slides up from below into full view
  * 0.33 - 0.36: Image holds fullscreen
  * 0.36 - 0.60: Zoom-out: image layer shrinks with the book, staying on the
- *              left-page item. Book scales from zoomed-in to resting size.
+ *              right-page item. Book scales from zoomed-in to resting size.
  * 0.60 - 1.00: Book is at rest, pages turn (handled by Sketchbook component)
  *
  * Props:
@@ -26,8 +26,6 @@ export default function ScrollSequence({ onMatVisible, onBookVisible, onZoomProg
   const [progress, setProgress] = useState(0);
   const [imgAspect, setImgAspect] = useState(0);
 
-  // Tacker assignment baked into the Anthrazit image item (matches App.tsx)
-  const tackerSrc = (i) => `/portfolio/textures/tacker_${[3, 1, 4, 2][i]}.png`;
   const [viewport, setViewport] = useState({
     w: typeof window !== 'undefined' ? window.innerWidth : 1920,
     h: typeof window !== 'undefined' ? window.innerHeight : 1080,
@@ -75,7 +73,7 @@ export default function ScrollSequence({ onMatVisible, onBookVisible, onZoomProg
   // The image layer tracks the book's image item position at every frame
   // during zoom-out, so the image appears to be part of the book as it
   // zooms out. At zoomT=0 the item fills the viewport (cover); at zoomT=1
-  // it's at its resting position on the left page.
+  // it's at its resting position on the right page.
   const layerStyle = useMemo(() => {
     const vw = viewport.w;
     const vh = viewport.h;
@@ -107,14 +105,14 @@ export default function ScrollSequence({ onMatVisible, onBookVisible, onZoomProg
       totalW = pW * 2 + g;
     }
 
-    // Image item on left page: x:2%, y:45%, w:96% (Atelier Anthrazit)
+    // Image item on right page: x:-4%, y:10%, w:108% (Atelier Anthrazit)
     // Account for the 5% page inset (.sketchbook-page has inset: 5%)
     const pageInset = 0.05;
     const contentW = pW * (1 - 2 * pageInset); // content area width
     const contentH = pH * (1 - 2 * pageInset); // content area height
-    const itemX = (pageInset + 0.02 * (1 - 2 * pageInset)) * pW;
-    const itemY = (pageInset + 0.45 * (1 - 2 * pageInset)) * pH;
-    const itemW = 0.96 * contentW;
+    const itemX = pW + g + (pageInset - 0.04 * (1 - 2 * pageInset)) * pW;
+    const itemY = (pageInset + 0.1 * (1 - 2 * pageInset)) * pH;
+    const itemW = 1.08 * contentW;
     const itemH = imgAspect > 0 ? itemW / imgAspect : itemW;
 
     // Item center relative to book center (book-local coords)
@@ -196,7 +194,7 @@ export default function ScrollSequence({ onMatVisible, onBookVisible, onZoomProg
     >
       <img
         ref={imgRef}
-        src="/portfolio/tim/Atelier%20Anthrazit-039-breit.png"
+        src="/portfolio/tim/Atelier%20Anthrazit-039-breit-bw.jpg"
         alt="Featured work"
         className="scroll-image"
         onLoad={(e) => {
@@ -205,10 +203,10 @@ export default function ScrollSequence({ onMatVisible, onBookVisible, onZoomProg
           onImgAspect?.(aspect);
         }}
       />
-      <img src={tackerSrc(0)} alt="" className="scroll-tacker scroll-tacker-tl" />
-      <img src={tackerSrc(1)} alt="" className="scroll-tacker scroll-tacker-tr" />
-      <img src={tackerSrc(2)} alt="" className="scroll-tacker scroll-tacker-bl" />
-      <img src={tackerSrc(3)} alt="" className="scroll-tacker scroll-tacker-br" />
+      <div className="scroll-hole scroll-hole-tl" />
+      <div className="scroll-hole scroll-hole-tr" />
+      <div className="scroll-hole scroll-hole-bl" />
+      <div className="scroll-hole scroll-hole-br" />
     </div>
   );
 }

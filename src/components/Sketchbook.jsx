@@ -140,22 +140,22 @@ export default function Sketchbook({
   }, [viewport, isMobile]);
 
   // Book zoom-out: at bookZoom=0 the book is scaled and translated so the
-  // left-page image item fills the viewport (we're "zoomed in" on it).
+  // right-page image item fills the viewport (we're "zoomed in" on it).
   // At bookZoom=1 the book is at resting size, centered.
-  // The image item on the left page: x:2%, y:45%, w:96% (Atelier Anthrazit).
+  // The image item on the right page: x:-4%, y:10%, w:108% (Atelier Anthrazit).
   const bookTransform = useMemo(() => {
     if (bookZoom >= 1 || bookH === 0 || pageW === 0) {
       return { transform: 'scale(1)', transformOrigin: 'center center' };
     }
 
-    // Item position and size on the left page (in book-local px)
+    // Item position and size on the right page (in book-local px)
     // Account for the 5% page inset (.sketchbook-page has inset: 5%)
     const pageInset = 0.05;
     const contentW = pageW * (1 - 2 * pageInset);
     const contentH = pageH * (1 - 2 * pageInset);
-    const itemX = (pageInset + 0.02 * (1 - 2 * pageInset)) * pageW;
-    const itemY = (pageInset + 0.45 * (1 - 2 * pageInset)) * pageH;
-    const itemW = 0.96 * contentW;
+    const itemX = pageW + gap + (pageInset - 0.04 * (1 - 2 * pageInset)) * pageW;
+    const itemY = (pageInset + 0.1 * (1 - 2 * pageInset)) * pageH;
+    const itemW = 1.08 * contentW;
     // Item height depends on image aspect; use the item's natural aspect
     // from the loaded image. Fall back to square if unknown.
     const itemH = imgAspect > 0
@@ -199,7 +199,7 @@ export default function Sketchbook({
       transform: `translate(${translateX}px, ${translateY}px) scale(${scale})`,
       transformOrigin: 'center center',
     };
-  }, [bookZoom, bookW, bookH, pageW, pageH, viewport.w, viewport.h, imgAspect]);
+  }, [bookZoom, bookW, bookH, pageW, pageH, gap, viewport.w, viewport.h, imgAspect]);
 
   // Mobile: swipe/tap
   const touchStartX = useRef(0);
@@ -231,7 +231,7 @@ export default function Sketchbook({
   if (!visible) return null;
 
   // Render a single item on a page
-  const renderItem = (item, key) => {
+  const renderItem = (item, key, pageIndex) => {
     const style = {
       position: 'absolute',
       left: `${item.x}%`,
@@ -256,13 +256,13 @@ export default function Sketchbook({
           onClick={item.video ? () => onVideoOpen?.(item.video) : undefined}
         >
           {item.taped && (() => {
-            const t = item.tackers || [1, 2, 3, 4];
+            const holeColor = holeColorFor(pageIndex);
             return (
               <>
-                <img src={`/portfolio/textures/tacker_${t[0]}.png`} alt="" className="sketch-tacker sketch-tacker-tl" />
-                <img src={`/portfolio/textures/tacker_${t[1]}.png`} alt="" className="sketch-tacker sketch-tacker-tr" />
-                <img src={`/portfolio/textures/tacker_${t[2]}.png`} alt="" className="sketch-tacker sketch-tacker-bl" />
-                <img src={`/portfolio/textures/tacker_${t[3]}.png`} alt="" className="sketch-tacker sketch-tacker-br" />
+                <div className="sketch-hole sketch-hole-tl" style={{ backgroundColor: holeColor }} />
+                <div className="sketch-hole sketch-hole-tr" style={{ backgroundColor: holeColor }} />
+                <div className="sketch-hole sketch-hole-bl" style={{ backgroundColor: holeColor }} />
+                <div className="sketch-hole sketch-hole-br" style={{ backgroundColor: holeColor }} />
               </>
             );
           })()}
@@ -313,6 +313,7 @@ export default function Sketchbook({
       if (item.font) textStyle.fontFamily = item.font;
       if (item.fontSize) textStyle.fontSize = `${item.fontSize}rem`;
       if (item.align) textStyle.textAlign = item.align;
+      if (item.weight) textStyle.fontWeight = item.weight;
       const floatImg = item.floatImage;
       return (
         <div key={key} className="sketch-item sketch-item-text" style={textStyle}>
@@ -337,8 +338,67 @@ export default function Sketchbook({
               </div>
             ))
           ) : (
-            <div className="sketch-text-body">{item.text}</div>
+            <div className="sketch-text-body" style={(item.bodySize || item.bodyLineHeight) ? { fontSize: item.bodySize ? `${item.bodySize}rem` : undefined, lineHeight: item.bodyLineHeight } : undefined}>{item.text}</div>
           )}
+        </div>
+      );
+    }
+
+    if (item.type === 'holes') {
+      const holesStyle = { ...style };
+      if (item.h) holesStyle.height = `${item.h}%`;
+      const holeColor = holeColorFor(pageIndex);
+      return (
+        <div key={key} className="sketch-item sketch-holes" style={holesStyle}>
+          <div className="sketch-hole sketch-hole-tl" style={{ backgroundColor: holeColor }} />
+          <div className="sketch-hole sketch-hole-tr" style={{ backgroundColor: holeColor }} />
+          <div className="sketch-hole sketch-hole-bl" style={{ backgroundColor: holeColor }} />
+          <div className="sketch-hole sketch-hole-br" style={{ backgroundColor: holeColor }} />
+        </div>
+      );
+    }
+
+    if (item.type === 'cv') {
+      const cvStyle = { ...style };
+      if (item.fontSize) cvStyle.fontSize = `${item.fontSize}rem`;
+      return (
+        <div key={key} className="sketch-item sketch-item-text sketch-cv" style={cvStyle}>
+          {item.sections.map((sec, si) => (
+            <div key={si} className="cv-section">
+              <div className="cv-section-name">{sec.name}</div>
+              {sec.entries.map((e, i) => (
+                <div key={i} className="cv-entry">
+                  <div className="cv-head">
+                    <span className="cv-role">{e.head}</span>
+                    {e.date && (
+                      <>
+                        <span className="cv-line" />
+                        <span className="cv-date">{e.date}</span>
+                      </>
+                    )}
+                  </div>
+                  {e.desc && <div className="cv-desc">{e.desc}</div>}
+                </div>
+              ))}
+            </div>
+          ))}
+        </div>
+      );
+    }
+
+    if (item.type === 'statement') {
+      const statementStyle = { ...style };
+      if (item.h) statementStyle.height = `${item.h}%`;
+      // Font scales with the page so the statement fills its block
+      const blockH = pageH * 0.9 * ((item.h || 100) / 100);
+      statementStyle.fontSize = `${blockH * 0.16}px`;
+      return (
+        <div key={key} className="sketch-item sketch-item-statement" style={statementStyle}>
+          {item.text.split('\n').map((line, i, all) => (
+            <div key={i} style={i === 0 && all.length > 1 ? { textAlign: 'right' } : i < all.length - 1 ? { textAlignLast: 'justify' } : undefined}>
+              {line}
+            </div>
+          ))}
         </div>
       );
     }
@@ -354,6 +414,13 @@ export default function Sketchbook({
         width: 'auto',
         maxWidth: '45%',
       };
+      if (item.href) {
+        return (
+          <a key={key} href={item.href} className="sketch-item sketch-corner-text sketch-corner-link" style={cornerStyle}>
+            {item.text}
+          </a>
+        );
+      }
       return (
         <div key={key} className="sketch-item sketch-corner-text" style={cornerStyle}>
           {item.text}
@@ -367,13 +434,39 @@ export default function Sketchbook({
   // Font for all pages
   const fontForPage = () => "'Epoch', 'Futura', sans-serif";
 
+  // Paper texture for a page — pages can override via the `texture` field
+  const pageTexture = (pageIndex) =>
+    pages[pageIndex]?.texture || (pageIndex % 2 === 0 ? 'left_page' : 'right_page');
+  const textureUrl = (pageIndex) => `url('/portfolio/textures/${pageTexture(pageIndex)}.png')`;
+
+  // Punched-hole color: reads as the page underneath in the stack —
+  // black paper on white pages, paper color on black/dark pages
+  const holeColorFor = (pageIndex) => {
+    const tex = pageTexture(pageIndex);
+    return tex.includes('black') || tex.includes('dark') ? '#cfcfcf' : '#1d1d1d';
+  };
+
+  // Text color per page paper: paper tone on black/dark pages, black-page tone on white
+  const textColorFor = (pageIndex) => {
+    const tex = pageTexture(pageIndex);
+    return tex.includes('black') || tex.includes('dark') ? '#cfcfcf' : '#2e2e2e';
+  };
+
   // Inject corner text items for a page based on spread metadata
   // Spread 0 (intro) has no corner text. All other spreads get:
   //   Left page:  top-left = "WORK.NN/13", top-right = year
   //   Right page: top-left = place, top-right = project title
   const cornerItemsForPage = (pageIndex, pages) => {
     const spread = Math.floor(pageIndex / 2);
-    if (spread === 0) return [];
+    if (spread === 0) {
+      // Spread 0: contact field in the upper right corner of the right page
+      if (pageIndex % 2 === 0) return [];
+      return [
+        { type: 'corner-text', text: 'https://timmkr.space', href: 'https://timmkr.space', x: 1.4, y: 2, align: 'right' },
+        { type: 'corner-text', text: 'tim.moedeker@gmail.com', href: 'mailto:tim.moedeker@gmail.com', x: 1.4, y: 4.3, align: 'right' },
+        { type: 'corner-text', text: '+49 177 9000982', href: 'tel:+491779000982', x: 1.4, y: 6.6, align: 'right' },
+      ];
+    }
     const meta = pages[pageIndex]?.meta || pages[spread * 2]?.meta;
     if (!meta) return [];
     const isLeft = pageIndex % 2 === 0;
@@ -385,8 +478,8 @@ export default function Sketchbook({
       ];
     } else {
       return [
-        { type: 'corner-text', text: meta.place || '', x: 5, y: 2.5, align: 'left' },
-        { type: 'corner-text', text: meta.title || '', x: 5, y: 2.5, align: 'right' },
+        { type: 'corner-text', text: meta.place || '', x: 5, y: 2, align: 'left' },
+        { type: 'corner-text', text: meta.title || '', x: 5, y: 2, align: 'right' },
       ];
     }
   };
@@ -396,7 +489,7 @@ export default function Sketchbook({
     const corners = cornerItemsForPage(pageIndex, pages);
     if (corners.length === 0) return null;
     return (
-      <div className="sketchbook-corners">
+      <div className="sketchbook-corners" style={{ '--page-text': textColorFor(pageIndex) }}>
         {corners.map((item, i) => renderItem(item, `corner-${i}`))}
       </div>
     );
@@ -405,16 +498,16 @@ export default function Sketchbook({
   const renderPage = (page, key, fontFamily, pageIndex) => {
     if (!page) return <div key={key} className="sketchbook-page sketchbook-page-empty" />;
     return (
-      <div key={key} className="sketchbook-page" style={fontFamily ? { fontFamily } : undefined}>
-        {page.items?.map((item, i) => renderItem(item, i))}
+      <div key={key} className="sketchbook-page" style={{ fontFamily, '--page-text': textColorFor(pageIndex) }}>
+        {page.items?.map((item, i) => renderItem(item, i, pageIndex))}
       </div>
     );
   };
 
   if (isMobile) {
-    const mobileTexture = currentPage % 2 === 0 ? 'left_page' : 'right_page';
+    const mobileTexture = pageTexture(currentPage);
     return (
-      <div className="sketchbook-container">
+      <div className="sketchbook-container" style={{ '--hole-size': `${pageH * 0.0102}px` }}>
         <div
           className="sketchbook-mobile"
           style={{
@@ -459,7 +552,7 @@ export default function Sketchbook({
   const displayRightUnderneath = isTurning ? nextRightIndex : rightIndex;
 
   return (
-    <div className="sketchbook-container">
+    <div className="sketchbook-container" style={{ '--hole-size': `${pageH * 0.0102}px` }}>
       <div
         className="sketchbook"
         style={{
@@ -471,14 +564,14 @@ export default function Sketchbook({
         {/* Left page stack — crossfades from current to next left during turn */}
         <div
           className="sketchbook-page-stack sketchbook-page-stack-left"
-          style={{ width: `${pageW}px`, height: `${pageH}px` }}
+          style={{ width: `${pageW}px`, height: `${pageH}px`, backgroundImage: textureUrl(leftIndex) }}
         >
           {isTurning ? (
             <>
-              <div style={{ position: 'absolute', inset: 0, opacity: 1 - turnProgress }}>
+              <div style={{ position: 'absolute', inset: 0, opacity: 1 - turnProgress, backgroundImage: textureUrl(leftIndex), backgroundSize: '100% 100%' }}>
                 {renderPage(pages[leftIndex], 'left-current', fontForPage(leftIndex), leftIndex)}
               </div>
-              <div style={{ position: 'absolute', inset: 0, opacity: turnProgress }}>
+              <div style={{ position: 'absolute', inset: 0, opacity: turnProgress, backgroundImage: textureUrl(nextLeftIndex), backgroundSize: '100% 100%' }}>
                 {renderPage(pages[nextLeftIndex], 'left-next', fontForPage(nextLeftIndex), nextLeftIndex)}
               </div>
             </>
@@ -494,7 +587,7 @@ export default function Sketchbook({
         {/* Right page stack */}
         <div
           className="sketchbook-page-stack sketchbook-page-stack-right"
-          style={{ width: `${pageW}px`, height: `${pageH}px` }}
+          style={{ width: `${pageW}px`, height: `${pageH}px`, backgroundImage: textureUrl(displayRightUnderneath) }}
         >
           {/* Underneath: the destination right page */}
           {renderPage(pages[displayRightUnderneath], 'right-under', fontForPage(displayRightUnderneath), displayRightUnderneath)}
@@ -512,10 +605,10 @@ export default function Sketchbook({
               left: `${pageW + gap}px`,
             }}
           >
-            <div className="sketchbook-page-turning-front">
+            <div className="sketchbook-page-turning-front" style={{ backgroundImage: textureUrl(rightIndex) }}>
               {renderPage(pages[rightIndex], 'turn-front', fontForPage(rightIndex), rightIndex)}
             </div>
-            <div className="sketchbook-page-turning-back">
+            <div className="sketchbook-page-turning-back" style={{ backgroundImage: textureUrl(nextLeftIndex) }}>
               {renderPage(pages[nextLeftIndex], 'turn-back', fontForPage(nextLeftIndex), nextLeftIndex)}
             </div>
           </div>

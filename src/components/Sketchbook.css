@@ -59,6 +59,7 @@
 .sketch-item-image {
   background: white;
   padding: 4px;
+  container-type: inline-size;
   box-shadow:
     0 2px 8px rgba(0, 0, 0, 0.15),
     0 1px 3px rgba(0, 0, 0, 0.1);
@@ -102,19 +103,6 @@
   display: block;
 }
 
-/* Tacker images in the corners of taped images */
-.sketch-tacker {
-  position: absolute;
-  width: 27px;
-  height: 27px;
-  z-index: 2;
-  pointer-events: none;
-}
-
-.sketch-tacker-tl { top: 6px; left: 6px; }
-.sketch-tacker-tr { top: 6px; right: 6px; }
-.sketch-tacker-bl { bottom: 6px; left: 6px; }
-.sketch-tacker-br { bottom: 6px; right: 6px; }
 
 /* Sketch items */
 .sketch-item-sketch {
@@ -128,7 +116,7 @@
 
 /* Text blocks — Epoch typeface */
 .sketch-item-text {
-  color: #3d3d3d;
+  color: var(--page-text, #3d3d3d);
   font-family: 'Epoch', 'Futura', sans-serif;
   pointer-events: none !important;
   z-index: 0 !important;
@@ -143,7 +131,7 @@
 }
 
 .sketch-corner-text {
-  color: #3d3d3d;
+  color: var(--page-text, #3d3d3d);
   font-family: 'Epoch', 'Futura', sans-serif;
   font-size: 0.75rem;
   font-weight: 500;
@@ -156,7 +144,7 @@
   font-weight: 600;
   margin-bottom: 0.3em;
   text-decoration: underline;
-  text-decoration-color: rgba(61, 61, 61, 0.4);
+  text-decoration-color: color-mix(in srgb, var(--page-text, #3d3d3d) 40%, transparent);
   text-underline-offset: 3px;
 }
 
@@ -226,4 +214,105 @@
   font-size: 0.75rem;
   color: rgba(0, 0, 0, 0.4);
   pointer-events: none;
+}
+
+/* Statement — big bold white caps on dark paper */
+.sketch-item-statement {
+  color: var(--page-text, #cfcfcf);
+  font-family: 'Epoch', 'Futura', sans-serif;
+  font-weight: 700;
+  text-transform: uppercase;
+  text-align: justify;
+  white-space: pre-wrap;
+  line-height: 0.7;
+  pointer-events: none !important;
+  z-index: 0 !important;
+}
+
+/* Clickable corner links (contact field) */
+.sketch-corner-link {
+  pointer-events: auto !important;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.sketch-corner-link:hover,
+.sketch-corner-link:active {
+  color: #fff;
+  text-decoration: underline;
+}
+
+/* Punched holes — dots that hold images in place, colored per page paper.
+   Sized and positioned by percentage of the image they sit on. */
+.sketch-hole {
+  position: absolute;
+  width: var(--hole-size, 1.5cqw);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.sketch-hole-tl { top: 3.5cqw; left: 3.5cqw; }
+.sketch-hole-tr { top: 3.5cqw; right: 3.5cqw; }
+.sketch-hole-bl { bottom: 3.5cqw; left: 3.5cqw; }
+.sketch-hole-br { bottom: 3.5cqw; right: 3.5cqw; }
+
+/* Standalone hole marks (e.g. mirrored from the facing page) */
+.sketch-holes {
+  container-type: inline-size;
+  pointer-events: none !important;
+  z-index: 0 !important;
+}
+
+/* CV — sectioned entries, leader line to the right-aligned date */
+.sketch-cv {
+  line-height: 1.4;
+}
+
+.cv-section {
+  margin-bottom: 0.7em;
+}
+
+.cv-section-name {
+  font-weight: 400;
+  font-size: 1.5em;
+  line-height: 1.1;
+  margin-bottom: 0;
+}
+
+.cv-entry {
+  margin-bottom: 0.5em;
+}
+
+.cv-head {
+  display: flex;
+  align-items: flex-end;
+}
+
+.cv-role {
+  padding-right: 0.45em;
+}
+
+.cv-date {
+  white-space: nowrap;
+  padding-left: 0.45em;
+}
+
+.cv-line {
+  flex: 1;
+  border-bottom: 1px solid currentColor;
+  opacity: 0.5;
+  margin: 0 0 0.45em;
+}
+
+.cv-desc {
+  text-align: justify;
+  opacity: 0.65;
+  margin-top: -0.2em;
+}
+
+/* SKILLS (last section) — tighter line spacing */
+.cv-section:last-child .cv-entry {
+  margin-bottom: 0.15em;
 }
