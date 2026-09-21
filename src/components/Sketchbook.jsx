@@ -46,6 +46,7 @@ import './Sketchbook.css';
  * @property {number} [bookZoom] - 0 to 1, scales book from zoomed-in on image to resting size
  * @property {number} [imgAspect] - natural aspect ratio of the zoom image (w/h)
  * @property {(src: string) => void} [onVideoOpen]
+ * @property {() => void} [onMoreOpen]
  */
 
 // Measured from the scanned paper textures (width / height)
@@ -59,6 +60,7 @@ export default function Sketchbook({
   bookZoom = 1,
   imgAspect = 0,
   onVideoOpen,
+  onMoreOpen,
 }) {
   const [viewport, setViewport] = useState({
     w: typeof window !== 'undefined' ? window.innerWidth : 1920,
@@ -267,6 +269,9 @@ export default function Sketchbook({
               </>
             );
           })()}
+          {item.video && (
+            <div className="sketch-play-btn"><div className="sketch-play-triangle" /></div>
+          )}
           <img src={item.img} alt="" className="sketch-image" />
         </div>
       );
@@ -383,6 +388,19 @@ export default function Sketchbook({
               ))}
             </div>
           ))}
+        </div>
+      );
+    }
+
+    if (item.type === 'button') {
+      return (
+        <div
+          key={key}
+          className="sketch-item sketch-more-btn"
+          style={{ ...style, cursor: 'pointer' }}
+          onClick={() => onMoreOpen?.()}
+        >
+          {item.label}
         </div>
       );
     }

@@ -33,6 +33,15 @@ const projectItems = [
 
 const THESIS_IMG = `${BASE}master-thesis`
 
+// Master thesis pages — MORE overlay grid, numbered in reading order
+const thesisPageCount = 140
+const thesisPages = Array.from({ length: thesisPageCount }, (_, i) => ({
+  id: String(i + 1),
+  img: `${THESIS_IMG}/pages-preview/Masterthesis${i + 1}.jpg`,
+  full: `${THESIS_IMG}/pages/Masterthesis${i + 1}.png`,
+  aspect: 1748 / 2480,
+}))
+
 const bookPages = [
   // ===== SPREAD 0: Introduction & CV =====
   // Left page — Introduction heading on black paper
@@ -88,15 +97,15 @@ const bookPages = [
       // Upper text block — narrowed to make room for comics on the right
       { type: 'text', text: 'The current development in the field of artificial intelligence promises unprecedented potentials for creative fields such as architecture. Instead of mere automation of simple processes and efficiency improvement through enhanced tools, it could herald the beginning of a true symbiosis between humans and machines, a vision pursued in the 20th century by researchers like John McCarthy and later Nicolas Negroponte.', x: 8, y: 10, w: 58, rotation: 0, font: "'Epoch', sans-serif", fontSize: 0.55 },
       // Comics image — right side, 10% smaller, slightly more right
-      { type: 'image', img: `${THESIS_IMG}/comics-pipelineRendering.png`, x: 74, y: 10, w: 18, rotation: 0, noBg: true, taped: true, tackers: [2, 4, 1, 3] },
+      { type: 'image', img: `${THESIS_IMG}/comics-pipelineRendering.png`, x: 73, y: 9.5, w: 18, rotation: 0, noBg: true, taped: true, tackers: [2, 4, 1, 3] },
       // thesis-starter — between the two text blocks
       { type: 'image', img: `${THESIS_IMG}/thesis-starter.jpeg`, x: 8, y: 27, w: 42, rotation: 0, taped: true, noBg: true, tackers: [1, 3, 2, 4] },
       // website-concept — below the lower text, poking into it, 20% bigger than original w:38
-      { type: 'image', img: `${THESIS_IMG}/website-concept2.png`, x: 48, y: 80, w: 46, rotation: 0, noBg: true },
+      { type: 'image', img: `${THESIS_IMG}/website-concept2.png`, x: 48, y: 80, w: 42, rotation: 0, noBg: true },
       // Second text block — part 1: below comic, right of starter, above concept
       { type: 'text', text: 'However, the concept of artificial intelligence has undergone significant changes since its inception in the 1950s by John McCarthy. While he viewed AI as the understanding and reproduction of human intelligence, the term has now become vastly expansive, encompassing various categories of programs, from personal assistants to deep learning algorithms.', x: 52, y: 60, w: 38, rotation: 0, font: "'Epoch', sans-serif", fontSize: 0.5, align: 'right' },
       // Second text block — part 2: left of concept, below starter
-      { type: 'text', text: 'When someone speaks of AI today, it generally refers to a deep learning algorithm attempting to simulate cognitive functions based on vast amounts of data. However, truly autonomous thinking programs, as envisaged in the 1950s, have not been realized yet, as current computers lack the necessary level of perception or self-reflection to develop actual intelligence.', x: 8, y: 78, w: 34, rotation: 0, font: "'Epoch', sans-serif", fontSize: 0.5 },
+      { type: 'text', text: 'When someone speaks of AI today, it generally refers to a deep learning algorithm attempting to simulate cognitive functions based on vast amounts of data. However, truly autonomous thinking programs, as envisaged in the 1950s, have not been realized yet, as current computers lack the necessary level of perception or self-reflection to develop actual intelligence.', x: 8, y: 80, w: 34, rotation: 0, font: "'Epoch', sans-serif", fontSize: 0.5 },
     ],
   },
   // Right page — black paper
@@ -113,7 +122,9 @@ const bookPages = [
       { type: 'image', img: `${THESIS_IMG}/Cityhotel_Concrete.jpg`, x: 60, y: 29, w: 28, rotation: 2, polaroid: true, bringToFront: true },
       { type: 'image', img: `${THESIS_IMG}/Cityhotel_Scandi.jpg`, x: 52, y: 38, w: 28, rotation: -1, polaroid: true, bringToFront: true },
       { type: 'image', img: `${THESIS_IMG}/Cityhotel_Blade-Runner.jpg`, x: 64, y: 43, w: 28, rotation: 4, polaroid: true, bringToFront: true },
-      { type: 'image', img: `${THESIS_IMG}/website.png`, x: 12, y: 72, w: 72, rotation: 0, taped: true, noBg: true, video: `${THESIS_IMG}/FinalVideo.mp4`, tackers: [4, 2, 3, 1] },
+      { type: 'image', img: `${THESIS_IMG}/website.png`, x: 8, y: 72, w: 72, rotation: 0, taped: true, noBg: true, video: `${THESIS_IMG}/FinalVideo.mp4`, tackers: [4, 2, 3, 1] },
+      // MORE — square button right of the video poster
+      { type: 'button', label: 'MORE', x: 84, y: 91.25, w: 12, rotation: 0 },
     ],
   },
 
@@ -158,6 +169,8 @@ function App() {
   const [overlayVisible, setOverlayVisible] = useState(false)
   const [videoOverlay, setVideoOverlay] = useState<string | null>(null)
   const [contactOverlay, setContactOverlay] = useState(false)
+  const [moreOverlay, setMoreOverlay] = useState(false)
+  const [moreZoomed, setMoreZoomed] = useState<number | null>(null)
   const [copied, setCopied] = useState<string | null>(null)
   const copyToClipboard = (key: string, text: string) => {
     navigator.clipboard?.writeText(text)
@@ -332,11 +345,25 @@ function App() {
       if (e.key === 'Escape') {
         if (videoOverlay) { setVideoOverlay(null); return }
         if (contactOverlay) { setContactOverlay(false); return }
+        if (moreZoomed !== null) { setMoreZoomed(null); return }
+        if (moreOverlay) { setMoreOverlay(false); return }
         if (showProjects) { setShowProjects(false); return }
         return
       }
+      // Arrow keys navigate the zoomed thesis page
+      if (moreZoomed !== null) {
+        if (e.key === 'ArrowRight') {
+          e.preventDefault()
+          setMoreZoomed((m) => (m !== null && m < thesisPages.length - 1 ? m + 1 : m))
+        }
+        if (e.key === 'ArrowLeft') {
+          e.preventDefault()
+          setMoreZoomed((m) => (m !== null && m > 0 ? m - 1 : m))
+        }
+        return
+      }
       // Block arrow interactions while any overlay is open
-      if (showProjects || videoOverlay || contactOverlay) return
+      if (showProjects || videoOverlay || contactOverlay || moreOverlay) return
       if (e.key === 'ArrowDown' && arrowVisible && (atLanding || atImageStop)) {
         e.preventDefault()
         autoPlay()
@@ -356,13 +383,13 @@ function App() {
     }
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [arrowVisible, atLanding, atImageStop, canGoUp, canTurnForward, canTurnBack, showProjects, videoOverlay, contactOverlay])
+  }, [arrowVisible, atLanding, atImageStop, canGoUp, canTurnForward, canTurnBack, showProjects, videoOverlay, contactOverlay, moreOverlay, moreZoomed])
 
   // Trigger autoPlay/goBack after 2 wheel ticks in the appropriate direction
   const wheelTickRef = useRef(0)
   useEffect(() => {
     const handleWheel = (e: WheelEvent) => {
-      if (showProjects || videoOverlay || contactOverlay) return
+      if (showProjects || videoOverlay || contactOverlay || moreOverlay) return
       if (scrollAnimRef.current !== null) return
       if (!arrowVisible) return
 
@@ -397,7 +424,7 @@ function App() {
     }
     window.addEventListener('wheel', handleWheel, { passive: false })
     return () => window.removeEventListener('wheel', handleWheel)
-  }, [arrowVisible, atLanding, atImageStop, canGoUp, showProjects, videoOverlay, contactOverlay])
+  }, [arrowVisible, atLanding, atImageStop, canGoUp, showProjects, videoOverlay, contactOverlay, moreOverlay])
 
   const handleMatVisible = useCallback((show: boolean) => {
     setMatVisible(show)
@@ -421,7 +448,7 @@ function App() {
   }, [])
 
   useEffect(() => {
-    if (showProjects) {
+    if (showProjects || moreOverlay) {
       const t = setTimeout(() => setOverlayVisible(true), 10)
       document.body.style.overflow = 'hidden'
       return () => {
@@ -432,17 +459,17 @@ function App() {
       setOverlayVisible(false)
       if (!videoOverlay) document.body.style.overflow = ''
     }
-  }, [showProjects, videoOverlay])
+  }, [showProjects, moreOverlay, videoOverlay])
 
   // Lock scroll when video or contact overlay is open
   useEffect(() => {
-    if (videoOverlay || contactOverlay) {
+    if (videoOverlay || contactOverlay || moreOverlay) {
       document.body.style.overflow = 'hidden'
       return () => {
         if (!showProjects) document.body.style.overflow = ''
       }
     }
-  }, [videoOverlay, contactOverlay, showProjects])
+  }, [videoOverlay, contactOverlay, moreOverlay, showProjects])
 
   const dockItems = [
     { icon: <PixelHome size={18} />, label: 'Home', onClick: goHome },
@@ -503,6 +530,7 @@ function App() {
         bookZoom={bookZoom}
         imgAspect={imgAspect}
         onVideoOpen={setVideoOverlay}
+        onMoreOpen={() => setMoreOverlay(true)}
       />
 
       {/* Title — starts centered, moves to top on scroll.
@@ -623,6 +651,85 @@ function App() {
             />
           </div>
         </div>
+      )}
+
+      {/* MORE overlay — thesis pages overview, same interface as projects */}
+      {moreOverlay && (
+        <div
+          className="fixed inset-0 overflow-y-auto"
+          onClick={() => setMoreOverlay(false)}
+          style={{
+            zIndex: 45,
+            backgroundColor: 'rgba(5, 5, 5, 0.3)',
+            backdropFilter: 'blur(4px)',
+            WebkitBackdropFilter: 'blur(4px)',
+            opacity: overlayVisible ? 1 : 0,
+            transition: 'opacity 0.4s ease',
+            pointerEvents: overlayVisible ? 'auto' : 'none',
+          }}
+        >
+          <div
+            className="mx-auto w-full max-w-6xl px-6 pb-32 pt-20"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <Masonry
+              items={thesisPages}
+              ease="power3.out"
+              duration={0.3}
+              stagger={0.01}
+              animateFrom="bottom"
+              scaleOnHover
+              hoverScale={0.95}
+              blurToFocus
+              colorShiftOnHover={false}
+              waitForImages={false}
+              onItemClick={(item) => setMoreZoomed(Number(item.id) - 1)}
+            />
+          </div>
+        </div>
+      )}
+
+      {/* Zoomed thesis page — click outside or ESC returns to the overview */}
+      {moreZoomed !== null && (
+        <motion.div
+          className="fixed inset-0 flex items-center justify-center"
+          onClick={() => setMoreZoomed(null)}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.25, ease: 'easeOut' }}
+          style={{ zIndex: 50, backgroundColor: 'rgba(0, 0, 0, 0.85)' }}
+        >
+          {moreZoomed > 0 && (
+            <button
+              onClick={(e) => { e.stopPropagation(); setMoreZoomed(moreZoomed - 1) }}
+              className="fixed left-8 top-1/2 z-50 flex -translate-y-1/2 cursor-pointer items-center justify-center border-none bg-transparent p-2 text-white"
+              style={{ lineHeight: 0 }}
+              aria-label="Previous page"
+            >
+              <PixelArrowLeft size={48} />
+            </button>
+          )}
+          <motion.img
+            key={moreZoomed}
+            src={thesisPages[moreZoomed].full ?? thesisPages[moreZoomed].img}
+            alt=""
+            onClick={(e) => e.stopPropagation()}
+            initial={{ scale: 0.92 }}
+            animate={{ scale: 1 }}
+            transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+            style={{ maxWidth: '80vw', maxHeight: '80vh' }}
+          />
+          {moreZoomed < thesisPages.length - 1 && (
+            <button
+              onClick={(e) => { e.stopPropagation(); setMoreZoomed(moreZoomed + 1) }}
+              className="fixed right-8 top-1/2 z-50 flex -translate-y-1/2 cursor-pointer items-center justify-center border-none bg-transparent p-2 text-white"
+              style={{ lineHeight: 0 }}
+              aria-label="Next page"
+            >
+              <PixelArrowRight size={48} />
+            </button>
+          )}
+        </motion.div>
       )}
 
       {/* Video overlay — above all content, click outside or ESC to close */}

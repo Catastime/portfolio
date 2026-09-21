@@ -51,6 +51,20 @@ const preloadImages = async urls => {
   );
 };
 
+/**
+ * @param {Object} props
+ * @param {Array<{ id: string, img: string, url?: string, height?: number, aspect?: number, full?: string }>} props.items
+ * @param {string} [props.ease]
+ * @param {number} [props.duration]
+ * @param {number} [props.stagger]
+ * @param {string} [props.animateFrom]
+ * @param {boolean} [props.scaleOnHover]
+ * @param {number} [props.hoverScale]
+ * @param {boolean} [props.blurToFocus]
+ * @param {boolean} [props.colorShiftOnHover]
+ * @param {(item: { id: string, img: string, url?: string, height?: number, aspect?: number, full?: string }) => void} [props.onItemClick]
+ * @param {boolean} [props.waitForImages]
+ */
 const Masonry = ({
   items,
   ease = 'power3.out',
@@ -60,7 +74,9 @@ const Masonry = ({
   scaleOnHover = true,
   hoverScale = 0.95,
   blurToFocus = true,
-  colorShiftOnHover = false
+  colorShiftOnHover = false,
+  onItemClick = null,
+  waitForImages = true
 }) => {
   const columns = useMedia(
     ['(min-width:1500px)', '(min-width:1000px)', '(min-width:600px)', '(min-width:400px)'],
@@ -102,8 +118,12 @@ const Masonry = ({
   };
 
   useEffect(() => {
+    if (!waitForImages) {
+      setImagesReady(true);
+      return;
+    }
     preloadImages(items.map(i => i.img)).then(() => setImagesReady(true));
-  }, [items]);
+  }, [items, waitForImages]);
 
   const grid = useMemo(() => {
     if (!width) return [];
@@ -114,7 +134,7 @@ const Masonry = ({
     return items.map(child => {
       const col = colHeights.indexOf(Math.min(...colHeights));
       const x = columnWidth * col;
-      const height = child.height / 2;
+      const height = child.aspect ? columnWidth / child.aspect : child.height / 2;
       const y = colHeights[col];
 
       colHeights[col] += height;
@@ -224,7 +244,7 @@ const Masonry = ({
             key={item.id}
             data-key={item.id}
             className="item-wrapper"
-            onClick={() => window.open(item.url, '_blank', 'noopener')}
+            onClick={() => (onItemClick ? onItemClick(item) : window.open(item.url, '_blank', 'noopener'))}
             onMouseEnter={e => handleMouseEnter(e, item)}
             onMouseLeave={e => handleMouseLeave(e, item)}
           >
