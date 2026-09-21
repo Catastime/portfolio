@@ -212,20 +212,6 @@
   background-repeat: no-repeat;
 }
 
-@keyframes mobile-page-in-right {
-  from { transform: translateX(6%); opacity: 0; }
-  to { transform: translateX(0); opacity: 1; }
-}
-
-@keyframes mobile-page-in-left {
-  from { transform: translateX(-6%); opacity: 0; }
-  to { transform: translateX(0); opacity: 1; }
-}
-
-.sketchbook-mobile-layer-in-right { animation: mobile-page-in-right 0.25s ease-out; }
-
-.sketchbook-mobile-layer-in-left { animation: mobile-page-in-left 0.25s ease-out; }
-
 .sketchbook-mobile {
   position: relative;
   will-change: transform, opacity;

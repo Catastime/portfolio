@@ -59,11 +59,10 @@ export default function ScrollSequence({ onMatVisible, onBookVisible, onZoomProg
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // Phase boundaries. On mobile the zoom-out runs to the very bottom:
-  // the document ends with the book at rest, so scrolling can never skip pages.
+  // Phase boundaries
   const slideEnd = 0.33;
   const holdEnd = 0.36;
-  const zoomEnd = isMobile ? 1.0 : 0.60;
+  const zoomEnd = 0.60;
 
   // Image translateY: slides from 100vh (below viewport) to 0 (filling viewport)
   const translateY = useMemo(() => {

@@ -275,9 +275,8 @@ function App() {
   const bookArrowVisible = bookVisible && inFlatZone && scrollProgress >= bookStart && scrollProgress <= bookEnd
   const canTurnForward = bookArrowVisible && currentSpread < totalSpreads - 1 && !isMobileViewport
   const canTurnBack = bookArrowVisible && currentSpread > 0 && !isMobileViewport
-  // Up arrow: at image stop, at book flat zone on the first spread (desktop),
-  // or on mobile once the book has faded in
-  const canGoUp = atImageStop || (bookArrowVisible && currentSpread === 0) || (isMobileViewport && bookVisible && bookZoom > 0.35)
+  // Up arrow: at image stop, or at book flat zone on the first spread only
+  const canGoUp = atImageStop || (bookArrowVisible && currentSpread === 0)
 
   // Scroll to a specific spread's flat zone center
   const scrollToSpreadFlat = (spread: number) => {
@@ -298,6 +297,14 @@ function App() {
       scrollToSpreadFlat(currentSpread - 1)
     }
   }
+
+  // Mobile: single pages are scroll-driven, scroll to a page's slice center
+  const scrollToMobilePage = useCallback((page: number) => {
+    const max = document.documentElement.scrollHeight - window.innerHeight
+    const slice = bookRange / bookPages.length
+    const target = Math.min(1, bookStart + slice * (page + 0.5))
+    smoothScrollTo(max * target, 700)
+  }, [bookRange, bookPages.length])
 
   const smoothScrollTo = (target: number, duration = 4000) => {
     if (scrollAnimRef.current !== null) {
@@ -333,7 +340,7 @@ function App() {
   // Navigation: three steps — landing (0), image (0.33), book (0.60)
   const scrollToStep = (step: 'landing' | 'image' | 'book', duration = 1500) => {
     const max = document.documentElement.scrollHeight - window.innerHeight
-    const targets = { landing: 0, image: titleMoveEnd, book: isMobileViewport ? 1 : bookStart }
+    const targets = { landing: 0, image: titleMoveEnd, book: bookStart }
     smoothScrollTo(max * targets[step], duration)
   }
 
@@ -355,10 +362,6 @@ function App() {
     if (atImageStop) {
       autoPlayPhase.current = 0
       scrollToStep('landing', 1500)
-    } else if (isMobileViewport && bookVisible) {
-      // Mobile pages are gesture-driven — no flat zones, the arrow always works
-      autoPlayPhase.current = 1
-      scrollToStep('image', 1500)
     } else if (bookVisible && inFlatZone) {
       autoPlayPhase.current = 1
       scrollToStep('image', 1500)
@@ -530,7 +533,7 @@ function App() {
       />
 
       {/* Scroll spacer — gives the document scrollable height for the sequence */}
-      <div className={isMobileViewport ? 'h-[420vh] w-full' : 'h-[700vh] w-full'} />
+      <div className="h-[700vh] w-full" />
 
       {/* Fixed background layers */}
       <div className="fixed inset-0 z-0 pointer-events-none">
@@ -571,6 +574,7 @@ function App() {
         imgAspect={imgAspect}
         onVideoOpen={setVideoOverlay}
         onMoreOpen={() => setMoreOverlay(true)}
+        onNavigatePage={scrollToMobilePage}
       />
 
       {/* Title — starts centered, moves to top on scroll.
