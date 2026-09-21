@@ -90,9 +90,9 @@ export default function ScrollSequence({ onMatVisible, onBookVisible, onZoomProg
           height: '100vh',
         };
       }
-      const ease = zoomT < 0.5 ? 4 * zoomT * zoomT * zoomT : 1 - Math.pow(-2 * zoomT + 2, 3) / 2;
+      const ease = 1 - Math.pow(1 - zoomT, 3);
       return {
-        transform: `translateY(0vh) scale(${1 - 0.35 * ease})`,
+        transform: `translateY(0vh) scale(${1 - 0.45 * ease})`,
         width: '100%',
         height: '100vh',
       };

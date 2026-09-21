@@ -178,6 +178,25 @@ function App() {
     setTimeout(() => setCopied(prev => (prev === key ? null : prev)), 1500)
   }
 
+  // Hold-to-copy for touch devices (right-click is not available there)
+  const holdTimerRef = useRef<number | null>(null)
+  const holdCopiedRef = useRef(false)
+  const isTouch = typeof window !== 'undefined' && window.matchMedia('(pointer: coarse)').matches
+  const startHoldCopy = (key: string, text: string) => {
+    holdCopiedRef.current = false
+    holdTimerRef.current = window.setTimeout(() => {
+      holdCopiedRef.current = true
+      navigator.vibrate?.(50)
+      copyToClipboard(key, text)
+    }, 600)
+  }
+  const cancelHoldCopy = () => {
+    if (holdTimerRef.current !== null) {
+      clearTimeout(holdTimerRef.current)
+      holdTimerRef.current = null
+    }
+  }
+
   // Warm media before the user reaches it
   useEffect(() => { startPreload() }, [])
   const [matVisible, setMatVisible] = useState(false)
@@ -797,11 +816,14 @@ function App() {
               initial={{ opacity: 0, y: 100 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1], delay: 0 }}
-              onClick={() => { window.location.href = 'mailto:tim.moedeker@gmail.com' }}
+              onClick={() => { if (holdCopiedRef.current) return; window.location.href = 'mailto:tim.moedeker@gmail.com' }}
               onContextMenu={(e) => { e.preventDefault(); copyToClipboard('email', 'tim.moedeker@gmail.com') }}
+              onTouchStart={() => startHoldCopy('email', 'tim.moedeker@gmail.com')}
+              onTouchMove={cancelHoldCopy}
+              onTouchEnd={cancelHoldCopy}
             >
               <span className="contact-btn-main">tim.moedeker@gmail.com</span>
-              <span className="contact-btn-hint">{copied === 'email' ? 'Copied' : 'Rightclick to copy'}</span>
+              <span className="contact-btn-hint">{copied === 'email' ? 'Copied' : isTouch ? 'Hold to copy' : 'Rightclick to copy'}</span>
             </motion.button>
             <motion.button
               type="button"
@@ -809,11 +831,14 @@ function App() {
               initial={{ opacity: 0, y: 100 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1], delay: 0.04 }}
-              onClick={() => { window.location.href = 'tel:+491779000982' }}
+              onClick={() => { if (holdCopiedRef.current) return; window.location.href = 'tel:+491779000982' }}
               onContextMenu={(e) => { e.preventDefault(); copyToClipboard('phone', '+49 177 9000982') }}
+              onTouchStart={() => startHoldCopy('phone', '+49 177 9000982')}
+              onTouchMove={cancelHoldCopy}
+              onTouchEnd={cancelHoldCopy}
             >
               <span className="contact-btn-main">+49 177 9000982</span>
-              <span className="contact-btn-hint">{copied === 'phone' ? 'Copied' : 'Rightclick to copy'}</span>
+              <span className="contact-btn-hint">{copied === 'phone' ? 'Copied' : isTouch ? 'Hold to copy' : 'Rightclick to copy'}</span>
             </motion.button>
             <motion.a
               className="contact-btn"

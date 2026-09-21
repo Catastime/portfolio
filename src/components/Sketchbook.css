@@ -203,6 +203,14 @@
 }
 
 /* Mobile */
+.sketchbook-mobile-layer {
+  position: absolute;
+  inset: 0;
+  background-size: 100% 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
 .sketchbook-mobile {
   position: relative;
   background-size: 100% 100%;
@@ -356,10 +364,15 @@
   border: 2px solid #777;
   font-family: 'Hitobito', sans-serif;
   color: var(--page-text, #cfcfcf);
+  container-type: inline-size;
   cursor: pointer;
   pointer-events: auto !important;
   z-index: 2;
   transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.sketch-more-btn-label {
+  font-size: 26cqw;
 }
 
 .sketch-more-btn:hover {

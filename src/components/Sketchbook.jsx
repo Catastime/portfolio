@@ -116,14 +116,20 @@ export default function Sketchbook({
     return raw < 0.5 ? 4 * raw * raw * raw : 1 - Math.pow(-2 * raw + 2, 3) / 2;
   }, [scrollProgress, scrollSpread, totalSpreads]);
 
-  // Mobile: single pages are scroll-driven, one page per slice of the book range
-  const mobilePage = useMemo(() => {
-    if (scrollProgress <= bookStart) return 0;
-    if (scrollProgress >= bookEnd) return Math.max(0, pages.length - 1);
-    const t = (scrollProgress - bookStart) / bookRange;
-    const slice = 1 / pages.length;
-    return Math.min(pages.length - 1, Math.floor(t / slice));
+  // Mobile: single pages are scroll-driven, one page per slice of the book range.
+  // Each slice: first half at rest, second half crossfades to the next page.
+  const mobileFlat = 0.5;
+  const mobilePos = useMemo(() => {
+    const raw = ((scrollProgress - bookStart) / bookRange) * pages.length;
+    return Math.max(0, Math.min(pages.length - 1, raw));
   }, [scrollProgress, pages.length]);
+  const mobilePage = Math.floor(mobilePos);
+  const mobileFrac = mobilePos - mobilePage;
+  const mobileTurnP = useMemo(() => {
+    if (mobileFrac <= mobileFlat) return 0;
+    const raw = Math.min(1, (mobileFrac - mobileFlat) / (1 - mobileFlat));
+    return raw < 0.5 ? 4 * raw * raw * raw : 1 - Math.pow(-2 * raw + 2, 3) / 2;
+  }, [mobileFrac]);
 
   // Book dimensions — two A4 pages with a gap between them
   const { bookW, bookH, pageW, pageH, gap } = useMemo(() => {
@@ -164,14 +170,14 @@ export default function Sketchbook({
   // At bookZoom=1 the book is at resting size, centered.
   // The image item on the right page: x:-4%, y:10%, w:108% (Atelier Anthrazit).
   const bookTransform = useMemo(() => {
-    // Mobile: no two-page zoom geometry to track, scale/fade the page in
+    // Mobile: no two-page zoom geometry to track, scale/fade the page in.
+    // Ease-out so the motion responds immediately (the small scale range
+    // makes an ease-in start look like nothing is happening).
     if (isMobile) {
       if (bookZoom >= 1) return { transform: 'scale(1)', transformOrigin: 'center center' };
-      const ease = bookZoom < 0.5
-        ? 4 * bookZoom * bookZoom * bookZoom
-        : 1 - Math.pow(-2 * bookZoom + 2, 3) / 2;
+      const ease = 1 - Math.pow(1 - bookZoom, 3);
       return {
-        transform: `scale(${0.85 + 0.15 * ease})`,
+        transform: `scale(${0.8 + 0.2 * ease})`,
         transformOrigin: 'center center',
         opacity: ease,
       };
@@ -248,12 +254,20 @@ export default function Sketchbook({
   };
 
   const handleTouchEnd = (e) => {
-    const diff = touchStartX.current - e.changedTouches[0].clientX;
-    if (Math.abs(diff) < 40) return;
-    // Swipes navigate; suppress the synthetic click that follows
+    // All touch navigation happens here; suppress the synthetic click that follows
     suppressClickRef.current = true;
     setTimeout(() => { suppressClickRef.current = false; }, 400);
-    navigateToPage(mobilePage + (diff > 0 ? 1 : -1));
+    // Don't turn the page when tapping interactive items (video, MORE, links)
+    if (e.target.closest('.sketch-item-clickable, .sketch-more-btn, a')) return;
+    const diff = touchStartX.current - e.changedTouches[0].clientX;
+    if (Math.abs(diff) >= 40) {
+      navigateToPage(mobilePage + (diff > 0 ? 1 : -1));
+      return;
+    }
+    // Tap: left half goes back, right half goes forward
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = e.changedTouches[0].clientX - rect.left;
+    navigateToPage(mobilePage + (x > rect.width / 2 ? 1 : -1));
   };
 
   const handleClick = (e) => {
@@ -434,7 +448,7 @@ export default function Sketchbook({
           style={{ ...style, cursor: 'pointer' }}
           onClick={() => onMoreOpen?.()}
         >
-          {item.label}
+          <span className="sketch-more-btn-label">{item.label}</span>
         </div>
       );
     }
@@ -558,7 +572,8 @@ export default function Sketchbook({
   };
 
   if (isMobile) {
-    const mobileTexture = pageTexture(mobilePage);
+    const nextMobilePage = Math.min(pages.length - 1, mobilePage + 1);
+    const isTurning = mobileTurnP > 0 && nextMobilePage !== mobilePage;
     return (
       <div className="sketchbook-container" style={{ '--hole-size': `${pageH * 0.0102}px` }}>
         <div
@@ -566,15 +581,35 @@ export default function Sketchbook({
           style={{
             width: `${pageW}px`,
             height: `${pageH}px`,
-            backgroundImage: `url('${BASE}textures/${mobileTexture}.png')`,
             ...bookTransform,
           }}
           onClick={handleClick}
           onTouchStart={handleTouchStart}
           onTouchEnd={handleTouchEnd}
         >
-          {renderPage(pages[mobilePage], 'mobile', fontForPage(mobilePage), mobilePage)}
-          {renderCorners(mobilePage)}
+          <div
+            className="sketchbook-mobile-layer"
+            style={{
+              backgroundImage: `url('${BASE}textures/${pageTexture(mobilePage)}.png')`,
+              transform: `translateX(${-6 * mobileTurnP}%)`,
+            }}
+          >
+            {renderPage(pages[mobilePage], 'mobile', fontForPage(mobilePage), mobilePage)}
+            {renderCorners(mobilePage)}
+          </div>
+          {isTurning && (
+            <div
+              className="sketchbook-mobile-layer"
+              style={{
+                backgroundImage: `url('${BASE}textures/${pageTexture(nextMobilePage)}.png')`,
+                transform: `translateX(${6 * (1 - mobileTurnP)}%)`,
+                opacity: mobileTurnP,
+              }}
+            >
+              {renderPage(pages[nextMobilePage], 'mobile-next', fontForPage(nextMobilePage), nextMobilePage)}
+              {renderCorners(nextMobilePage)}
+            </div>
+          )}
           <div className="sketchbook-page-indicator">
             {mobilePage + 1} / {pages.length}
           </div>
