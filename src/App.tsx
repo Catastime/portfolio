@@ -275,8 +275,9 @@ function App() {
   const bookArrowVisible = bookVisible && inFlatZone && scrollProgress >= bookStart && scrollProgress <= bookEnd
   const canTurnForward = bookArrowVisible && currentSpread < totalSpreads - 1 && !isMobileViewport
   const canTurnBack = bookArrowVisible && currentSpread > 0 && !isMobileViewport
-  // Up arrow: at image stop, or at book flat zone on the first spread only
-  const canGoUp = atImageStop || (bookArrowVisible && currentSpread === 0) || (isMobileViewport && bookVisible && scrollProgress > 0.9)
+  // Up arrow: at image stop, at book flat zone on the first spread (desktop),
+  // or on mobile once the book has faded in
+  const canGoUp = atImageStop || (bookArrowVisible && currentSpread === 0) || (isMobileViewport && bookVisible && bookZoom > 0.35)
 
   // Scroll to a specific spread's flat zone center
   const scrollToSpreadFlat = (spread: number) => {
@@ -354,6 +355,10 @@ function App() {
     if (atImageStop) {
       autoPlayPhase.current = 0
       scrollToStep('landing', 1500)
+    } else if (isMobileViewport && bookVisible) {
+      // Mobile pages are gesture-driven — no flat zones, the arrow always works
+      autoPlayPhase.current = 1
+      scrollToStep('image', 1500)
     } else if (bookVisible && inFlatZone) {
       autoPlayPhase.current = 1
       scrollToStep('image', 1500)

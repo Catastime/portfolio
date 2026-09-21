@@ -163,16 +163,17 @@ export default function Sketchbook({
   // At bookZoom=1 the book is at resting size, centered.
   // The image item on the right page: x:-4%, y:10%, w:108% (Atelier Anthrazit).
   const bookTransform = useMemo(() => {
-    // Mobile: no two-page zoom geometry to track, scale/fade the page in.
-    // Ease-out so the motion responds immediately (the small scale range
-    // makes an ease-in start look like nothing is happening).
+    // Mobile: no two-page zoom geometry to track, scale the page in.
+    // The zoom spans the whole rest of the scroll on mobile — a fade tied to
+    // it would ghost the pages. Fade in fast, then stay solid like desktop.
     if (isMobile) {
       if (bookZoom >= 1) return { transform: 'scale(1)', transformOrigin: 'center center' };
       const ease = 1 - Math.pow(1 - bookZoom, 3);
+      const fadeIn = Math.min(1, bookZoom / 0.35);
       return {
         transform: `scale(${0.8 + 0.2 * ease})`,
         transformOrigin: 'center center',
-        opacity: ease,
+        opacity: 1 - Math.pow(1 - fadeIn, 3),
       };
     }
     if (bookZoom >= 1 || bookH === 0 || pageW === 0) {
@@ -233,10 +234,10 @@ export default function Sketchbook({
   }, [bookZoom, bookW, bookH, pageW, pageH, gap, viewport.w, viewport.h, imgAspect, isMobile]);
 
   // Mobile: swipe/tap
-  const touchStartX = useRef(0);
+  const touchStart = useRef({ x: 0, y: 0 });
 
   const handleTouchStart = (e) => {
-    touchStartX.current = e.touches[0].clientX;
+    touchStart.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
   };
 
   const suppressClickRef = useRef(false);
@@ -253,14 +254,19 @@ export default function Sketchbook({
     setTimeout(() => { suppressClickRef.current = false; }, 400);
     // Don't turn the page when tapping interactive items (video, MORE, links)
     if (e.target.closest('.sketch-item-clickable, .sketch-more-btn, a')) return;
-    const diff = touchStartX.current - e.changedTouches[0].clientX;
-    if (Math.abs(diff) >= 40) {
-      navigateToPage(currentPage + (diff > 0 ? 1 : -1));
+    const end = e.changedTouches[0];
+    const dx = touchStart.current.x - end.clientX;
+    const dy = touchStart.current.y - end.clientY;
+    // Vertical drags are scroll gestures — never page turns
+    if (Math.abs(dy) > Math.abs(dx) && Math.abs(dy) > 10) return;
+    if (Math.abs(dx) >= 40) {
+      navigateToPage(currentPage + (dx > 0 ? 1 : -1));
       return;
     }
-    // Tap: left half goes back, right half goes forward
+    // Tap (barely moved): left half goes back, right half goes forward
+    if (Math.abs(dx) > 10 || Math.abs(dy) > 10) return;
     const rect = e.currentTarget.getBoundingClientRect();
-    const x = e.changedTouches[0].clientX - rect.left;
+    const x = end.clientX - rect.left;
     navigateToPage(currentPage + (x > rect.width / 2 ? 1 : -1));
   };
 
