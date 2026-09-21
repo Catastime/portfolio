@@ -54,3 +54,53 @@ body,
   line-height: 0.9;
   white-space: nowrap;
 }
+
+/* Contact overlay — opened from the dock */
+.contact-overlay {
+  display: flex;
+  flex-direction: column;
+  gap: 1.4rem;
+  padding: 2.5rem 3.5rem;
+}
+
+.contact-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  min-width: 22rem;
+  padding: 1.1rem 2.2rem;
+  border-radius: 12px;
+  background-color: rgba(18, 15, 23, 0.35);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  cursor: pointer;
+  font-family: 'Epoch', 'Futura', sans-serif;
+  text-decoration: none;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.contact-btn:hover,
+.contact-btn:focus-visible {
+  background-color: rgba(18, 15, 23, 0.6);
+  border-color: rgba(255, 255, 255, 0.25);
+}
+
+.contact-btn:hover .contact-btn-main,
+.contact-btn:focus-visible .contact-btn-main {
+  color: #fff;
+}
+
+.contact-btn-main {
+  color: #cfcfcf;
+  font-size: 1.4rem;
+}
+
+.contact-btn-hint {
+  color: #cfcfcf;
+  opacity: 0.55;
+  font-size: 0.8rem;
+}
+

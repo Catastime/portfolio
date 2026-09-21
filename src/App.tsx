@@ -7,6 +7,7 @@ import CuttingMat from '@/components/CuttingMat'
 import ScrollSequence from '@/components/ScrollSequence'
 import Sketchbook from '@/components/Sketchbook'
 import { PixelHome, PixelProjects, PixelContact, PixelArrowDown, PixelArrowUp, PixelArrowRight, PixelArrowLeft } from '@/components/PixelIcons'
+import { motion } from 'motion/react'
 
 const projectItems = [
   { id: '1', img: 'https://picsum.photos/id/1015/600/900?grayscale', url: 'https://example.com/one', height: 400 },
@@ -154,6 +155,13 @@ function App() {
   const [showProjects, setShowProjects] = useState(false)
   const [overlayVisible, setOverlayVisible] = useState(false)
   const [videoOverlay, setVideoOverlay] = useState<string | null>(null)
+  const [contactOverlay, setContactOverlay] = useState(false)
+  const [copied, setCopied] = useState<string | null>(null)
+  const copyToClipboard = (key: string, text: string) => {
+    navigator.clipboard?.writeText(text)
+    setCopied(key)
+    setTimeout(() => setCopied(prev => (prev === key ? null : prev)), 1500)
+  }
   const [matVisible, setMatVisible] = useState(false)
   const [bookVisible, setBookVisible] = useState(false)
   const [bookZoom, setBookZoom] = useState(0)
@@ -318,11 +326,12 @@ function App() {
       // ESC closes any open overlay
       if (e.key === 'Escape') {
         if (videoOverlay) { setVideoOverlay(null); return }
+        if (contactOverlay) { setContactOverlay(false); return }
         if (showProjects) { setShowProjects(false); return }
         return
       }
       // Block arrow interactions while any overlay is open
-      if (showProjects || videoOverlay) return
+      if (showProjects || videoOverlay || contactOverlay) return
       if (e.key === 'ArrowDown' && arrowVisible && (atLanding || atImageStop)) {
         e.preventDefault()
         autoPlay()
@@ -342,13 +351,13 @@ function App() {
     }
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [arrowVisible, atLanding, atImageStop, canGoUp, canTurnForward, canTurnBack, showProjects, videoOverlay])
+  }, [arrowVisible, atLanding, atImageStop, canGoUp, canTurnForward, canTurnBack, showProjects, videoOverlay, contactOverlay])
 
   // Trigger autoPlay/goBack after 2 wheel ticks in the appropriate direction
   const wheelTickRef = useRef(0)
   useEffect(() => {
     const handleWheel = (e: WheelEvent) => {
-      if (showProjects || videoOverlay) return
+      if (showProjects || videoOverlay || contactOverlay) return
       if (scrollAnimRef.current !== null) return
       if (!arrowVisible) return
 
@@ -383,7 +392,7 @@ function App() {
     }
     window.addEventListener('wheel', handleWheel, { passive: false })
     return () => window.removeEventListener('wheel', handleWheel)
-  }, [arrowVisible, atLanding, atImageStop, canGoUp, showProjects, videoOverlay])
+  }, [arrowVisible, atLanding, atImageStop, canGoUp, showProjects, videoOverlay, contactOverlay])
 
   const handleMatVisible = useCallback((show: boolean) => {
     setMatVisible(show)
@@ -420,20 +429,20 @@ function App() {
     }
   }, [showProjects, videoOverlay])
 
-  // Lock scroll when video overlay is open
+  // Lock scroll when video or contact overlay is open
   useEffect(() => {
-    if (videoOverlay) {
+    if (videoOverlay || contactOverlay) {
       document.body.style.overflow = 'hidden'
       return () => {
         if (!showProjects) document.body.style.overflow = ''
       }
     }
-  }, [videoOverlay, showProjects])
+  }, [videoOverlay, contactOverlay, showProjects])
 
   const dockItems = [
     { icon: <PixelHome size={18} />, label: 'Home', onClick: goHome },
     { icon: <PixelProjects size={18} />, label: 'Projects', onClick: () => setShowProjects(prev => !prev) },
-    { icon: <PixelContact size={18} />, label: 'Contact', onClick: () => console.log('Contact') },
+    { icon: <PixelContact size={18} />, label: 'Contact', onClick: () => setContactOverlay(true) },
   ]
 
   return (
@@ -635,6 +644,60 @@ function App() {
             }}
           />
         </div>
+      )}
+
+      {/* Contact overlay — email/phone with right-click copy, CV download */}
+      {contactOverlay && (
+        <motion.div
+          className="fixed inset-0 flex items-center justify-center"
+          onClick={() => setContactOverlay(false)}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.4, ease: 'easeOut' }}
+          style={{
+            zIndex: 60,
+            backgroundColor: 'rgba(5, 5, 5, 0.3)',
+            backdropFilter: 'blur(4px)',
+            WebkitBackdropFilter: 'blur(4px)',
+          }}
+        >
+          <div className="contact-overlay" onClick={(e) => e.stopPropagation()}>
+            <motion.button
+              type="button"
+              className="contact-btn"
+              initial={{ opacity: 0, y: 100 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1], delay: 0 }}
+              onClick={() => { window.location.href = 'mailto:tim.moedeker@gmail.com' }}
+              onContextMenu={(e) => { e.preventDefault(); copyToClipboard('email', 'tim.moedeker@gmail.com') }}
+            >
+              <span className="contact-btn-main">tim.moedeker@gmail.com</span>
+              <span className="contact-btn-hint">{copied === 'email' ? 'Copied' : 'Rightclick to copy'}</span>
+            </motion.button>
+            <motion.button
+              type="button"
+              className="contact-btn"
+              initial={{ opacity: 0, y: 100 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1], delay: 0.04 }}
+              onClick={() => { window.location.href = 'tel:+491779000982' }}
+              onContextMenu={(e) => { e.preventDefault(); copyToClipboard('phone', '+49 177 9000982') }}
+            >
+              <span className="contact-btn-main">+49 177 9000982</span>
+              <span className="contact-btn-hint">{copied === 'phone' ? 'Copied' : 'Rightclick to copy'}</span>
+            </motion.button>
+            <motion.a
+              className="contact-btn"
+              href="/portfolio/CV.pdf"
+              download="CV_Tim_Moedeker.pdf"
+              initial={{ opacity: 0, y: 100 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1], delay: 0.08 }}
+            >
+              <span className="contact-btn-main">Download CV</span>
+            </motion.a>
+          </div>
+        </motion.div>
       )}
 
       <div className="fixed inset-x-0 bottom-0 z-40 flex justify-center">
