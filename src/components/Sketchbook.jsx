@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo, useRef } from 'react';
+import { BASE } from '@/paths'
 import './Sketchbook.css';
 
 /**
@@ -437,7 +438,7 @@ export default function Sketchbook({
   // Paper texture for a page — pages can override via the `texture` field
   const pageTexture = (pageIndex) =>
     pages[pageIndex]?.texture || (pageIndex % 2 === 0 ? 'left_page' : 'right_page');
-  const textureUrl = (pageIndex) => `url('/portfolio/textures/${pageTexture(pageIndex)}.png')`;
+  const textureUrl = (pageIndex) => `url('${BASE}textures/${pageTexture(pageIndex)}.png')`;
 
   // Punched-hole color: reads as the page underneath in the stack —
   // black paper on white pages, paper color on black/dark pages
@@ -513,7 +514,7 @@ export default function Sketchbook({
           style={{
             width: `${pageW}px`,
             height: `${pageH}px`,
-            backgroundImage: `url('/portfolio/textures/${mobileTexture}.png')`,
+            backgroundImage: `url('${BASE}textures/${mobileTexture}.png')`,
             ...bookTransform,
           }}
           onClick={handleClick}

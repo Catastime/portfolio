@@ -8,6 +8,8 @@ import ScrollSequence from '@/components/ScrollSequence'
 import Sketchbook from '@/components/Sketchbook'
 import { PixelHome, PixelProjects, PixelContact, PixelArrowDown, PixelArrowUp, PixelArrowRight, PixelArrowLeft } from '@/components/PixelIcons'
 import { motion } from 'motion/react'
+import { BASE } from '@/paths'
+import { startPreload } from '@/preload'
 
 const projectItems = [
   { id: '1', img: 'https://picsum.photos/id/1015/600/900?grayscale', url: 'https://example.com/one', height: 400 },
@@ -29,7 +31,7 @@ const projectItems = [
 // Corner text (spread number, year, place, title) is auto-injected by Sketchbook
 // for all spreads except spread 0, using the `meta` field on the left page.
 
-const THESIS_IMG = '/portfolio/master-thesis'
+const THESIS_IMG = `${BASE}master-thesis`
 
 const bookPages = [
   // ===== SPREAD 0: Introduction & CV =====
@@ -50,7 +52,7 @@ const bookPages = [
   {
     items: [
       // Atelier Anthrazit — the image we zoom out from
-      { type: 'image', img: '/portfolio/tim/Atelier Anthrazit-039-breit-bw.jpg', x: -4, y: 10, w: 108, rotation: 0, taped: true, noBg: true, shadow: '0 2px 8px rgba(0, 0, 0, 0.15)', tackers: [3, 1, 4, 2] },
+      { type: 'image', img: `${BASE}tim/Atelier Anthrazit-039-breit-bw.jpg`, x: -4, y: 10, w: 108, rotation: 0, taped: true, noBg: true, shadow: '0 2px 8px rgba(0, 0, 0, 0.15)', tackers: [3, 1, 4, 2] },
       // CV — single column below the image: leader lines to right-aligned dates
       {
         type: 'cv', x: -4, y: 48.5, w: 108, rotation: 0, fontSize: 0.85,
@@ -162,6 +164,9 @@ function App() {
     setCopied(key)
     setTimeout(() => setCopied(prev => (prev === key ? null : prev)), 1500)
   }
+
+  // Warm media before the user reaches it
+  useEffect(() => { startPreload() }, [])
   const [matVisible, setMatVisible] = useState(false)
   const [bookVisible, setBookVisible] = useState(false)
   const [bookZoom, setBookZoom] = useState(0)
@@ -688,7 +693,7 @@ function App() {
             </motion.button>
             <motion.a
               className="contact-btn"
-              href="/portfolio/CV.pdf"
+              href={`${BASE}CV.pdf`}
               download="CV_Tim_Moedeker.pdf"
               initial={{ opacity: 0, y: 100 }}
               animate={{ opacity: 1, y: 0 }}

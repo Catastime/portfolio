@@ -26,14 +26,12 @@
 }
 
 .sketchbook-page-stack-left {
-  background-image: url('/portfolio/textures/left_page.png');
   background-size: 100% 100%;
   background-position: center;
   background-repeat: no-repeat;
 }
 
 .sketchbook-page-stack-right {
-  background-image: url('/portfolio/textures/right_page.png');
   background-size: 100% 100%;
   background-position: center;
   background-repeat: no-repeat;
@@ -185,11 +183,9 @@
 }
 
 .sketchbook-page-turning-front {
-  background-image: url('/portfolio/textures/right_page.png');
 }
 
 .sketchbook-page-turning-back {
-  background-image: url('/portfolio/textures/left_page.png');
   transform: rotateY(180deg);
 }
 

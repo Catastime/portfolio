@@ -2,7 +2,7 @@
 
 @font-face {
   font-family: "Hitobito";
-  src: url("/portfolio/fonts/Hitobito.otf") format("opentype");
+  src: url("/fonts/Hitobito.otf") format("opentype");
   font-weight: normal;
   font-style: normal;
   font-display: swap;
@@ -10,7 +10,7 @@
 
 @font-face {
   font-family: "Epoch";
-  src: url("/portfolio/fonts/Epoch.otf") format("opentype");
+  src: url("/fonts/Epoch.otf") format("opentype");
   font-weight: normal;
   font-style: normal;
   font-display: swap;
@@ -18,7 +18,7 @@
 
 @font-face {
   font-family: "Endless";
-  src: url("/portfolio/fonts/ENDLESS.ttf") format("truetype");
+  src: url("/fonts/ENDLESS.ttf") format("truetype");
   font-weight: normal;
   font-style: normal;
   font-display: swap;

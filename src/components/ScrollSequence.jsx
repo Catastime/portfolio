@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo, useRef } from 'react';
+import { BASE } from '@/paths'
 import './ScrollSequence.css';
 
 /**
@@ -194,7 +195,7 @@ export default function ScrollSequence({ onMatVisible, onBookVisible, onZoomProg
     >
       <img
         ref={imgRef}
-        src="/portfolio/tim/Atelier%20Anthrazit-039-breit-bw.jpg"
+        src={`${BASE}tim/Atelier%20Anthrazit-039-breit-bw.jpg`}
         alt="Featured work"
         className="scroll-image"
         onLoad={(e) => {
