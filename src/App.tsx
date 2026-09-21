@@ -184,6 +184,14 @@ function App() {
   const [bookVisible, setBookVisible] = useState(false)
   const [bookZoom, setBookZoom] = useState(0)
   const [imgAspect, setImgAspect] = useState(0)
+  const [viewportW, setViewportW] = useState(() => (typeof window !== 'undefined' ? window.innerWidth : 1920))
+  const isMobileViewport = viewportW < 768
+
+  useEffect(() => {
+    const onResize = () => setViewportW(window.innerWidth)
+    window.addEventListener('resize', onResize)
+    return () => window.removeEventListener('resize', onResize)
+  }, [])
   const [scrollProgress, setScrollProgress] = useState(0)
   const [arrowVisible, setArrowVisible] = useState(false)
   const [fadingHome, setFadingHome] = useState(false)
@@ -238,8 +246,8 @@ function App() {
 
   // Show book arrows when in the book's flat zone
   const bookArrowVisible = bookVisible && inFlatZone && scrollProgress >= bookStart && scrollProgress <= bookEnd
-  const canTurnForward = bookArrowVisible && currentSpread < totalSpreads - 1
-  const canTurnBack = bookArrowVisible && currentSpread > 0
+  const canTurnForward = bookArrowVisible && currentSpread < totalSpreads - 1 && !isMobileViewport
+  const canTurnBack = bookArrowVisible && currentSpread > 0 && !isMobileViewport
   // Up arrow: at image stop, or at book flat zone on the first spread only
   const canGoUp = atImageStop || (bookArrowVisible && currentSpread === 0)
 
@@ -262,6 +270,14 @@ function App() {
       scrollToSpreadFlat(currentSpread - 1)
     }
   }
+
+  // Mobile: single pages are scroll-driven, scroll to a page's slice center
+  const scrollToMobilePage = useCallback((page: number) => {
+    const max = document.documentElement.scrollHeight - window.innerHeight
+    const slice = bookRange / bookPages.length
+    const target = Math.min(1, bookStart + slice * (page + 0.5))
+    smoothScrollTo(max * target, 700)
+  }, [bookRange, bookPages.length])
 
   const smoothScrollTo = (target: number, duration = 4000) => {
     if (scrollAnimRef.current !== null) {
@@ -531,6 +547,7 @@ function App() {
         imgAspect={imgAspect}
         onVideoOpen={setVideoOverlay}
         onMoreOpen={() => setMoreOverlay(true)}
+        onNavigatePage={scrollToMobilePage}
       />
 
       {/* Title — starts centered, moves to top on scroll.

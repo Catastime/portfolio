@@ -32,6 +32,7 @@ export default function ScrollSequence({ onMatVisible, onBookVisible, onZoomProg
     h: typeof window !== 'undefined' ? window.innerHeight : 1080,
   });
   const imgRef = useRef(null);
+  const isMobile = viewport.w < 768;
 
   useEffect(() => {
     const handleScroll = () => {
@@ -78,6 +79,24 @@ export default function ScrollSequence({ onMatVisible, onBookVisible, onZoomProg
   const layerStyle = useMemo(() => {
     const vw = viewport.w;
     const vh = viewport.h;
+
+    // Mobile: no book item to land on, shrink toward the center and
+    // crossfade into the single-page book scaling in underneath
+    if (isMobile) {
+      if (zoomT === 0) {
+        return {
+          transform: `translateY(${translateY})`,
+          width: '100%',
+          height: '100vh',
+        };
+      }
+      const ease = zoomT < 0.5 ? 4 * zoomT * zoomT * zoomT : 1 - Math.pow(-2 * zoomT + 2, 3) / 2;
+      return {
+        transform: `translateY(0vh) scale(${1 - 0.35 * ease})`,
+        width: '100%',
+        height: '100vh',
+      };
+    }
 
     if (zoomT === 0) {
       return {
@@ -152,7 +171,7 @@ export default function ScrollSequence({ onMatVisible, onBookVisible, onZoomProg
       left: `${screenLeft}px`,
       top: `${screenTop}px`,
     };
-  }, [zoomT, translateY, imgAspect, viewport]);
+  }, [zoomT, translateY, imgAspect, viewport, isMobile]);
 
   // Cutting mat appears when zoom-out starts
   const matShouldShow = progress > holdEnd;
@@ -163,12 +182,18 @@ export default function ScrollSequence({ onMatVisible, onBookVisible, onZoomProg
   // Image layer stays visible at rest (the image is on page 1).
   // Disappears when the first page turn begins and stays hidden.
   const imageOpacity = useMemo(() => {
+    // Mobile: fade out during the zoom-out so the book underneath is reachable
+    if (isMobile) {
+      if (zoomT >= 0.9) return 0;
+      if (zoomT >= 0.5) return 1 - (zoomT - 0.5) / 0.4;
+      return 1;
+    }
     if (progress >= imageFadeEnd) return 0;
     if (progress >= imageFadeStart) {
       return 1 - (progress - imageFadeStart) / (imageFadeEnd - imageFadeStart);
     }
     return 1;
-  }, [progress, imageFadeStart, imageFadeEnd]);
+  }, [progress, imageFadeStart, imageFadeEnd, isMobile, zoomT]);
 
   useEffect(() => {
     onMatVisible?.(matShouldShow);
@@ -190,7 +215,7 @@ export default function ScrollSequence({ onMatVisible, onBookVisible, onZoomProg
       style={{
         ...layerStyle,
         opacity: imageOpacity,
-        pointerEvents: imageOpacity > 0 ? 'auto' : 'none',
+        pointerEvents: imageOpacity > 0 && !isMobile ? 'auto' : 'none',
       }}
     >
       <img
@@ -198,6 +223,7 @@ export default function ScrollSequence({ onMatVisible, onBookVisible, onZoomProg
         src={`${BASE}tim/Atelier%20Anthrazit-039-breit-bw.jpg`}
         alt="Featured work"
         className="scroll-image"
+        style={isMobile ? { objectPosition: '66% 50%' } : undefined}
         onLoad={(e) => {
           const aspect = e.target.naturalWidth / e.target.naturalHeight;
           setImgAspect(aspect);
