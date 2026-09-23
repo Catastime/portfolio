@@ -81,7 +81,7 @@ const bookPages = [
             { head: 'Design & BIM: Rhinoceros, Revit, Archicad' },
             { head: 'Visualization: V-Ray, D5, Unity, Photoshop, Illustrator, InDesign' },
             { head: 'Other: Python, QGIS, 3D printing, large-format plotting, web/server hosting' },
-            { head: 'Languages: English (fluent)' },
+            { head: 'Languages: German (mother tongue), English (fluent)' },
           ]},
         ],
       },

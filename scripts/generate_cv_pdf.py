@@ -147,7 +147,7 @@ section('SKILLS')
 for s in ('Design & BIM: Rhinoceros, Revit, Archicad',
           'Visualization: V-Ray, D5, Unity, Photoshop, Illustrator, InDesign',
           'Other: Python, QGIS, 3D printing, large-format plotting, web/server hosting',
-          'Languages: English (fluent)'):
+          'Languages: German (mother tongue), English (fluent)'):
     d2.text((x, y), s, font=f_body, fill=DARK)
     y += lh_b
 
