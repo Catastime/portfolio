@@ -493,7 +493,10 @@ function App() {
   // Navigation: three steps — landing (0), image (0.33), book (0.60)
   const scrollToStep = (step: 'landing' | 'image' | 'book', duration = 1500) => {
     const max = document.documentElement.scrollHeight - window.innerHeight
-    const targets = { landing: 0, image: titleMoveEnd, book: bookStart }
+    // Land inside spread 0's flat zone, not exactly on bookStart — pixel
+    // rounding at the boundary can stop the scroll a hair short, which
+    // hides the arrows (they require scrollProgress >= bookStart).
+    const targets = { landing: 0, image: titleMoveEnd, book: bookStart + bookRange * (flatRatio * 0.5) / totalSpreads }
     smoothScrollTo(max * targets[step], duration)
   }
 
