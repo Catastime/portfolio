@@ -53,6 +53,12 @@ import './Sketchbook.css';
 // Measured from the scanned paper textures (width / height)
 const PAGE_ASPECT = 1510 / 2153; // average of left (1505) and right (1515) page textures
 
+// Reference page height for desktop type scaling: 80% of a 1080p viewport.
+// Desktop pages at least this tall render text at the authored rem sizes
+// (scale clamped to 1); smaller windows scale text down proportionally so
+// it stays inside its layout box. Mobile always renders at authored sizes.
+const REF_PAGE_H = 864;
+
 /** @param {SketchbookProps} props */
 export default function Sketchbook({
   pages = [],
@@ -365,7 +371,8 @@ export default function Sketchbook({
     if (item.type === 'text') {
       const textStyle = { ...style };
       if (item.font) textStyle.fontFamily = item.font;
-      if (item.fontSize) textStyle.fontSize = `${item.fontSize}rem`;
+      const itemFontSize = isMobile && item.fontSizeMobile != null ? item.fontSizeMobile : item.fontSize;
+      if (itemFontSize) textStyle.fontSize = `calc(${itemFontSize}rem * var(--page-scale, 1))`;
       if (item.align) textStyle.textAlign = item.align;
       if (item.weight) textStyle.fontWeight = item.weight;
       const floatImg = item.floatImage;
@@ -387,12 +394,12 @@ export default function Sketchbook({
           )}
           {item.sizes ? (
             item.sizes.map((s, i) => (
-              <div key={i} className="sketch-text-body" style={{ fontSize: `${s}rem` }}>
+              <div key={i} className="sketch-text-body" style={{ fontSize: `calc(${s}rem * var(--page-scale, 1))` }}>
                 {item.text}
               </div>
             ))
           ) : (
-            <div className="sketch-text-body" style={(item.bodySize || item.bodyLineHeight) ? { fontSize: item.bodySize ? `${item.bodySize}rem` : undefined, lineHeight: item.bodyLineHeight } : undefined}>{item.text}</div>
+            <div className="sketch-text-body" style={(item.bodySize || item.bodyLineHeight) ? { fontSize: item.bodySize ? `calc(${item.bodySize}rem * var(--page-scale, 1))` : undefined, lineHeight: item.bodyLineHeight } : undefined}>{item.text}</div>
           )}
         </div>
       );
@@ -414,7 +421,8 @@ export default function Sketchbook({
 
     if (item.type === 'cv') {
       const cvStyle = { ...style };
-      if (item.fontSize) cvStyle.fontSize = `${item.fontSize}rem`;
+      const cvFontSize = isMobile && item.fontSizeMobile != null ? item.fontSizeMobile : item.fontSize;
+      if (cvFontSize) cvStyle.fontSize = `calc(${cvFontSize}rem * var(--page-scale, 1))`;
       return (
         <div key={key} className="sketch-item sketch-item-text sketch-cv" style={cvStyle}>
           {item.sections.map((sec, si) => (
@@ -575,7 +583,7 @@ export default function Sketchbook({
     const nextMobilePage = Math.min(pages.length - 1, mobilePage + 1);
     const isTurning = mobileTurnP > 0 && nextMobilePage !== mobilePage;
     return (
-      <div className="sketchbook-container" style={{ '--hole-size': `${pageH * 0.0102}px` }}>
+      <div className="sketchbook-container" style={{ '--hole-size': `${pageH * 0.0102}px`, '--page-scale': isMobile ? 1 : Math.min(1, pageH / REF_PAGE_H) }}>
         <div
           className="sketchbook-mobile"
           style={{
@@ -632,6 +640,11 @@ export default function Sketchbook({
 
   const isTurning = turnProgress > 0 && turnProgress < 1 && scrollSpread < totalSpreads - 1;
 
+  // The left stack underneath switches to the next spread by the turn's
+  // halfway point — once the turning page passes edge-on, the new spread
+  // is fully visible underneath it.
+  const underT = Math.min(1, Math.max(0, (turnProgress - 0.4) / 0.1));
+
   // During a turn:
   //   - Left page underneath: crossfades from current left to next left
   //   - Right page underneath: shows next right page (destination)
@@ -640,7 +653,7 @@ export default function Sketchbook({
   const displayRightUnderneath = isTurning ? nextRightIndex : rightIndex;
 
   return (
-    <div className="sketchbook-container" style={{ '--hole-size': `${pageH * 0.0102}px` }}>
+    <div className="sketchbook-container" style={{ '--hole-size': `${pageH * 0.0102}px`, '--page-scale': isMobile ? 1 : Math.min(1, pageH / REF_PAGE_H) }}>
       <div
         className="sketchbook"
         style={{
@@ -656,10 +669,10 @@ export default function Sketchbook({
         >
           {isTurning ? (
             <>
-              <div style={{ position: 'absolute', inset: 0, opacity: 1 - turnProgress, backgroundImage: textureUrl(leftIndex), backgroundSize: '100% 100%' }}>
+              <div style={{ position: 'absolute', inset: 0, opacity: 1 - underT, backgroundImage: textureUrl(leftIndex), backgroundSize: '100% 100%' }}>
                 {renderPage(pages[leftIndex], 'left-current', fontForPage(leftIndex), leftIndex)}
               </div>
-              <div style={{ position: 'absolute', inset: 0, opacity: turnProgress, backgroundImage: textureUrl(nextLeftIndex), backgroundSize: '100% 100%' }}>
+              <div style={{ position: 'absolute', inset: 0, opacity: underT, backgroundImage: textureUrl(nextLeftIndex), backgroundSize: '100% 100%' }}>
                 {renderPage(pages[nextLeftIndex], 'left-next', fontForPage(nextLeftIndex), nextLeftIndex)}
               </div>
             </>
@@ -693,10 +706,10 @@ export default function Sketchbook({
               left: `${pageW + gap}px`,
             }}
           >
-            <div className="sketchbook-page-turning-front" style={{ backgroundImage: textureUrl(rightIndex) }}>
+            <div className="sketchbook-page-turning-front" style={{ backgroundImage: textureUrl(rightIndex), visibility: turnProgress < 0.5 ? 'visible' : 'hidden' }}>
               {renderPage(pages[rightIndex], 'turn-front', fontForPage(rightIndex), rightIndex)}
             </div>
-            <div className="sketchbook-page-turning-back" style={{ backgroundImage: textureUrl(nextLeftIndex) }}>
+            <div className="sketchbook-page-turning-back" style={{ backgroundImage: textureUrl(nextLeftIndex), visibility: turnProgress < 0.5 ? 'hidden' : 'visible' }}>
               {renderPage(pages[nextLeftIndex], 'turn-back', fontForPage(nextLeftIndex), nextLeftIndex)}
             </div>
           </div>

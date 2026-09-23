@@ -145,14 +145,14 @@
 .sketch-corner-text {
   color: var(--page-text, #3d3d3d);
   font-family: 'Epoch', 'Futura', sans-serif;
-  font-size: 0.75rem;
+  font-size: calc(0.75rem * var(--page-scale, 1));
   font-weight: 500;
   line-height: 1.2;
   white-space: nowrap;
 }
 
 .sketch-text-title {
-  font-size: 0.8rem;
+  font-size: calc(0.8rem * var(--page-scale, 1));
   font-weight: 600;
   margin-bottom: 0.3em;
   text-decoration: underline;
@@ -161,7 +161,7 @@
 }
 
 .sketch-text-body {
-  font-size: 0.7rem;
+  font-size: calc(0.7rem * var(--page-scale, 1));
   line-height: 1.6;
   white-space: pre-wrap;
 }
@@ -230,7 +230,7 @@
   position: absolute;
   bottom: 8px;
   right: 12px;
-  font-size: 0.75rem;
+  font-size: calc(0.75rem * var(--page-scale, 1));
   color: rgba(0, 0, 0, 0.4);
   pointer-events: none;
 }
@@ -350,10 +350,10 @@
 .sketch-play-triangle {
   width: 0;
   height: 0;
-  border-top: 15px solid transparent;
-  border-bottom: 15px solid transparent;
-  border-left: 23px solid #cfcfcf;
-  margin-left: 6px;
+  border-top: calc(15px * var(--page-scale, 1)) solid transparent;
+  border-bottom: calc(15px * var(--page-scale, 1)) solid transparent;
+  border-left: calc(23px * var(--page-scale, 1)) solid #cfcfcf;
+  margin-left: calc(6px * var(--page-scale, 1));
 }
 
 

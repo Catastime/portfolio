@@ -64,7 +64,7 @@ const bookPages = [
       { type: 'image', img: `${BASE}tim/Atelier Anthrazit-039-breit-bw.jpg`, imgMobile: `${BASE}tim/Atelier Anthrazit-039-breit-bw-mobile.jpg`, x: -4, y: 10, w: 108, rotation: 0, taped: true, noBg: true, shadow: '0 2px 8px rgba(0, 0, 0, 0.15)', tackers: [3, 1, 4, 2] },
       // CV — single column below the image: leader lines to right-aligned dates
       {
-        type: 'cv', x: -4, y: 48.5, w: 108, rotation: 0, fontSize: 0.85,
+        type: 'cv', x: -4, y: 48.5, w: 108, rotation: 0, fontSize: 0.85, fontSizeMobile: 0.5,
         sections: [
           { name: 'EDUCATION', entries: [
             { head: 'M. Sc. Architecture, Leibniz University Hannover', date: '10.2021 - 01.2024', desc: 'Thesis on AI in architectural design, with a practical AI interface focused on accessibility.' },
@@ -95,7 +95,7 @@ const bookPages = [
     meta: { year: '2024', place: 'Hannover', title: 'Artificial Intelligence in Architectural Design' },
     items: [
       // Upper text block — narrowed to make room for comics on the right
-      { type: 'text', text: 'The current development in the field of artificial intelligence promises unprecedented potentials for creative fields such as architecture. Instead of mere automation of simple processes and efficiency improvement through enhanced tools, it could herald the beginning of a true symbiosis between humans and machines, a vision pursued in the 20th century by researchers like John McCarthy and later Nicolas Negroponte.', x: 8, y: 10, w: 58, rotation: 0, font: "'Epoch', sans-serif", fontSize: 0.55 },
+      { type: 'text', text: 'The current development in the field of artificial intelligence promises unprecedented potentials for creative fields such as architecture. Instead of mere automation of simple processes and efficiency improvement through enhanced tools, it could herald the beginning of a true symbiosis between humans and machines, a vision pursued in the 20th century by researchers like John McCarthy and later Nicolas Negroponte.', x: 8, y: 10, w: 58, rotation: 0, font: "'Epoch', sans-serif", fontSize: 0.55, fontSizeMobile: 0.33 },
       // Comics image — right side, 10% smaller, slightly more right
       { type: 'image', img: `${THESIS_IMG}/comics-pipelineRendering.png`, x: 73, y: 9.5, w: 18, rotation: 0, noBg: true, taped: true, tackers: [2, 4, 1, 3] },
       // thesis-starter — between the two text blocks
@@ -103,9 +103,9 @@ const bookPages = [
       // website-concept — below the lower text, poking into it, 20% bigger than original w:38
       { type: 'image', img: `${THESIS_IMG}/website-concept2.png`, x: 48, y: 80, w: 42, rotation: 0, noBg: true },
       // Second text block — part 1: below comic, right of starter, above concept
-      { type: 'text', text: 'However, the concept of artificial intelligence has undergone significant changes since its inception in the 1950s by John McCarthy. While he viewed AI as the understanding and reproduction of human intelligence, the term has now become vastly expansive, encompassing various categories of programs, from personal assistants to deep learning algorithms.', x: 52, y: 60, w: 38, rotation: 0, font: "'Epoch', sans-serif", fontSize: 0.5, align: 'right' },
+      { type: 'text', text: 'However, the concept of artificial intelligence has undergone significant changes since its inception in the 1950s by John McCarthy. While he viewed AI as the understanding and reproduction of human intelligence, the term has now become vastly expansive, encompassing various categories of programs, from personal assistants to deep learning algorithms.', x: 52, y: 60, w: 38, rotation: 0, font: "'Epoch', sans-serif", fontSize: 0.5, fontSizeMobile: 0.3, align: 'right' },
       // Second text block — part 2: left of concept, below starter
-      { type: 'text', text: 'When someone speaks of AI today, it generally refers to a deep learning algorithm attempting to simulate cognitive functions based on vast amounts of data. However, truly autonomous thinking programs, as envisaged in the 1950s, have not been realized yet, as current computers lack the necessary level of perception or self-reflection to develop actual intelligence.', x: 8, y: 80, w: 34, rotation: 0, font: "'Epoch', sans-serif", fontSize: 0.5 },
+      { type: 'text', text: 'When someone speaks of AI today, it generally refers to a deep learning algorithm attempting to simulate cognitive functions based on vast amounts of data. However, truly autonomous thinking programs, as envisaged in the 1950s, have not been realized yet, as current computers lack the necessary level of perception or self-reflection to develop actual intelligence.', x: 8, y: 80, w: 34, rotation: 0, font: "'Epoch', sans-serif", fontSize: 0.5, fontSizeMobile: 0.3 },
     ],
   },
   // Right page — black paper
@@ -114,7 +114,7 @@ const bookPages = [
     meta: { year: '2024', place: 'Hannover', title: 'Artificial Intelligence in Architectural Design' },
     items: [
       // Top text block
-      { type: 'text', text: 'The rapid development in this renaissance of artificial intelligence has ignited in me a desire to delve into this topic through a master\'s thesis. The goal of this work is to examine the connections between past and current developments, describe the theoretical ideas and aspirations of these developments and their instigators, and develop a simple tool that showcases current possibilities of generative deep learning artificial intelligence in a user-friendly and helpful manner.', x: 8, y: 10, w: 84, rotation: 0, font: "'Epoch', sans-serif", fontSize: 0.55 },
+      { type: 'text', text: 'The rapid development in this renaissance of artificial intelligence has ignited in me a desire to delve into this topic through a master\'s thesis. The goal of this work is to examine the connections between past and current developments, describe the theoretical ideas and aspirations of these developments and their instigators, and develop a simple tool that showcases current possibilities of generative deep learning artificial intelligence in a user-friendly and helpful manner.', x: 8, y: 10, w: 84, rotation: 0, font: "'Epoch', sans-serif", fontSize: 0.55, fontSizeMobile: 0.33 },
       // Three images — positioned below the text (y:30 to y:95)
       { type: 'image', img: `${THESIS_IMG}/Example_start.png`, x: 8, y: 32, w: 35, rotation: 0, taped: true, noBg: true, tackers: [1, 3, 2, 4] },
       // Cityhotel Polaroid stack — slightly overlapping like stickers
@@ -336,6 +336,58 @@ function App() {
       scrollAnimRef.current = null
     }
   }
+
+  // Mobile: settle on the nearest page when scrolling comes to rest, so
+  // the page crossfade never stops halfway between two pages. Never settles
+  // while a finger is on the screen or an animation is running.
+  useEffect(() => {
+    if (!isMobileViewport) return
+    let snapTimer: number | null = null
+    let touchActive = false
+    const settle = () => {
+      snapTimer = null
+      if (touchActive || scrollAnimRef.current !== null) return
+      const max = document.documentElement.scrollHeight - window.innerHeight
+      if (max <= 0) return
+      const p = window.scrollY / max
+      if (p < bookStart || p >= 0.999) return
+      const slice = bookRange / bookPages.length
+      const page = Math.min(bookPages.length - 1, Math.max(0, Math.round((p - bookStart) / slice - 0.5)))
+      const target = max * (bookStart + slice * (page + 0.5))
+      if (Math.abs(target - window.scrollY) < 2) return
+      smoothScrollTo(target, 350)
+    }
+    const schedule = () => {
+      if (snapTimer !== null) window.clearTimeout(snapTimer)
+      snapTimer = window.setTimeout(settle, 220)
+    }
+    const onTouchStart = () => {
+      touchActive = true
+      if (snapTimer !== null) { window.clearTimeout(snapTimer); snapTimer = null }
+      cancelScroll()
+    }
+    const onTouchEnd = () => {
+      touchActive = false
+      schedule()
+    }
+    const onWheel = () => {
+      if (snapTimer !== null) { window.clearTimeout(snapTimer); snapTimer = null }
+      cancelScroll()
+    }
+    window.addEventListener('scroll', schedule, { passive: true })
+    window.addEventListener('touchstart', onTouchStart, { passive: true })
+    window.addEventListener('touchend', onTouchEnd, { passive: true })
+    window.addEventListener('touchcancel', onTouchEnd, { passive: true })
+    window.addEventListener('wheel', onWheel, { passive: true })
+    return () => {
+      window.removeEventListener('scroll', schedule)
+      window.removeEventListener('touchstart', onTouchStart)
+      window.removeEventListener('touchend', onTouchEnd)
+      window.removeEventListener('touchcancel', onTouchEnd)
+      window.removeEventListener('wheel', onWheel)
+      if (snapTimer !== null) window.clearTimeout(snapTimer)
+    }
+  }, [isMobileViewport])
 
   // Navigation: three steps — landing (0), image (0.33), book (0.60)
   const scrollToStep = (step: 'landing' | 'image' | 'book', duration = 1500) => {
