@@ -1,0 +1,33 @@
+# timmkr.space — search engines are welcome, everything else (AI training, scrapers, data brokers) stays out.
+
+User-agent: Googlebot
+Disallow:
+
+User-agent: Googlebot-Image
+Disallow:
+
+User-agent: bingbot
+Disallow:
+
+User-agent: DuckDuckBot
+Disallow:
+
+User-agent: Slurp
+Disallow:
+
+User-agent: Applebot
+Disallow:
+
+User-agent: BraveBot
+Disallow:
+
+User-agent: MojeekBot
+Disallow:
+
+User-agent: EcosiaBot
+Disallow:
+
+User-agent: *
+Disallow: /
+
+Sitemap: https://timmkr.space/sitemap.xml
