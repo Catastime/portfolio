@@ -74,11 +74,13 @@ def wrap(words, size, width):
     lines.append(cur)
     return lines
 
-def draw_block(c, dx, dy, width, text, size, fill, lh, mode='justify', ragged_last=True):
+def draw_block(c, dx, dy, width, text, size, fill, lh, mode='justify', ragged_last=True, slack=0.0):
     wpt = width * PT
     c.setFillColor(fill)
     c.setFont('Epoch', size * PT)
-    lines = wrap(text.split(), size, wpt)
+    # Browsers round glyph advances ~0.8% narrower than the raw metrics;
+    # slack widens only the wrap decision so breaks match the website.
+    lines = wrap(text.split(), size, wpt + slack * PT)
     for i, ln in enumerate(lines):
         last = i == len(lines) - 1
         if mode == 'right':
@@ -105,14 +107,14 @@ c = canvas.Canvas(out, pagesize=A4)
 # ---------------- Page 1 ----------------
 c.drawImage(ImageReader(prep_texture('left_page-black.png')), 0, 0, PW, PH)
 c.setFillColor(PAPER)
-r = 9 * PT
-for cx, cy in ((69, 296), (1171, 296), (69, 779), (1171, 779)):
+r = 1754 * 0.0102 / 2 * PT  # hole radius = --hole-size (1.02% of page height) / 2
+for cx, cy in ((59.6, 287.8), (1180.5, 287.8), (59.6, 787.7), (1180.5, 787.7)):
     c.circle(X(cx), PH - cy * PT, r, stroke=0, fill=1)
-c.setFont('Epoch', 32 * PT)
-c.drawCentredString(X(W // 2), PH - (537 + 32 * ASC / 2) * PT, 'introduction')
-sy = draw_block(c, 17, 1017, W - 34, "I'M TIM MOEDEKER,", 95, PAPER, 67, mode='right')
-sy = draw_block(c, 17, sy, W - 34, "AN ARCHITECT AND LECTURER BASED IN HANNOVER", 95, PAPER, 67, mode='justify', ragged_last=False)
-sy = draw_block(c, 17, sy, W - 34, "WITH A PASSION FOR CUTTING EDGE TECHNOLOGIES OF THE DIGITAL WORLD AND, CONTRADICTORILY, ANALOGUE PHOTOGRAPHY.", 95, PAPER, 67)
+c.setFont('Epoch', 27 * PT)  # 1rem x page-scale, measured on the web
+c.drawCentredString(X(W // 2), PH - 537.7 * PT, 'introduction')
+sy = draw_block(c, 17.4, 1017.4, 1205.3, "I'M TIM MOEDEKER,", 96.2, PAPER, 67.3, mode='right', slack=7.5)
+sy = draw_block(c, 17.4, sy, 1205.3, "AN ARCHITECT AND LECTURER BASED IN HANNOVER", 96.2, PAPER, 67.3, mode='justify', ragged_last=False, slack=7.5)
+sy = draw_block(c, 17.4, sy, 1205.3, "WITH A PASSION FOR CUTTING EDGE TECHNOLOGIES OF THE DIGITAL WORLD AND, CONTRADICTORILY, ANALOGUE PHOTOGRAPHY.", 96.2, PAPER, 67.3, slack=7.5)
 
 # ---------------- Page 2 ----------------
 c.showPage()
@@ -124,62 +126,64 @@ contacts = [
     ('tim.moedeker@gmail.com', 'mailto:tim.moedeker@gmail.com'),
     ('+49 177 9000982', 'tel:+491779000982'),
 ]
-cy = 35
+cy = 35.1  # y 2% of page height (corner text sits at stack level)
 for text, target in contacts:
     c.setFillColor(DARK)
-    c.setFont('Epoch', 24 * PT)
-    c.drawRightString(X(W - 17), YB(cy, 24), text)
-    x0 = W - 17 - sw(text, 24) / PT
-    c.linkURL(target, (X(x0), (H - cy - 28) * PT, X(W - 17), (H - cy + 4) * PT))
-    cy += 34
+    c.setFont('Epoch', 20.2 * PT)  # 0.75rem x page-scale
+    c.drawRightString(X(W - 17.4), YB(cy, 20.2), text)
+    x0 = W - 17.4 - sw(text, 20.2) / PT
+    c.linkURL(target, (X(x0), (H - cy - 24) * PT, X(W - 17.4), (H - cy + 4) * PT))
+    cy += 40.3  # 2.3% of page height between corner lines
 
 img = Image.open(os.path.join(ROOT, 'tim', 'Atelier Anthrazit-039-breit-bw.jpg')).convert('RGB')
-iw_d = 1206
+iw_d = 1205.3  # 108% of the 90% content box
 ih_d = round(iw_d / 2.0462)
 img = img.resize((1600, round(1600 / 2.0462)), Image.LANCZOS)
 buf = BytesIO()
 img.save(buf, 'JPEG', quality=88)
 buf.seek(0)
-ix, iy = 17, 245
+ix, iy = 17.4, 245.6  # x -4%, y 10% of content
 c.drawImage(ImageReader(buf), X(ix), PH - (iy + ih_d) * PT, X(iw_d), X(ih_d))
 c.setFillColor((29 / 255, 29 / 255, 29 / 255))
-inset = 42
+inset = 42.2  # 3.5cqw of the image box
 for cx, cyy in ((ix + inset, iy + inset), (ix + iw_d - inset, iy + inset), (ix + inset, iy + ih_d - inset), (ix + iw_d - inset, iy + ih_d - inset)):
     c.circle(X(cx), PH - cyy * PT, r, stroke=0, fill=1)
 
-# CV — section gaps mirror the web CV: 1em above EDUCATION, 1.8em between
-y = 854 + 26
+# CV — every metric mirrors the web CV: font = 0.85rem x page-scale
+# (measured 13.6px in a 709px column), em = 23.12 design px.
+EM = 23.12
+y = 853.6 + EM  # y 48.5% of content + 1em first-section margin
 
-def section(name, gap=45):
+def section(name, gap=1.8 * EM):
     global y
     y += gap
     c.setFillColor(DARK)
-    c.setFont('Epoch', 36 * PT)
-    c.drawString(X(17), YB(y, 36), name)
-    y += 44
+    c.setFont('Epoch', 1.5 * EM * PT)
+    c.drawString(X(17.4), YB(y, 1.5 * EM), name)
+    y += 1.1 * 1.5 * EM  # section-name line-height 1.1
 
 def entry(head, date, desc):
     global y
     c.setFillColor(DARK)
-    c.setFont('Epoch', 25 * PT)
-    hw = sw(head, 25)
-    dw = sw(date, 25) if date else 0
-    c.drawString(X(17), YB(y, 25), head)
+    c.setFont('Epoch', EM * PT)
+    hw = sw(head, EM)
+    dw = sw(date, EM) if date else 0
+    c.drawString(X(17.4), YB(y, EM), head)
     if date:
         c.setStrokeColor(LINE)
         c.setLineWidth(PT)
-        c.line(X(17) + hw + 10 * PT, PH - (y + 27) * PT, X(17) + (W - 34) * PT - dw - 10 * PT, PH - (y + 27) * PT)
-        c.drawRightString(X(17) + (W - 34) * PT, YB(y, 25), date)
-    y += 35
+        c.line(X(17.4) + hw + 0.45 * EM * PT, PH - (y + 0.95 * EM) * PT, X(17.4) + 1205.3 * PT - dw - 0.45 * EM * PT, PH - (y + 0.95 * EM) * PT)
+        c.drawRightString(X(17.4) + 1205.3 * PT, YB(y, EM), date)
+    y += 1.4 * EM  # line-height
     if desc:
-        y = draw_block(c, 17, y - 4, W - 34, desc, 25, LIGHT, 35) + 6
+        y = draw_block(c, 17.4, y - 0.2 * EM, 1205.3, desc, EM, LIGHT, 1.4 * EM) + 0.5 * EM  # desc margin-top -0.2em, entry margin-bottom 0.5em
 
 section('EDUCATION', gap=0)
 entry('M. Sc. Architecture, Leibniz University Hannover', '10.2021 - 01.2024',
        'Thesis on AI in architectural design, with a practical AI interface focused on accessibility.')
 entry('B. Sc. Architecture, Leibniz University Hannover', '10.2017 - 01.2021',
        'Focus on conceptual, digital work in new formats such as VR and AR, deepened in the bachelor\'s thesis.')
-section('EXPERIENCE', gap=45)
+section('EXPERIENCE')
 entry('Architectural Designer, Mosaik Architekt:innen Hannover', '10.2024 - today',
        'Competitions for public-sector clients, some currently being realized.')
 entry('Lecturer, Institute of Digital Methods in Architecture, Leibniz University Hannover', '04.2024 - today',
@@ -190,15 +194,15 @@ entry('Architectural Intern, Design & Concept, Angelis & Partner', '04.2021 - 10
        'Design and concept work on competitions.')
 entry('Student Assistant - IT, Faculty of Architecture & Landscape, Leibniz University Hannover', '01.2018 - 01.2025',
        'IT support for teaching staff and students.')
-section('SKILLS', gap=45)
+section('SKILLS')
 c.setFillColor(DARK)
-c.setFont('Epoch', 25 * PT)
+c.setFont('Epoch', EM * PT)
 for s in ('Design & BIM: Rhinoceros, Revit, Archicad',
           'Visualization: V-Ray, D5, Unity, Photoshop, Illustrator, InDesign',
           'Other: Python, QGIS, 3D printing, large-format plotting, web/server hosting',
           'Languages: German (mother tongue), English (fluent)'):
-    c.drawString(X(17), YB(y, 25), s)
-    y += 35
+    c.drawString(X(17.4), YB(y, EM), s)
+    y += 1.4 * EM + 0.15 * EM  # skills entries: margin-bottom 0.15em
 
 print('CV ends at y =', y, 'of', H)
 c.showPage()
