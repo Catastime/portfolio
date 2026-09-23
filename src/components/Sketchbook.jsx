@@ -48,16 +48,18 @@ import './Sketchbook.css';
  * @property {(src: string) => void} [onVideoOpen]
  * @property {() => void} [onMoreOpen]
  * @property {(page: number) => void} [onNavigatePage]
+ * @property {'forward' | 'back' | null} [turnHint] - desktop scroll hint: highlights the page side being scrolled toward
  */
 
 // Measured from the scanned paper textures (width / height)
 const PAGE_ASPECT = 1510 / 2153; // average of left (1505) and right (1515) page textures
 
-// Reference page height for desktop type scaling: 80% of a 1080p viewport.
-// Desktop pages at least this tall render text at the authored rem sizes
-// (scale clamped to 1); smaller windows scale text down proportionally so
-// it stays inside its layout box. Mobile always renders at authored sizes.
-const REF_PAGE_H = 864;
+// Page heights the type sizes are anchored to — text scales uniformly with
+// the page on every screen. Desktop rem sizes were tuned in a maximized
+// browser on a 3440x1440 screen; the mobile fit values (fontSizeMobile)
+// are calibrated on a 390x844 phone, nudged ~5% smaller for readability.
+const REF_PAGE_H = 1040;
+const REF_MOBILE_PAGE_H = 540;
 
 /** @param {SketchbookProps} props */
 export default function Sketchbook({
@@ -69,6 +71,7 @@ export default function Sketchbook({
   onVideoOpen,
   onMoreOpen,
   onNavigatePage,
+  turnHint,
 }) {
   const [viewport, setViewport] = useState({
     w: typeof window !== 'undefined' ? window.innerWidth : 1920,
@@ -399,7 +402,7 @@ export default function Sketchbook({
               </div>
             ))
           ) : (
-            <div className="sketch-text-body" style={(item.bodySize || item.bodyLineHeight) ? { fontSize: item.bodySize ? `calc(${item.bodySize}rem * var(--page-scale, 1))` : undefined, lineHeight: item.bodyLineHeight } : undefined}>{item.text}</div>
+            <div className="sketch-text-body" style={(isMobile && item.fontSizeMobile != null) ? { fontSize: `calc(${item.fontSizeMobile}rem * var(--page-scale, 1))` } : (item.bodySize || item.bodyLineHeight) ? { fontSize: item.bodySize ? `calc(${item.bodySize}rem * var(--page-scale, 1))` : undefined, lineHeight: item.bodyLineHeight } : undefined}>{item.text}</div>
           )}
         </div>
       );
@@ -583,7 +586,7 @@ export default function Sketchbook({
     const nextMobilePage = Math.min(pages.length - 1, mobilePage + 1);
     const isTurning = mobileTurnP > 0 && nextMobilePage !== mobilePage;
     return (
-      <div className="sketchbook-container" style={{ '--hole-size': `${pageH * 0.0102}px`, '--page-scale': isMobile ? 1 : Math.min(1, pageH / REF_PAGE_H) }}>
+      <div className="sketchbook-container" style={{ '--hole-size': `${pageH * 0.0102}px`, '--page-scale': pageH / (isMobile ? REF_MOBILE_PAGE_H : REF_PAGE_H) }}>
         <div
           className="sketchbook-mobile"
           style={{
@@ -653,7 +656,7 @@ export default function Sketchbook({
   const displayRightUnderneath = isTurning ? nextRightIndex : rightIndex;
 
   return (
-    <div className="sketchbook-container" style={{ '--hole-size': `${pageH * 0.0102}px`, '--page-scale': isMobile ? 1 : Math.min(1, pageH / REF_PAGE_H) }}>
+    <div className="sketchbook-container" style={{ '--hole-size': `${pageH * 0.0102}px`, '--page-scale': pageH / (isMobile ? REF_MOBILE_PAGE_H : REF_PAGE_H) }}>
       <div
         className="sketchbook"
         style={{
@@ -665,7 +668,7 @@ export default function Sketchbook({
         {/* Left page stack — crossfades from current to next left during turn */}
         <div
           className="sketchbook-page-stack sketchbook-page-stack-left"
-          style={{ width: `${pageW}px`, height: `${pageH}px`, backgroundImage: textureUrl(leftIndex) }}
+          style={{ width: `${pageW}px`, height: `${pageH}px`, backgroundImage: textureUrl(leftIndex), transform: turnHint === 'back' ? 'perspective(2000px) rotateY(3deg)' : undefined, transformOrigin: 'right center', transition: 'transform 0.25s ease-out' }}
         >
           {isTurning ? (
             <>
@@ -688,7 +691,7 @@ export default function Sketchbook({
         {/* Right page stack */}
         <div
           className="sketchbook-page-stack sketchbook-page-stack-right"
-          style={{ width: `${pageW}px`, height: `${pageH}px`, backgroundImage: textureUrl(displayRightUnderneath) }}
+          style={{ width: `${pageW}px`, height: `${pageH}px`, backgroundImage: textureUrl(displayRightUnderneath), transform: turnHint === 'forward' ? 'perspective(2000px) rotateY(-3deg)' : undefined, transformOrigin: 'left center', transition: 'transform 0.25s ease-out' }}
         >
           {/* Underneath: the destination right page */}
           {renderPage(pages[displayRightUnderneath], 'right-under', fontForPage(displayRightUnderneath), displayRightUnderneath)}

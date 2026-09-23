@@ -98,7 +98,7 @@
 .sketch-item-clickable::after {
   content: '';
   position: absolute;
-  inset: 0;
+  inset: -5px;
   border: 1px solid #cfcfcf;
   opacity: 0;
   transition: opacity 0.15s ease;
@@ -290,7 +290,22 @@
 }
 
 .cv-section {
-  margin-bottom: 0.7em;
+  margin-bottom: 1.5em;
+}
+
+.cv-section:first-child {
+  margin-top: 0.75em;
+}
+
+/* Desktop-only: a little more air between CV sections (mobile is at its fit ceiling) */
+@media (min-width: 768px) {
+  .cv-section {
+    margin-bottom: 1.8em;
+  }
+
+  .cv-section:first-child {
+    margin-top: 1em;
+  }
 }
 
 .cv-section-name {

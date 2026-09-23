@@ -106,4 +106,27 @@ body,
   opacity: 0.55;
   font-size: 0.8rem;
 }
+/* Book page-turn arrows — on scroll hint or hover, an offset silhouette of
+   the arrow appears behind it (like the video hover frame, floated off the
+   shape). No glow. */
+.book-arrow {
+  position: relative;
+  display: flex;
+}
 
+.book-arrow-outline {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #cfcfcf;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+
+.book-arrow-hint .book-arrow-outline,
+.book-arrow:hover .book-arrow-outline {
+  opacity: 1;
+}

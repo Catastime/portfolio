@@ -64,7 +64,7 @@ const bookPages = [
       { type: 'image', img: `${BASE}tim/Atelier Anthrazit-039-breit-bw.jpg`, imgMobile: `${BASE}tim/Atelier Anthrazit-039-breit-bw-mobile.jpg`, x: -4, y: 10, w: 108, rotation: 0, taped: true, noBg: true, shadow: '0 2px 8px rgba(0, 0, 0, 0.15)', tackers: [3, 1, 4, 2] },
       // CV — single column below the image: leader lines to right-aligned dates
       {
-        type: 'cv', x: -4, y: 48.5, w: 108, rotation: 0, fontSize: 0.85, fontSizeMobile: 0.5,
+        type: 'cv', x: -4, y: 48.5, w: 108, rotation: 0, fontSize: 0.85, fontSizeMobile: 0.46,
         sections: [
           { name: 'EDUCATION', entries: [
             { head: 'M. Sc. Architecture, Leibniz University Hannover', date: '10.2021 - 01.2024', desc: 'Thesis on AI in architectural design, with a practical AI interface focused on accessibility.' },
@@ -95,7 +95,7 @@ const bookPages = [
     meta: { year: '2024', place: 'Hannover', title: 'Artificial Intelligence in Architectural Design' },
     items: [
       // Upper text block — narrowed to make room for comics on the right
-      { type: 'text', text: 'The current development in the field of artificial intelligence promises unprecedented potentials for creative fields such as architecture. Instead of mere automation of simple processes and efficiency improvement through enhanced tools, it could herald the beginning of a true symbiosis between humans and machines, a vision pursued in the 20th century by researchers like John McCarthy and later Nicolas Negroponte.', x: 8, y: 10, w: 58, rotation: 0, font: "'Epoch', sans-serif", fontSize: 0.55, fontSizeMobile: 0.33 },
+      { type: 'text', text: 'The current development in the field of artificial intelligence promises unprecedented potentials for creative fields such as architecture. Instead of mere automation of simple processes and efficiency improvement through enhanced tools, it could herald the beginning of a true symbiosis between humans and machines, a vision pursued in the 20th century by researchers like John McCarthy and later Nicolas Negroponte.', x: 8, y: 10, w: 58, rotation: 0, font: "'Epoch', sans-serif", fontSize: 0.55, fontSizeMobile: 0.42 },
       // Comics image — right side, 10% smaller, slightly more right
       { type: 'image', img: `${THESIS_IMG}/comics-pipelineRendering.png`, x: 73, y: 9.5, w: 18, rotation: 0, noBg: true, taped: true, tackers: [2, 4, 1, 3] },
       // thesis-starter — between the two text blocks
@@ -103,9 +103,9 @@ const bookPages = [
       // website-concept — below the lower text, poking into it, 20% bigger than original w:38
       { type: 'image', img: `${THESIS_IMG}/website-concept2.png`, x: 48, y: 80, w: 42, rotation: 0, noBg: true },
       // Second text block — part 1: below comic, right of starter, above concept
-      { type: 'text', text: 'However, the concept of artificial intelligence has undergone significant changes since its inception in the 1950s by John McCarthy. While he viewed AI as the understanding and reproduction of human intelligence, the term has now become vastly expansive, encompassing various categories of programs, from personal assistants to deep learning algorithms.', x: 52, y: 60, w: 38, rotation: 0, font: "'Epoch', sans-serif", fontSize: 0.5, fontSizeMobile: 0.3, align: 'right' },
+      { type: 'text', text: 'However, the concept of artificial intelligence has undergone significant changes since its inception in the 1950s by John McCarthy. While he viewed AI as the understanding and reproduction of human intelligence, the term has now become vastly expansive, encompassing various categories of programs, from personal assistants to deep learning algorithms.', x: 52, y: 60, w: 38, rotation: 0, font: "'Epoch', sans-serif", fontSize: 0.5, fontSizeMobile: 0.4, align: 'right' },
       // Second text block — part 2: left of concept, below starter
-      { type: 'text', text: 'When someone speaks of AI today, it generally refers to a deep learning algorithm attempting to simulate cognitive functions based on vast amounts of data. However, truly autonomous thinking programs, as envisaged in the 1950s, have not been realized yet, as current computers lack the necessary level of perception or self-reflection to develop actual intelligence.', x: 8, y: 80, w: 34, rotation: 0, font: "'Epoch', sans-serif", fontSize: 0.5, fontSizeMobile: 0.3 },
+      { type: 'text', text: 'When someone speaks of AI today, it generally refers to a deep learning algorithm attempting to simulate cognitive functions based on vast amounts of data. However, truly autonomous thinking programs, as envisaged in the 1950s, have not been realized yet, as current computers lack the necessary level of perception or self-reflection to develop actual intelligence.', x: 8, y: 80, w: 34, rotation: 0, font: "'Epoch', sans-serif", fontSize: 0.5, fontSizeMobile: 0.4 },
     ],
   },
   // Right page — black paper
@@ -114,7 +114,7 @@ const bookPages = [
     meta: { year: '2024', place: 'Hannover', title: 'Artificial Intelligence in Architectural Design' },
     items: [
       // Top text block
-      { type: 'text', text: 'The rapid development in this renaissance of artificial intelligence has ignited in me a desire to delve into this topic through a master\'s thesis. The goal of this work is to examine the connections between past and current developments, describe the theoretical ideas and aspirations of these developments and their instigators, and develop a simple tool that showcases current possibilities of generative deep learning artificial intelligence in a user-friendly and helpful manner.', x: 8, y: 10, w: 84, rotation: 0, font: "'Epoch', sans-serif", fontSize: 0.55, fontSizeMobile: 0.33 },
+      { type: 'text', text: 'The rapid development in this renaissance of artificial intelligence has ignited in me a desire to delve into this topic through a master\'s thesis. The goal of this work is to examine the connections between past and current developments, describe the theoretical ideas and aspirations of these developments and their instigators, and develop a simple tool that showcases current possibilities of generative deep learning artificial intelligence in a user-friendly and helpful manner.', x: 8, y: 10, w: 84, rotation: 0, font: "'Epoch', sans-serif", fontSize: 0.55, fontSizeMobile: 0.4 },
       // Three images — positioned below the text (y:30 to y:95)
       { type: 'image', img: `${THESIS_IMG}/Example_start.png`, x: 8, y: 32, w: 35, rotation: 0, taped: true, noBg: true, tackers: [1, 3, 2, 4] },
       // Cityhotel Polaroid stack — slightly overlapping like stickers
@@ -215,6 +215,8 @@ function App() {
   const [arrowVisible, setArrowVisible] = useState(false)
   const [fadingHome, setFadingHome] = useState(false)
   const scrollAnimRef = useRef<number | null>(null)
+  const [turnHint, setTurnHint] = useState<null | 'forward' | 'back'>(null)
+  const turnHintRef = useRef<null | 'forward' | 'back'>(null)
 
   // Show arrow after DecryptedText finishes (28 chars * 80ms speed + buffer)
   useEffect(() => {
@@ -386,6 +388,105 @@ function App() {
       window.removeEventListener('touchcancel', onTouchEnd)
       window.removeEventListener('wheel', onWheel)
       if (snapTimer !== null) window.clearTimeout(snapTimer)
+    }
+  }, [isMobileViewport])
+
+  // Desktop: settle into the nearest spread's flat zone when scrolling comes
+  // to rest, so wheel/trackpad scrolling lands on settled pages instead of
+  // freezing mid-turn. Uses the same smooth scroll as the arrows; fresh
+  // input interrupts the settle.
+  useEffect(() => {
+    if (isMobileViewport) return
+    let settleTimer: number | null = null
+    const settle = () => {
+      settleTimer = null
+      if (scrollAnimRef.current !== null) return
+      const max = document.documentElement.scrollHeight - window.innerHeight
+      if (max <= 0) return
+      const p = window.scrollY / max
+      if (p < bookStart || p >= 0.999) return
+      const bookT = (p - bookStart) / bookRange
+      const sliceSize = 1 / totalSpreads
+      const spread = Math.min(totalSpreads - 1, Math.floor(bookT / sliceSize))
+      const sliceT = (bookT - spread * sliceSize) / sliceSize
+      // Already flat, or on the last spread (no turn zone) — nothing to do
+      if (sliceT <= flatRatio || spread >= totalSpreads - 1) return
+      // Snap to the nearer flat center: this spread's or the next one's
+      const flatCenterT = flatRatio / 2
+      const toCurrent = sliceT - flatCenterT
+      const toNext = 1 + flatCenterT - sliceT
+      const targetT = (toNext < toCurrent ? spread + 1 : spread) * sliceSize + flatCenterT * sliceSize
+      const target = max * (bookStart + targetT * bookRange)
+      if (Math.abs(target - window.scrollY) < 2) return
+      smoothScrollTo(target, 600)
+    }
+    const onScroll = () => {
+      if (settleTimer !== null) window.clearTimeout(settleTimer)
+      settleTimer = window.setTimeout(settle, 220)
+    }
+    const onInterrupt = () => {
+      if (settleTimer !== null) { window.clearTimeout(settleTimer); settleTimer = null }
+      cancelScroll()
+    }
+    window.addEventListener('scroll', onScroll, { passive: true })
+    window.addEventListener('touchstart', onInterrupt, { passive: true })
+    return () => {
+      window.removeEventListener('scroll', onScroll)
+      window.removeEventListener('touchstart', onInterrupt)
+      if (settleTimer !== null) window.clearTimeout(settleTimer)
+    }
+  }, [isMobileViewport])
+
+  // Desktop: in the book, wheel input no longer scrubs the page turn.
+  // Scroll distance accumulates and, past a threshold, plays the same smooth
+  // turn animation the arrows use. While accumulating, the target page lifts
+  // slightly and its arrow gets an outline; both persist for a moment (wheel
+  // signals are intermittent) instead of flickering. The counter resets when
+  // a turn plays or scrolling stops for 0.8s, and never builds during an
+  // animation.
+  useEffect(() => {
+    if (isMobileViewport) return
+    let acc = 0
+    let lastWheel = 0
+    let hintTimer: number | null = null
+    const THRESHOLD = 100
+    const IDLE_RESET_MS = 800
+    const setHint = (h: null | 'forward' | 'back') => {
+      if (turnHintRef.current !== h) { turnHintRef.current = h; setTurnHint(h) }
+    }
+    const onWheel = (e: WheelEvent) => {
+      if (e.ctrlKey) return
+      if (document.body.style.overflow === 'hidden') return
+      const max = document.documentElement.scrollHeight - window.innerHeight
+      if (max <= 0) return
+      const p = window.scrollY / max
+      if (p < bookStart) return
+      const bookT = (p - bookStart) / bookRange
+      const sliceSize = 1 / totalSpreads
+      const spread = Math.min(totalSpreads - 1, Math.floor(bookT / sliceSize))
+      if (e.deltaY < 0 && spread === 0) return
+      e.preventDefault()
+      const now = performance.now()
+      if (now - lastWheel > IDLE_RESET_MS) acc = 0
+      lastWheel = now
+      // No threshold building while an animation plays
+      if (scrollAnimRef.current !== null) return
+      acc += e.deltaMode === 1 ? e.deltaY * 33 : e.deltaY
+      setHint(acc > 0 ? 'forward' : 'back')
+      if (hintTimer !== null) window.clearTimeout(hintTimer)
+      hintTimer = window.setTimeout(() => setHint(null), IDLE_RESET_MS)
+      if (acc >= THRESHOLD || acc <= -THRESHOLD) {
+        const next = spread + (acc > 0 ? 1 : -1)
+        acc = 0
+        setHint(null)
+        if (hintTimer !== null) { window.clearTimeout(hintTimer); hintTimer = null }
+        if (next >= 0 && next <= totalSpreads - 1) scrollToSpreadFlat(next)
+      }
+    }
+    window.addEventListener('wheel', onWheel, { passive: false })
+    return () => {
+      window.removeEventListener('wheel', onWheel)
+      if (hintTimer !== null) window.clearTimeout(hintTimer)
     }
   }, [isMobileViewport])
 
@@ -627,6 +728,7 @@ function App() {
         onVideoOpen={setVideoOverlay}
         onMoreOpen={() => setMoreOverlay(true)}
         onNavigatePage={scrollToMobilePage}
+        turnHint={turnHint}
       />
 
       {/* Title — starts centered, moves to top on scroll.
@@ -662,7 +764,10 @@ function App() {
           }}
           aria-label="Scroll to explore"
         >
-          <PixelArrowDown size={48} />
+          <span className="book-arrow">
+            <span className="book-arrow-outline"><PixelArrowDown size={60} /></span>
+            <PixelArrowDown size={48} />
+          </span>
         </button>
       )}
 
@@ -679,7 +784,10 @@ function App() {
           }}
           aria-label="Go back"
         >
-          <PixelArrowUp size={48} />
+          <span className="book-arrow">
+            <span className="book-arrow-outline"><PixelArrowUp size={60} /></span>
+            <PixelArrowUp size={48} />
+          </span>
         </button>
       )}
 
@@ -696,7 +804,10 @@ function App() {
           }}
           aria-label="Next page"
         >
-          <PixelArrowRight size={48} />
+          <span className={'book-arrow' + (turnHint === 'forward' ? ' book-arrow-hint' : '')}>
+            <span className="book-arrow-outline"><PixelArrowRight size={60} /></span>
+            <PixelArrowRight size={48} />
+          </span>
         </button>
       )}
 
@@ -712,7 +823,10 @@ function App() {
           }}
           aria-label="Previous page"
         >
-          <PixelArrowLeft size={48} />
+          <span className={'book-arrow' + (turnHint === 'back' ? ' book-arrow-hint' : '')}>
+            <span className="book-arrow-outline"><PixelArrowLeft size={60} /></span>
+            <PixelArrowLeft size={48} />
+          </span>
         </button>
       )}
 
