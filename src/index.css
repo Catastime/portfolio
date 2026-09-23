@@ -106,27 +106,20 @@ body,
   opacity: 0.55;
   font-size: 0.8rem;
 }
-/* Book page-turn arrows — on scroll hint or hover, an offset silhouette of
-   the arrow appears behind it (like the video hover frame, floated off the
-   shape). No glow. */
-.book-arrow {
-  position: relative;
-  display: flex;
+/* Book page-turn arrows — hover: a touch darker and slightly larger;
+   click: lighter than base and slightly smaller. The scroll hint (while
+   turning toward a page) uses the hover treatment. */
+.book-arrow svg {
+  transition: transform 0.15s ease, filter 0.15s ease;
 }
 
-.book-arrow-outline {
-  position: absolute;
-  inset: 0;
-  margin: auto;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #cfcfcf;
-  opacity: 0;
-  transition: opacity 0.15s ease;
+.book-arrow-hint svg,
+.book-arrow:hover svg {
+  transform: scale(1.05);
+  filter: brightness(0.8);
 }
 
-.book-arrow-hint .book-arrow-outline,
-.book-arrow:hover .book-arrow-outline {
-  opacity: 1;
+.book-arrow:active svg {
+  transform: scale(0.95);
+  filter: brightness(1.4) drop-shadow(0 0 2px rgba(255, 255, 255, 0.9));
 }

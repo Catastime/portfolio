@@ -765,7 +765,6 @@ function App() {
           aria-label="Scroll to explore"
         >
           <span className="book-arrow">
-            <span className="book-arrow-outline"><PixelArrowDown size={60} /></span>
             <PixelArrowDown size={48} />
           </span>
         </button>
@@ -785,7 +784,6 @@ function App() {
           aria-label="Go back"
         >
           <span className="book-arrow">
-            <span className="book-arrow-outline"><PixelArrowUp size={60} /></span>
             <PixelArrowUp size={48} />
           </span>
         </button>
@@ -805,7 +803,6 @@ function App() {
           aria-label="Next page"
         >
           <span className={'book-arrow' + (turnHint === 'forward' ? ' book-arrow-hint' : '')}>
-            <span className="book-arrow-outline"><PixelArrowRight size={60} /></span>
             <PixelArrowRight size={48} />
           </span>
         </button>
@@ -824,7 +821,6 @@ function App() {
           aria-label="Previous page"
         >
           <span className={'book-arrow' + (turnHint === 'back' ? ' book-arrow-hint' : '')}>
-            <span className="book-arrow-outline"><PixelArrowLeft size={60} /></span>
             <PixelArrowLeft size={48} />
           </span>
         </button>
