@@ -112,9 +112,27 @@ for cx, cy in ((59.6, 287.8), (1180.5, 287.8), (59.6, 787.7), (1180.5, 787.7)):
     c.circle(X(cx), PH - cy * PT, r, stroke=0, fill=1)
 c.setFont('Epoch', 27 * PT)  # 1rem x page-scale, measured on the web
 c.drawCentredString(X(W // 2), PH - 537.7 * PT, 'introduction')
-sy = draw_block(c, 17.4, 1017.4, 1205.3, "I'M TIM MOEDEKER,", 96.2, PAPER, 67.3, mode='right', slack=7.5)
-sy = draw_block(c, 17.4, sy, 1205.3, "AN ARCHITECT AND LECTURER BASED IN HANNOVER", 96.2, PAPER, 67.3, mode='justify', ragged_last=False, slack=7.5)
-sy = draw_block(c, 17.4, sy, 1205.3, "WITH A PASSION FOR CUTTING EDGE TECHNOLOGIES OF THE DIGITAL WORLD AND, CONTRADICTORILY, ANALOGUE PHOTOGRAPHY.", 96.2, PAPER, 67.3, slack=7.5)
+# Statement — explicit line breaks, matching the website authored breaks
+STATEMENT = [
+    ("I'M TIM MOEDEKER,", 'right'),
+    ('AN ARCHITECT AND', 'justify'),
+    ('LECTURER BASED IN', 'justify'),
+    ('HANNOVER', 'justify'),
+    ('WITH A PASSION FOR', 'justify'),
+    ('CUTTING EDGE', 'justify'),
+    ('TECHNOLOGIES OF THE', 'justify'),
+    ('DIGITAL WORLD AND,', 'justify'),
+    ('CONTRADICTORILY,', 'justify'),
+    ('ANALOGUE PHOTOGRAPHY.', 'last'),
+]
+sy = 1017.4
+for line, mode in STATEMENT:
+    if mode == 'right':
+        sy = draw_block(c, 17.4, sy, 1205.3, line, 96.2, PAPER, 67.3, mode='right')
+    elif mode == 'justify':
+        sy = draw_block(c, 17.4, sy, 1205.3, line, 96.2, PAPER, 67.3, mode='justify', ragged_last=False)
+    else:
+        sy = draw_block(c, 17.4, sy, 1205.3, line, 96.2, PAPER, 67.3)
 
 # ---------------- Page 2 ----------------
 c.showPage()
