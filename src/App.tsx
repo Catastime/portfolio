@@ -71,7 +71,7 @@ const bookPages = [
             { head: 'B. Sc. Architecture, Leibniz University Hannover', date: '10.2017 - 01.2021', desc: 'Focus on conceptual, digital work in new formats such as VR and AR, deepened in the bachelor\'s thesis.' },
           ]},
           { name: 'EXPERIENCE', entries: [
-            { head: 'Architectural Designer, Mosaik Architekt:innen Hannover', date: '10.2024 - today', desc: 'Competitions for public-sector clients, some currently being realized.' },
+            { head: 'Architectural Designer, Mosaik Architekt:innen Hannover', date: '10.2024 - today', desc: 'Competitions for public-sector clients, agentic automations and some IT.' },
             { head: 'Lecturer, Institute of Digital Methods in Architecture, Leibniz University Hannover', date: '04.2024 - today', desc: 'Teaching "Digital Simulation", researching open-source AI in architecture.' },
             { head: 'Guest Lecturer, Digital Design Unit, TU Darmstadt', date: '05.2025', desc: 'Weekend Arduino seminar; students built sensor-based musical instruments.' },
             { head: 'Architectural Intern, Design & Concept, Angelis & Partner', date: '04.2021 - 10.2021', desc: 'Design and concept work on competitions.' },

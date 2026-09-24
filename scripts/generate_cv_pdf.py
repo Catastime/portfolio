@@ -203,7 +203,7 @@ entry('B. Sc. Architecture, Leibniz University Hannover', '10.2017 - 01.2021',
        'Focus on conceptual, digital work in new formats such as VR and AR, deepened in the bachelor\'s thesis.')
 section('EXPERIENCE')
 entry('Architectural Designer, Mosaik Architekt:innen Hannover', '10.2024 - today',
-       'Competitions for public-sector clients, some currently being realized.')
+       'Competitions for public-sector clients, agentic automations and some IT.')
 entry('Lecturer, Institute of Digital Methods in Architecture, Leibniz University Hannover', '04.2024 - today',
        'Teaching "Digital Simulation", researching open-source AI in architecture.')
 entry('Guest Lecturer, Digital Design Unit, TU Darmstadt', '05.2025',
