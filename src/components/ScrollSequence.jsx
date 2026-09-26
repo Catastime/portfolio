@@ -9,10 +9,12 @@ import './ScrollSequence.css';
  * position at every frame, so the image appears to be part of the book
  * throughout the zoom-out (not a separate layer that fades away).
  *
- * 0.00 - 0.33: Image slides up from below into full view
- * 0.33 - 0.36: Image holds fullscreen
- * 0.36 - 0.60: Zoom-out: image layer shrinks with the book, staying on the
+ * 0.00 - 0.33: Image slides up from below into full view (ease-out)
+ * 0.20 - 0.60: Zoom-out: image layer shrinks with the book, staying on the
  *              right-page item. Book scales from zoomed-in to resting size.
+ *              The zoom starts while the slide is still finishing, and the
+ *              layer box blends from viewport box to book box, so there is
+ *              no visible break between the two motions.
  * 0.60 - 1.00: Book is at rest, pages turn (handled by Sketchbook component)
  *
  * Props:
@@ -59,25 +61,27 @@ export default function ScrollSequence({ onMatVisible, onBookVisible, onZoomProg
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // Phase boundaries
+  // Phase boundaries — the zoom starts before the slide finishes so the
+  // two motions overlap instead of stopping in between
   const slideEnd = 0.33;
-  const holdEnd = 0.36;
+  const zoomStart = 0.20;
   const zoomEnd = 0.60;
 
   // Image translateY: slides from 100vh (below viewport) to 0 (filling viewport)
   const translateY = useMemo(() => {
     if (progress <= slideEnd) {
       const t = progress / slideEnd;
-      return `${(1 - t) * 100}vh`;
+      const eased = 1 - Math.pow(1 - t, 3);
+      return `${(1 - eased) * 100}vh`;
     }
     return '0vh';
   }, [progress]);
 
-  // Zoom-out progress: 0 at holdEnd, 1 at zoomEnd
+  // Zoom-out progress: 0 at zoomStart, 1 at zoomEnd
   const zoomT = useMemo(() => {
-    if (progress <= holdEnd) return 0;
+    if (progress <= zoomStart) return 0;
     if (progress >= zoomEnd) return 1;
-    return (progress - holdEnd) / (zoomEnd - holdEnd);
+    return (progress - zoomStart) / (zoomEnd - zoomStart);
   }, [progress]);
 
   // The image layer tracks the book's image item position at every frame
@@ -100,7 +104,7 @@ export default function ScrollSequence({ onMatVisible, onBookVisible, onZoomProg
       }
       const ease = 1 - Math.pow(1 - zoomT, 3);
       return {
-        transform: `translateY(0vh) scale(${1 - 0.45 * ease})`,
+        transform: `translateY(${translateY}) scale(${1 - 0.45 * ease})`,
         width: '100%',
         height: '100vh',
       };
@@ -167,10 +171,21 @@ export default function ScrollSequence({ onMatVisible, onBookVisible, onZoomProg
     // book center is at viewport center (flexbox), then apply transform
     const screenCenterX = vw / 2 + translateX + scale * offsetX;
     const screenCenterY = vh / 2 + translateYBook + scale * offsetY;
-    const screenW = scale * itemW;
-    const screenH = scale * itemH;
-    const screenLeft = screenCenterX - screenW / 2;
-    const screenTop = screenCenterY - screenH / 2;
+    const bookW = scale * itemW;
+    const bookH = scale * itemH;
+    const bookLeft = screenCenterX - bookW / 2;
+    const bookTop = screenCenterY - bookH / 2;
+
+    // Blend from the fullscreen viewport box to the book-tracking box over
+    // the first stretch of the zoom. The layer's aspect changes smoothly
+    // (the cover crop opens up) instead of popping at the phase switch.
+    const blend = Math.min(1, zoomT / 0.25);
+    const b = blend * blend * (3 - 2 * blend);
+    const lerp = (from, to) => from + (to - from) * b;
+    const screenW = lerp(vw, bookW);
+    const screenH = lerp(vh, bookH);
+    const screenLeft = lerp(0, bookLeft);
+    const screenTop = lerp(0, bookTop);
 
     return {
       transform: `translateY(${translateY})`,
@@ -182,10 +197,10 @@ export default function ScrollSequence({ onMatVisible, onBookVisible, onZoomProg
   }, [zoomT, translateY, imgAspect, viewport, isMobile]);
 
   // Cutting mat appears when zoom-out starts
-  const matShouldShow = progress > holdEnd;
+  const matShouldShow = progress > zoomStart;
 
   // Book appears when zoom-out starts
-  const bookShouldShow = progress > holdEnd;
+  const bookShouldShow = progress > zoomStart;
 
   // Image layer stays visible at rest (the image is on page 1).
   // Disappears when the first page turn begins and stays hidden.
