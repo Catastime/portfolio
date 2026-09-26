@@ -10,7 +10,7 @@ import './ScrollSequence.css';
  * throughout the zoom-out (not a separate layer that fades away).
  *
  * 0.00 - 0.33: Image slides up from below into full view (ease-out)
- * 0.20 - 0.60: Zoom-out: image layer shrinks with the book, staying on the
+ * 0.15 - 0.60: Zoom-out: image layer shrinks with the book, staying on the
  *              right-page item. Book scales from zoomed-in to resting size.
  *              The zoom starts while the slide is still finishing, and the
  *              layer box blends from viewport box to book box, so there is
@@ -64,7 +64,7 @@ export default function ScrollSequence({ onMatVisible, onBookVisible, onZoomProg
   // Phase boundaries — the zoom starts before the slide finishes so the
   // two motions overlap instead of stopping in between
   const slideEnd = 0.33;
-  const zoomStart = 0.20;
+  const zoomStart = 0.15;
   const zoomEnd = 0.60;
 
   // Image translateY: slides from 100vh (below viewport) to 0 (filling viewport)
@@ -218,6 +218,14 @@ export default function ScrollSequence({ onMatVisible, onBookVisible, onZoomProg
     return 1;
   }, [progress, imageFadeStart, imageFadeEnd, isMobile, zoomT]);
 
+  // Corner holes only appear once the zoom-out begins — the fullscreen
+  // image has no holes; they fade in as it shrinks onto the book
+  const holeOpacity = useMemo(() => {
+    if (zoomT <= 0) return 0;
+    const t = Math.min(1, zoomT / 0.25);
+    return t * t * (3 - 2 * t);
+  }, [zoomT]);
+
   useEffect(() => {
     onMatVisible?.(matShouldShow);
   }, [matShouldShow, onMatVisible]);
@@ -255,10 +263,10 @@ export default function ScrollSequence({ onMatVisible, onBookVisible, onZoomProg
           onImgAspect?.(aspect);
         }}
       />
-      <div className="scroll-hole scroll-hole-tl" />
-      <div className="scroll-hole scroll-hole-tr" />
-      <div className="scroll-hole scroll-hole-bl" />
-      <div className="scroll-hole scroll-hole-br" />
+      <div className="scroll-hole scroll-hole-tl" style={{ opacity: holeOpacity }} />
+      <div className="scroll-hole scroll-hole-tr" style={{ opacity: holeOpacity }} />
+      <div className="scroll-hole scroll-hole-bl" style={{ opacity: holeOpacity }} />
+      <div className="scroll-hole scroll-hole-br" style={{ opacity: holeOpacity }} />
     </div>
   );
 }
