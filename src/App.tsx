@@ -52,7 +52,8 @@ const bookPages = [
       { type: 'statement', text: 'I\'M TIM MOEDEKER,\nAN ARCHITECT AND\nLECTURER BASED IN\nHANNOVER\nWITH A PASSION FOR\nCUTTING EDGE\nTECHNOLOGIES OF THE\nDIGITAL WORLD AND,\nCONTRADICTORILY,\nANALOGUE PHOTOGRAPHY.', x: -4, y: 58.9, w: 108, h: 37.8, rotation: 0 },
       // Hole marks — mirrored from the Anthrazit image on the right page
       // (box matches the image box; h follows the image aspect 2.046)
-      { type: 'holes', x: -4, y: 10, w: 108, h: 37, rotation: 0 },
+      // frame: black outline around the dots, same size as the right image
+      { type: 'holes', x: -4, y: 10, w: 108, h: 37, rotation: 0, frame: true },
       // Introduction — centered between the hole marks
       { type: 'text', text: 'introduction', x: -4, y: 26.8, w: 108, rotation: 0, align: 'center', sizes: [1], weight: 300 },
     ],

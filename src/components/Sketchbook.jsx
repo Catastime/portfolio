@@ -434,6 +434,9 @@ export default function Sketchbook({
       const holeColor = holeColorFor(pageIndex);
       return (
         <div key={key} className="sketch-item sketch-holes" style={holesStyle}>
+          {item.frame && (
+            <div style={{ position: 'absolute', inset: 0, border: '1px solid #000000', opacity: 0.66 }} />
+          )}
           <div className="sketch-hole sketch-hole-tl" style={{ backgroundColor: holeColor }} />
           <div className="sketch-hole sketch-hole-tr" style={{ backgroundColor: holeColor }} />
           <div className="sketch-hole sketch-hole-bl" style={{ backgroundColor: holeColor }} />
