@@ -173,8 +173,8 @@ const bookPages = [
     texture: 'left_page-black',
     items: [
       { type: 'text', text: 'TIM MOEDEKER\nSELMASTR. 7\n30451 HANNOVER\n\nTIM.MOEDEKER@GMAIL.COM\n+49 177 9000982\nTIMMKR.SPACE', x: -4, y: 40.5, w: 108, rotation: 0, fontSize: 0.85, fontSizeMobile: 0.46, weight: 300, align: 'center' },
-      { type: 'text', text: '© 2026 TIM MOEDEKER — ALL RIGHTS RESERVED', x: -4, y: 86, w: 108, rotation: 0, fontSize: 0.7, fontSizeMobile: 0.4, weight: 300 },
-      { type: 'text', text: 'DESIGNED AND BUILT WITH THE SUPPORT OF AI TOOLS', x: -4, y: 90.5, w: 108, rotation: 0, fontSize: 0.7, fontSizeMobile: 0.4, weight: 300 },
+      { type: 'text', text: '© 2026 TIM MOEDEKER — ALL RIGHTS RESERVED', x: -4, y: 91, w: 108, rotation: 0, fontSize: 0.7, fontSizeMobile: 0.4, weight: 300, align: 'center' },
+      { type: 'text', text: 'DESIGNED AND BUILT WITH THE SUPPORT OF AI TOOLS', x: -4, y: 95.2, w: 108, rotation: 0, fontSize: 0.7, fontSizeMobile: 0.4, weight: 300, align: 'center' },
     ],
   },
 ]
