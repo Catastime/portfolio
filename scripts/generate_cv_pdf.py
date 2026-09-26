@@ -110,6 +110,13 @@ c.setFillColor(PAPER)
 r = 1754 * 0.0102 / 2 * PT  # hole radius = --hole-size (1.02% of page height) / 2
 for cx, cy in ((59.6, 287.8), (1180.5, 287.8), (59.6, 787.7), (1180.5, 787.7)):
     c.circle(X(cx), PH - cy * PT, r, stroke=0, fill=1)
+# Frame around the hole marks — matches the website (1px, 15% opacity)
+# Box = holes item: x:-4, y:10, w:108, h:37 of the content area
+c.setStrokeColor(PAPER)
+c.setStrokeAlpha(0.15)
+c.setLineWidth(PT)
+c.rect(X(17.4), PH - 829.7 * PT, 1205.3 * PT, (829.7 - 245.6) * PT, stroke=1, fill=0)
+c.setStrokeAlpha(1)
 c.setFont('Epoch', 27 * PT)  # 1rem x page-scale, measured on the web
 c.drawCentredString(X(W // 2), PH - 537.7 * PT, 'introduction')
 # Statement — explicit line breaks, matching the website authored breaks
@@ -184,13 +191,8 @@ def entry(head, date, desc):
     global y
     c.setFillColor(DARK)
     c.setFont('Epoch', EM * PT)
-    hw = sw(head, EM)
-    dw = sw(date, EM) if date else 0
     c.drawString(X(17.4), YB(y, EM), head)
     if date:
-        c.setStrokeColor(LINE)
-        c.setLineWidth(PT)
-        c.line(X(17.4) + hw + 0.45 * EM * PT, PH - (y + 0.95 * EM) * PT, X(17.4) + 1205.3 * PT - dw - 0.45 * EM * PT, PH - (y + 0.95 * EM) * PT)
         c.drawRightString(X(17.4) + 1205.3 * PT, YB(y, EM), date)
     y += 1.4 * EM  # line-height
     if desc:
