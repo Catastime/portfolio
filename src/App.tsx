@@ -62,6 +62,9 @@ const bookPages = [
     items: [
       // Atelier Anthrazit — the image we zoom out from
       { type: 'image', img: `${BASE}tim/Atelier Anthrazit-039-breit-bw.jpg`, imgMobile: `${BASE}tim/Atelier Anthrazit-039-breit-bw-mobile.jpg`, x: -4, y: 10, w: 108, rotation: 0, taped: true, noBg: true, shadow: '0 2px 8px rgba(0, 0, 0, 0.15)', tackers: [3, 1, 4, 2] },
+      // Punched holes on the image — the book renders its own dots, so the
+      // fullscreen layer can hand over to it early in the zoom-out
+      { type: 'holes', x: -4, y: 10, w: 108, h: 37, rotation: 0 },
       // CV — single column below the image: leader lines to right-aligned dates
       {
         type: 'cv', x: -4, y: 48.5, w: 108, rotation: 0, fontSize: 0.85, fontSizeMobile: 0.46,
@@ -818,11 +821,6 @@ function App() {
     setBookZoom(zoom)
   }, [])
 
-  // Scroll progress at which the first page turn begins (end of spread 0 flat zone)
-  const totalSpreadsForFade = Math.ceil(bookPages.length / 2)
-  const imageFadeStart = bookStart + (1 / totalSpreadsForFade) * flatRatio * bookRange
-  const imageFadeEnd = bookStart + (1 / totalSpreadsForFade) * (flatRatio + 0.05) * bookRange
-
   const handleImgAspect = useCallback((aspect: number) => {
     setImgAspect(aspect)
   }, [])
@@ -888,7 +886,7 @@ function App() {
       </div>
 
       {/* Scroll-driven image — fixed layer, moves/scales with scroll */}
-      <ScrollSequence onMatVisible={handleMatVisible} onBookVisible={handleBookVisible} onZoomProgress={handleZoomProgress} onImgAspect={handleImgAspect} imageFadeStart={imageFadeStart} imageFadeEnd={imageFadeEnd} />
+      <ScrollSequence onMatVisible={handleMatVisible} onBookVisible={handleBookVisible} onZoomProgress={handleZoomProgress} onImgAspect={handleImgAspect} />
 
       {/* Cutting mat — behind the image, appears when zoom-out starts */}
       <div

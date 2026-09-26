@@ -5,9 +5,10 @@ import './ScrollSequence.css';
 /**
  * ScrollSequence — scroll-driven animation.
  *
- * The image is a fixed-position layer that tracks the book's image item
- * position at every frame, so the image appears to be part of the book
- * throughout the zoom-out (not a separate layer that fades away).
+ * The image is a fixed-position layer for the intro: it slides up
+ * fullscreen, then crossfades into the book's own image item during the
+ * first stretch of the zoom-out and unmounts — the book carries the
+ * image from there, so the layer never lingers around the shrinking book.
  *
  * 0.00 - 0.33: Image slides up from below into full view (ease-out)
  * 0.05 - 0.60: Zoom-out: image layer shrinks with the book, staying on the
@@ -22,10 +23,8 @@ import './ScrollSequence.css';
  * - onBookVisible: callback when zoom-out starts and book should appear
  * - onZoomProgress: callback with zoomT (0-1) so the book can scale in sync
  * - onImgAspect: callback with the image's natural aspect ratio
- * - imageFadeStart: scroll progress at which the image starts fading (page turn)
- * - imageFadeEnd: scroll progress at which the image is fully faded
  */
-export default function ScrollSequence({ onMatVisible, onBookVisible, onZoomProgress, onImgAspect, imageFadeStart = 1, imageFadeEnd = 1 }) {
+export default function ScrollSequence({ onMatVisible, onBookVisible, onZoomProgress, onImgAspect }) {
   const [progress, setProgress] = useState(0);
   const [imgAspect, setImgAspect] = useState(0);
 
@@ -202,25 +201,19 @@ export default function ScrollSequence({ onMatVisible, onBookVisible, onZoomProg
   // Book appears when zoom-out starts
   const bookShouldShow = progress > zoomStart;
 
-  // Image layer stays visible at rest (the image is on page 1).
-  // Disappears when the first page turn begins and stays hidden.
+  // Desktop: the book's own image item takes over during the blend window —
+  // the fixed layer is gone before the zoom-out proper begins. Mobile: fade
+  // out during the zoom-out so the book underneath is reachable.
   const imageOpacity = useMemo(() => {
-    // Mobile: fade out during the zoom-out so the book underneath is reachable
     if (isMobile) {
       if (zoomT >= 0.9) return 0;
       if (zoomT >= 0.5) return 1 - (zoomT - 0.5) / 0.4;
       return 1;
     }
-    if (progress >= imageFadeEnd) return 0;
-    if (progress >= imageFadeStart) {
-      return 1 - (progress - imageFadeStart) / (imageFadeEnd - imageFadeStart);
-    }
+    if (zoomT >= 0.25) return 0;
+    if (zoomT > 0.05) return 1 - (zoomT - 0.05) / 0.2;
     return 1;
-  }, [progress, imageFadeStart, imageFadeEnd, isMobile, zoomT]);
-
-  // Corner holes appear once the zoom-out is underway — the fullscreen
-  // image has no holes; they pop in when the layer settles onto the book box
-  const holeOpacity = zoomT >= 0.25 ? 1 : 0;
+  }, [isMobile, zoomT]);
 
   useEffect(() => {
     onMatVisible?.(matShouldShow);
@@ -259,10 +252,6 @@ export default function ScrollSequence({ onMatVisible, onBookVisible, onZoomProg
           onImgAspect?.(aspect);
         }}
       />
-      <div className="scroll-hole scroll-hole-tl" style={{ opacity: holeOpacity }} />
-      <div className="scroll-hole scroll-hole-tr" style={{ opacity: holeOpacity }} />
-      <div className="scroll-hole scroll-hole-bl" style={{ opacity: holeOpacity }} />
-      <div className="scroll-hole scroll-hole-br" style={{ opacity: holeOpacity }} />
     </div>
   );
 }
