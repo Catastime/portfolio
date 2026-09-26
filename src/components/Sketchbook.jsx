@@ -257,11 +257,14 @@ export default function Sketchbook({
       transform: `translate(${translateX}px, ${translateY + slideTranslateY}px) scale(${scale})`,
       transformOrigin: 'center center',
       // While the book slides in, clip everything above the image item so
-      // the photo reads as a clean fullscreen image. Released once the
-      // slide ends — by then the page above is offscreen, so nothing pops.
-      clipPath: slideTranslateY > 0 ? `inset(${(itemY / pageH) * 100}% 0 0 0)` : undefined,
+      // the photo reads as a clean fullscreen image. After the slide the
+      // clip releases over a short window so the page above the photo
+      // eases in instead of popping in all at once.
+      clipPath: scrollProgress < slideEnd + 0.07
+        ? `inset(${(itemY / pageH) * (1 - Math.min(1, Math.max(0, (scrollProgress - slideEnd) / 0.07))) * 100}% 0 0 0)`
+        : undefined,
     };
-  }, [bookZoom, bookW, bookH, pageW, pageH, gap, viewport.w, viewport.h, imgAspect, isMobile, slideTranslateY]);
+  }, [bookZoom, bookW, bookH, pageW, pageH, gap, viewport.w, viewport.h, imgAspect, isMobile, slideTranslateY, scrollProgress]);
 
   // Mobile: swipe/tap
   const touchStartX = useRef(0);
