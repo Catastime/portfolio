@@ -253,18 +253,21 @@ export default function Sketchbook({
     const translateX = maxTranslateX * (1 - ease);
     const translateY = maxTranslateY * (1 - ease);
 
+    // Only the image item is visible while the book slides in; the clip
+    // then opens from the item box to the full book over the first
+    // stretch of the zoom, so the page eases out around the photo with
+    // no pop at any point (same window the old fullscreen layer blended)
+    const clipT = Math.min(1, bookZoom / 0.25);
+    const clipInv = 1 - (clipT * clipT * (3 - 2 * clipT));
+
     return {
       transform: `translate(${translateX}px, ${translateY + slideTranslateY}px) scale(${scale})`,
       transformOrigin: 'center center',
-      // While the book slides in, clip everything above the image item so
-      // the photo reads as a clean fullscreen image. After the slide the
-      // clip releases over a short window so the page above the photo
-      // eases in instead of popping in all at once.
-      clipPath: scrollProgress < slideEnd + 0.07
-        ? `inset(${(itemY / pageH) * (1 - Math.min(1, Math.max(0, (scrollProgress - slideEnd) / 0.07))) * 100}% 0 0 0)`
+      clipPath: clipInv > 0
+        ? `inset(${(itemY / pageH) * clipInv * 100}% ${((bookW - itemX - itemW) / bookW) * clipInv * 100}% ${((pageH - itemY - itemH) / pageH) * clipInv * 100}% ${(itemX / bookW) * clipInv * 100}%)`
         : undefined,
     };
-  }, [bookZoom, bookW, bookH, pageW, pageH, gap, viewport.w, viewport.h, imgAspect, isMobile, slideTranslateY, scrollProgress]);
+  }, [bookZoom, bookW, bookH, pageW, pageH, gap, viewport.w, viewport.h, imgAspect, isMobile, slideTranslateY]);
 
   // Mobile: swipe/tap
   const touchStartX = useRef(0);
