@@ -49,7 +49,7 @@ const bookPages = [
     texture: 'left_page-black',
     items: [
       // Statement — big white caps in the lower half of the page
-      { type: 'statement', text: 'I\'M TIM MOEDEKER,\nAN M.Sc.ARCHITECTURE\nAND LECTURER BASED\nIN HANNOVER\nWITH A PASSION FOR\nCUTTING EDGE\nTECHNOLOGIES OF THE\nDIGITAL WORLD AND,\nCONTRADICTORILY,\nANALOGUE PHOTOGRAPHY.', x: -4, y: 58.9, w: 108, h: 37.8, rotation: 0, aligns: { 3: 'left' } },
+      { type: 'statement', text: 'I\'M TIM MOEDEKER,\nAN M.SC.ARCHITECTURE\nAND LECTURER BASED\nIN HANNOVER\nWITH A PASSION FOR\nCUTTING EDGE\nTECHNOLOGIES OF THE\nDIGITAL WORLD AND,\nCONTRADICTORILY,\nANALOGUE PHOTOGRAPHY.', x: -4, y: 58.9, w: 108, h: 37.8, rotation: 0, aligns: { 3: 'left' } },
       // Hole marks — mirrored from the Anthrazit image on the right page
       // (box matches the image box; h follows the image aspect 2.046)
       // frame: black outline around the dots, same size as the right image
