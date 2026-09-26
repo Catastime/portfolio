@@ -368,9 +368,10 @@ function App() {
           if (Math.hypot(tx - cx, ty - cy) < 4) dartRef.current = null
         }
       } else {
-        // Trail the cursor, parked to its lower right and just out of reach
-        tx = Math.min(Math.max(m.x + halfW + 90, halfW), vw - halfW)
-        ty = Math.min(Math.max(m.y + halfH + 120, halfH), vh - halfH)
+        // Follow underneath the cursor so it stays clickable, trailing
+        // behind with a little lag like a dog on a leash
+        tx = Math.min(Math.max(m.x, halfW), vw - halfW)
+        ty = Math.min(Math.max(m.y, halfH), vh - halfH)
       }
       const prev = prevCenterRef.current
       const vx = prev ? cx - prev.x : 0
