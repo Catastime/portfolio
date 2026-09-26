@@ -6,7 +6,7 @@ import DecryptedText from '@/components/DecryptedText'
 import CuttingMat from '@/components/CuttingMat'
 import ScrollSequence from '@/components/ScrollSequence'
 import Sketchbook from '@/components/Sketchbook'
-import { PixelHome, PixelProjects, PixelContact, PixelArrowDown, PixelArrowUp, PixelArrowRight, PixelArrowLeft } from '@/components/PixelIcons'
+import { PixelHome, PixelProjects, PixelContact, PixelArrowDownSolid, PixelArrowUp, PixelArrowRight, PixelArrowLeft } from '@/components/PixelIcons'
 import { motion } from 'motion/react'
 import { BASE } from '@/paths'
 import { startPreload } from '@/preload'
@@ -854,7 +854,7 @@ function App() {
               transition: 'transform 0.3s ease',
             }}
           >
-            <PixelArrowDown size={48} />
+            <PixelArrowDownSolid size={48} />
           </span>
         </button>
       )}

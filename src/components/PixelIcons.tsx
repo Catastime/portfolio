@@ -114,6 +114,26 @@ export function PixelArrowDown({ size = 18 }) {
   return <PixelIcon grid={arrowDownGrid} size={size} />
 }
 
+// Arrow down as one continuous filled path — same silhouette as
+// arrowDownGrid, but with no internal cell edges, so scaling and rotating it
+// (landing click choreography) never shows seam lines between the pixels
+export function PixelArrowDownSolid({ size = 18 }) {
+  const cellSize = 4
+  const w = 5 * cellSize
+  const h = 6 * cellSize
+  return (
+    <svg
+      width={size}
+      height={size * (6 / 5)}
+      viewBox={`0 0 ${w} ${h}`}
+      fill="currentColor"
+      shapeRendering="crispEdges"
+    >
+      <path d="M8 0 H12 V16 H16 V20 H12 V24 H8 V20 H4 V16 H8 Z M0 12 H4 V16 H0 Z M16 12 H20 V16 H16 Z" />
+    </svg>
+  )
+}
+
 export function PixelArrowUp({ size = 18 }) {
   return <PixelIcon grid={arrowUpGrid} size={size} />
 }
