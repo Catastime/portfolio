@@ -174,6 +174,17 @@ export default function Sketchbook({
     return { bookW: totalW, bookH: pH, pageW: pW, pageH: pH, gap: g };
   }, [viewport, isMobile]);
 
+  // Intro slide: the whole book slides up from below until slideEnd — at
+  // max zoom only the image item is on screen, so this reads as the
+  // fullscreen image sliding in (desktop; mobile keeps its own layer)
+  const slideEnd = 0.33;
+  const slideTranslateY = useMemo(() => {
+    if (scrollProgress >= slideEnd) return 0;
+    const t = Math.max(0, scrollProgress / slideEnd);
+    const eased = 1 - Math.pow(1 - t, 3);
+    return (1 - eased) * viewport.h;
+  }, [scrollProgress, viewport.h]);
+
   // Book zoom-out: at bookZoom=0 the book is scaled and translated so the
   // right-page image item fills the viewport (we're "zoomed in" on it).
   // At bookZoom=1 the book is at resting size, centered.
@@ -242,11 +253,20 @@ export default function Sketchbook({
     const translateX = maxTranslateX * (1 - ease);
     const translateY = maxTranslateY * (1 - ease);
 
+    // While the book slides in, everything above the image item is
+    // clipped away so the intro reads as a clean fullscreen image. The
+    // clip edge tracks the slide offset: as the zoom-out overlaps the
+    // slide tail, the page above the photo is revealed at exactly its
+    // natural zoom rate, and by the time the slide ends the edge has
+    // reached the screen top — so releasing the clip is invisible.
+    const clipY = Math.min(itemY, Math.max(0, bookH / 2 - (viewport.h / 2 + translateY) / scale));
+
     return {
-      transform: `translate(${translateX}px, ${translateY}px) scale(${scale})`,
+      transform: `translate(${translateX}px, ${translateY + slideTranslateY}px) scale(${scale})`,
       transformOrigin: 'center center',
+      clipPath: slideTranslateY > 0 ? `inset(${(clipY / pageH) * 100}% 0 0 0)` : undefined,
     };
-  }, [bookZoom, bookW, bookH, pageW, pageH, gap, viewport.w, viewport.h, imgAspect, isMobile]);
+  }, [bookZoom, bookW, bookH, pageW, pageH, gap, viewport.w, viewport.h, imgAspect, isMobile, slideTranslateY]);
 
   // Mobile: swipe/tap
   const touchStartX = useRef(0);
