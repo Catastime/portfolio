@@ -495,11 +495,21 @@ export default function Sketchbook({
       statementStyle.fontSize = `${blockH * 0.16}px`;
       return (
         <div key={key} className="sketch-item sketch-item-statement" style={statementStyle}>
-          {item.text.split('\n').map((line, i, all) => (
-            <div key={i} style={i === 0 && all.length > 1 ? { textAlign: 'right' } : i < all.length - 1 ? { textAlignLast: 'justify' } : undefined}>
-              {line}
-            </div>
-          ))}
+          {item.text.split('\n').map((line, i, all) => {
+            const align = item.aligns?.[i];
+            const lineStyle = align === 'left'
+              ? { textAlign: 'left' }
+              : i === 0 && all.length > 1
+                ? { textAlign: 'right' }
+                : i < all.length - 1
+                  ? { textAlignLast: 'justify' }
+                  : undefined;
+            return (
+              <div key={i} style={lineStyle}>
+                {line}
+              </div>
+            );
+          })}
         </div>
       );
     }
