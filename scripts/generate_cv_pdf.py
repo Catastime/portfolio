@@ -115,7 +115,7 @@ c.drawCentredString(X(W // 2), PH - 537.7 * PT, 'introduction')
 # Statement — explicit line breaks, matching the website authored breaks
 STATEMENT = [
     ("I'M TIM MOEDEKER,", 'right'),
-    ('AN M.Sc.ARCHITECTURE AND', 'justify'),
+    ('AN M.Sc.ARCHITECTURE &', 'justify'),
     ('LECTURER BASED IN', 'justify'),
     ('HANNOVER', 'justify'),
     ('WITH A PASSION FOR', 'justify'),
