@@ -116,8 +116,8 @@ c.drawCentredString(X(W // 2), PH - 537.7 * PT, 'introduction')
 STATEMENT = [
     ("I'M TIM MOEDEKER,", 'right'),
     ('AN M.Sc.ARCHITECTURE', 'justify'),
-    ('AND LECTURER BASED', 'left'),
-    ('IN HANNOVER', 'justify'),
+    ('AND LECTURER BASED', 'justify'),
+    ('IN HANNOVER', 'left'),
     ('WITH A PASSION FOR', 'justify'),
     ('CUTTING EDGE', 'justify'),
     ('TECHNOLOGIES OF THE', 'justify'),
