@@ -40,7 +40,7 @@ export default function ScrollSequence() {
   // Phase boundaries — the zoom starts before the slide finishes so the
   // two motions overlap instead of stopping in between
   const slideEnd = 0.33;
-  const zoomStart = 0.05;
+  const zoomStart = 0.15;
   const zoomEnd = 0.60;
 
   // Image translateY: slides from 100vh (below viewport) to 0 (filling viewport)

@@ -467,7 +467,7 @@ function App() {
   // the slide and the zoom overlap with no visible break. The book is
   // always mounted: at max zoom it *is* the intro image, sliding up
   // before zooming out onto the cutting mat (see Sketchbook)
-  const zoomStart = 0.05
+  const zoomStart = 0.15
   const zoomT = scrollProgress <= zoomStart ? 0 : scrollProgress >= bookStart ? 1 : (scrollProgress - zoomStart) / (bookStart - zoomStart)
   // The cutting mat appears behind the book as the zoom-out begins
   const matVisible = scrollProgress > zoomStart
