@@ -62,6 +62,8 @@ const bookPages = [
     items: [
       // Atelier Anthrazit — the image we zoom out from
       { type: 'image', img: `${BASE}tim/Atelier Anthrazit-039-breit-bw.jpg`, imgMobile: `${BASE}tim/Atelier Anthrazit-039-breit-bw-mobile.jpg`, x: -4, y: 10, w: 108, rotation: 0, taped: true, noBg: true, shadow: '0 2px 8px rgba(0, 0, 0, 0.15)', tackers: [3, 1, 4, 2] },
+      // Punched holes on the image — the book renders its own dots
+      { type: 'holes', x: -4, y: 10, w: 108, h: 37, rotation: 0 },
       // CV — single column below the image: leader lines to right-aligned dates
       {
         type: 'cv', x: -4, y: 48.5, w: 108, rotation: 0, fontSize: 0.85, fontSizeMobile: 0.46,
@@ -199,10 +201,14 @@ function App() {
 
   // Warm media before the user reaches it
   useEffect(() => { startPreload() }, [])
-  const [matVisible, setMatVisible] = useState(false)
-  const [bookVisible, setBookVisible] = useState(false)
-  const [bookZoom, setBookZoom] = useState(0)
   const [imgAspect, setImgAspect] = useState(0)
+
+  // Measure the intro image's aspect — the book's max-zoom geometry needs it
+  useEffect(() => {
+    const img = new Image()
+    img.onload = () => setImgAspect(img.naturalWidth / img.naturalHeight)
+    img.src = `${BASE}tim/Atelier Anthrazit-039-breit-bw.jpg`
+  }, [])
   const [viewportW, setViewportW] = useState(() => (typeof window !== 'undefined' ? window.innerWidth : 1920))
   const isMobileViewport = viewportW < 768
 
@@ -455,6 +461,15 @@ function App() {
   const bookStart = 0.60
   const bookEnd = 1.00
   const bookRange = bookEnd - bookStart
+
+  // The intro slide runs 0-0.33; the zoom-out starts exactly when it ends.
+  // Both motions ease to/from zero velocity at the junction, and the photo
+  // is always the book's own image item (no separate layer), so the handoff
+  // is smooth without any overlap.
+  const zoomStart = 0.33
+  const zoomT = scrollProgress <= zoomStart ? 0 : scrollProgress >= bookStart ? 1 : (scrollProgress - zoomStart) / (bookStart - zoomStart)
+  // The cutting mat appears behind the book as the zoom-out begins
+  const matVisible = scrollProgress > zoomStart
   const totalSpreads = Math.ceil(bookPages.length / 2)
   const flatRatio = 0.35
 
@@ -467,7 +482,7 @@ function App() {
   const inFlatZone = sliceT <= flatRatio || currentSpread >= totalSpreads - 1
 
   // Show book arrows when in the book's flat zone
-  const bookArrowVisible = bookVisible && inFlatZone && scrollProgress >= bookStart && scrollProgress <= bookEnd
+  const bookArrowVisible = inFlatZone && scrollProgress >= bookStart && scrollProgress <= bookEnd
   const canTurnForward = bookArrowVisible && currentSpread < totalSpreads - 1 && !isMobileViewport
   const canTurnBack = bookArrowVisible && currentSpread > 0 && !isMobileViewport
   // Up arrow: at book flat zone on the first spread only
@@ -701,7 +716,7 @@ function App() {
 
   // Go back to the landing
   const goBack = () => {
-    if (bookVisible && inFlatZone) {
+    if (inFlatZone) {
       scrollToStep('landing', 2000)
     }
   }
@@ -806,27 +821,6 @@ function App() {
     return () => window.removeEventListener('wheel', handleWheel)
   }, [arrowVisible, atLanding, canGoUp, showProjects, videoOverlay, contactOverlay, moreOverlay])
 
-  const handleMatVisible = useCallback((show: boolean) => {
-    setMatVisible(show)
-  }, [])
-
-  const handleBookVisible = useCallback((show: boolean) => {
-    setBookVisible(show)
-  }, [])
-
-  const handleZoomProgress = useCallback((zoom: number) => {
-    setBookZoom(zoom)
-  }, [])
-
-  // Scroll progress at which the first page turn begins (end of spread 0 flat zone)
-  const totalSpreadsForFade = Math.ceil(bookPages.length / 2)
-  const imageFadeStart = bookStart + (1 / totalSpreadsForFade) * flatRatio * bookRange
-  const imageFadeEnd = bookStart + (1 / totalSpreadsForFade) * (flatRatio + 0.05) * bookRange
-
-  const handleImgAspect = useCallback((aspect: number) => {
-    setImgAspect(aspect)
-  }, [])
-
   useEffect(() => {
     if (showProjects || moreOverlay) {
       const t = setTimeout(() => setOverlayVisible(true), 10)
@@ -887,8 +881,8 @@ function App() {
         />
       </div>
 
-      {/* Scroll-driven image — fixed layer, moves/scales with scroll */}
-      <ScrollSequence onMatVisible={handleMatVisible} onBookVisible={handleBookVisible} onZoomProgress={handleZoomProgress} onImgAspect={handleImgAspect} imageFadeStart={imageFadeStart} imageFadeEnd={imageFadeEnd} />
+      {/* Mobile intro image layer — on desktop the book itself is the intro */}
+      {isMobileViewport && <ScrollSequence />}
 
       {/* Cutting mat — behind the image, appears when zoom-out starts */}
       <div
@@ -902,12 +896,13 @@ function App() {
         <CuttingMat startCm={7} />
       </div>
 
-      {/* Sketchbook — appears on the cutting mat after zoom-out completes */}
+      {/* Sketchbook — always mounted: at max zoom it is the intro image,
+          slides up, then zooms out onto the cutting mat */}
       <Sketchbook
         pages={bookPages}
-        visible={bookVisible}
+        visible={true}
         scrollProgress={scrollProgress}
-        bookZoom={bookZoom}
+        bookZoom={zoomT}
         imgAspect={imgAspect}
         onVideoOpen={setVideoOverlay}
         onMoreOpen={() => setMoreOverlay(true)}
