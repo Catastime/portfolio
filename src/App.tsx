@@ -226,6 +226,14 @@ function App() {
   const arrowIconRef = useRef<HTMLSpanElement | null>(null)
   const [arrowRotation, setArrowRotation] = useState(0)
   const settleTimerRef = useRef<number | null>(null)
+  const arrowButtonRef = useRef<HTMLButtonElement | null>(null)
+  const mouseRef = useRef({ x: 0, y: 0 })
+  const offsetRef = useRef({ x: 0, y: 0 })
+  const rotRef = useRef(0)
+  const scaleRef = useRef(2)
+  const prevCenterRef = useRef<{ x: number; y: number } | null>(null)
+  const dartRef = useRef<{ x: number; y: number } | null>(null)
+  const forceDartRef = useRef<{ x: number; y: number } | null>(null)
 
   // Show arrow after DecryptedText finishes (28 chars * 80ms speed + buffer)
   useEffect(() => {
@@ -277,6 +285,8 @@ function App() {
         window.clearTimeout(settleTimerRef.current)
         settleTimerRef.current = null
       }
+      dartRef.current = null
+      forceDartRef.current = null
     }
   }, [atLanding])
 
@@ -285,6 +295,102 @@ function App() {
     if (settleTimerRef.current !== null) window.clearTimeout(settleTimerRef.current)
   }, [])
 
+  // Click 6+: the arrow trails the cursor; click 8+: it grows huge; click
+  // 10+: it evades the cursor. The loop writes the arrow's transform directly
+  // every frame — React leaves unchanged inline styles alone, so the JSX
+  // values stay dormant while this runs and take over again on reset
+  const followMode = landingClickStep >= 6
+  const hugeMode = landingClickStep >= 8
+  const evadeMode = landingClickStep >= 10
+
+  useEffect(() => {
+    if (!followMode) return
+    const onMouseMove = (e: MouseEvent) => {
+      mouseRef.current = { x: e.clientX, y: e.clientY }
+    }
+    window.addEventListener('mousemove', onMouseMove)
+    return () => window.removeEventListener('mousemove', onMouseMove)
+  }, [followMode])
+
+  useEffect(() => {
+    if (!followMode || !atLanding || !arrowVisible) return
+    const btn = arrowButtonRef.current
+    const icon = arrowIconRef.current
+    if (!btn || !icon) return
+    let raf = 0
+    const loop = () => {
+      raf = requestAnimationFrame(loop)
+      const rect = icon.getBoundingClientRect()
+      if (!rect.width) return
+      const cx = rect.left + rect.width / 2
+      const cy = rect.top + rect.height / 2
+      // Ease toward the target size (2x, or 8x once it gets ridiculous)
+      scaleRef.current += ((hugeMode ? 8 : 2) - scaleRef.current) * 0.07
+      const halfW = 24 * scaleRef.current
+      const halfH = 28.8 * scaleRef.current
+      const vw = window.innerWidth
+      const vh = window.innerHeight
+      const m = mouseRef.current
+      let tx = cx
+      let ty = cy
+      let ease = 0.09
+      if (evadeMode) {
+        const dart = dartRef.current
+        const near = Math.hypot(cx - m.x, cy - m.y) < 260
+        // Dart to a random point out of reach when the cursor closes in
+        if (forceDartRef.current || (near && (!dart || Math.hypot(dart.x - m.x, dart.y - m.y) < 300))) {
+          forceDartRef.current = null
+          let picked = false
+          for (let i = 0; i < 8; i++) {
+            const a = Math.random() * Math.PI * 2
+            const d = 320 + Math.random() * 220
+            const px = Math.min(Math.max(m.x + Math.cos(a) * d, halfW), vw - halfW)
+            const py = Math.min(Math.max(m.y + Math.sin(a) * d, halfH), vh - halfH)
+            if (Math.hypot(px - m.x, py - m.y) > 360) {
+              dartRef.current = { x: px, y: py }
+              picked = true
+              break
+            }
+          }
+          if (!picked) {
+            // Everything nearby clamps too close — flee to the far corner
+            dartRef.current = {
+              x: m.x < vw / 2 ? vw - halfW : halfW,
+              y: m.y < vh / 2 ? vh - halfH : halfH,
+            }
+          }
+        }
+        const target = dartRef.current
+        if (target) {
+          tx = target.x
+          ty = target.y
+          ease = 0.16
+          if (Math.hypot(tx - cx, ty - cy) < 4) dartRef.current = null
+        }
+      } else {
+        // Trail the cursor, parked to its lower right and just out of reach
+        tx = Math.min(Math.max(m.x + halfW + 90, halfW), vw - halfW)
+        ty = Math.min(Math.max(m.y + halfH + 120, halfH), vh - halfH)
+      }
+      const prev = prevCenterRef.current
+      const vx = prev ? cx - prev.x : 0
+      const vy = prev ? cy - prev.y : 0
+      prevCenterRef.current = { x: cx, y: cy }
+      // Tip ahead while moving; settle crooked-down when parked
+      const targetRot = Math.hypot(vx, vy) > 0.6
+        ? Math.atan2(vy, vx) * 180 / Math.PI - 90
+        : 11
+      const diff = ((targetRot - rotRef.current + 540) % 360) - 180
+      rotRef.current += diff * 0.12
+      offsetRef.current.x += (tx - cx) * ease
+      offsetRef.current.y += (ty - cy) * ease
+      btn.style.transform = `translate(${offsetRef.current.x}px, ${offsetRef.current.y}px)`
+      icon.style.transform = `rotate(${rotRef.current}deg) scale(${scaleRef.current})`
+    }
+    raf = requestAnimationFrame(loop)
+    return () => cancelAnimationFrame(raf)
+  }, [followMode, hugeMode, evadeMode, atLanding, arrowVisible])
+
   // Landing clicks on non-interactive areas: grow the arrow, then show the
   // hint text, then move the arrow to each click point
   useEffect(() => {
@@ -292,12 +398,24 @@ function App() {
     const onLandingClick = (e: MouseEvent) => {
       const target = e.target as HTMLElement
       if (target.closest('button, a, [role="button"]')) return
-      if (landingClickStep === 0) {
+      mouseRef.current = { x: e.clientX, y: e.clientY }
+      const step = landingClickStep
+      if (step === 0) {
         setLandingClickStep(1)
-      } else if (landingClickStep === 1) {
+        return
+      }
+      if (step === 1) {
         setLandingClickStep(2)
         setLandingHint(true)
-      } else {
+        return
+      }
+      if (step >= 10) {
+        // Evading: any further click scares it away from the click point
+        forceDartRef.current = { x: e.clientX, y: e.clientY }
+        return
+      }
+      setLandingClickStep(step + 1)
+      if (step <= 4) {
         const rect = arrowIconRef.current?.getBoundingClientRect()
         if (!rect) return
         const dx = e.clientX - (rect.left + rect.width / 2)
@@ -315,11 +433,22 @@ function App() {
           setArrowRotation(crook)
           settleTimerRef.current = null
         }, 520)
+      } else if (step === 5) {
+        // Following starts — hand position and rotation to the rAF loop
+        if (settleTimerRef.current !== null) {
+          window.clearTimeout(settleTimerRef.current)
+          settleTimerRef.current = null
+        }
+        offsetRef.current = { ...arrowOffset }
+        rotRef.current = arrowRotation
+        scaleRef.current = 2
+        prevCenterRef.current = null
+        dartRef.current = null
       }
     }
     document.addEventListener('click', onLandingClick)
     return () => document.removeEventListener('click', onLandingClick)
-  }, [atLanding, arrowVisible, landingClickStep])
+  }, [atLanding, arrowVisible, landingClickStep, arrowOffset, arrowRotation])
 
   // Book page turn arrows — visible when the book is visible
   // The book scroll range is 0.60-1.00, with flat zones and turn zones
@@ -834,12 +963,13 @@ function App() {
       {/* Scroll arrow — appears after decrypt animation, lower right corner */}
       {arrowVisible && arrowOpacity > 0.01 && (
         <button
+          ref={arrowButtonRef}
           onClick={autoPlay}
           className="fixed bottom-8 right-8 z-20 flex cursor-pointer items-center justify-center border-none bg-transparent p-2 text-white"
           style={{
             opacity: arrowOpacity,
             transform: `translate(${arrowOffset.x}px, ${arrowOffset.y}px)`,
-            transition: 'opacity 0.5s ease, transform 0.5s ease',
+            transition: followMode ? 'opacity 0.5s ease' : 'opacity 0.5s ease, transform 0.5s ease',
             lineHeight: 0,
             paddingBottom: '48px',
           }}
@@ -851,7 +981,7 @@ function App() {
             style={{
               transform: `rotate(${arrowRotation}deg) scale(${landingClickStep >= 1 ? 2 : 1})`,
               transformOrigin: 'center',
-              transition: 'transform 0.3s ease',
+              transition: followMode ? 'none' : 'transform 0.3s ease',
             }}
           >
             <PixelArrowDownSolid size={48} />
