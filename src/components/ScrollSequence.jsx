@@ -218,13 +218,9 @@ export default function ScrollSequence({ onMatVisible, onBookVisible, onZoomProg
     return 1;
   }, [progress, imageFadeStart, imageFadeEnd, isMobile, zoomT]);
 
-  // Corner holes only appear once the zoom-out begins — the fullscreen
-  // image has no holes; they fade in as it shrinks onto the book
-  const holeOpacity = useMemo(() => {
-    if (zoomT <= 0) return 0;
-    const t = Math.min(1, zoomT / 0.25);
-    return t * t * (3 - 2 * t);
-  }, [zoomT]);
+  // Corner holes appear once the zoom-out is underway — the fullscreen
+  // image has no holes; they pop in when the layer settles onto the book box
+  const holeOpacity = zoomT >= 0.25 ? 1 : 0;
 
   useEffect(() => {
     onMatVisible?.(matShouldShow);
