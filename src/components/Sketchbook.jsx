@@ -728,7 +728,9 @@ export default function Sketchbook({
         {/* Gap between stacks */}
         <div style={{ width: `${gap}px` }} />
 
-        {/* Right page stack */}
+        {/* Right page stack — not rendered when the spread has no right page
+            (the impressum ends the book on a single left page) */}
+        {pages[displayRightUnderneath] && (
         <div
           className="sketchbook-page-stack sketchbook-page-stack-right"
           style={{ width: `${pageW}px`, height: `${pageH}px`, backgroundImage: textureUrl(displayRightUnderneath), transform: turnHint === 'forward' ? 'perspective(2000px) rotateY(-3deg)' : undefined, transformOrigin: 'left center', transition: 'transform 0.25s ease-out' }}
@@ -737,6 +739,7 @@ export default function Sketchbook({
           {renderPage(pages[displayRightUnderneath], 'right-under', fontForPage(displayRightUnderneath), displayRightUnderneath)}
           {renderCorners(displayRightUnderneath)}
         </div>
+        )}
 
         {/* Turning page — positioned over the right stack, not clipped by it */}
         {isTurning && (
