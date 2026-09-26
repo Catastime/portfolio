@@ -15,3 +15,20 @@
   object-fit: cover;
 }
 
+
+/* Punched holes on the fullscreen image — lands on the white right page.
+   Percentage sizing so the holes scale with the image during the zoom. */
+.scroll-hole {
+  position: absolute;
+  width: 1.5cqw;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background-color: #1d1d1d;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.scroll-hole-tl { top: 3.5cqw; left: 3.5cqw; }
+.scroll-hole-tr { top: 3.5cqw; right: 3.5cqw; }
+.scroll-hole-bl { bottom: 3.5cqw; left: 3.5cqw; }
+.scroll-hole-br { bottom: 3.5cqw; right: 3.5cqw; }
