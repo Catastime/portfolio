@@ -333,7 +333,7 @@ function App() {
       const m = mouseRef.current
       let tx = cx
       let ty = cy
-      let ease = 0.09
+      let ease = 0.06
       if (evadeMode) {
         const dart = dartRef.current
         const near = Math.hypot(cx - m.x, cy - m.y) < 260
