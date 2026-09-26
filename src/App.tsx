@@ -202,10 +202,14 @@ function App() {
 
   // Warm media before the user reaches it
   useEffect(() => { startPreload() }, [])
-  const [matVisible, setMatVisible] = useState(false)
-  const [bookVisible, setBookVisible] = useState(false)
-  const [bookZoom, setBookZoom] = useState(0)
   const [imgAspect, setImgAspect] = useState(0)
+
+  // Measure the intro image's aspect — the book's max-zoom geometry needs it
+  useEffect(() => {
+    const img = new Image()
+    img.onload = () => setImgAspect(img.naturalWidth / img.naturalHeight)
+    img.src = `${BASE}tim/Atelier Anthrazit-039-breit-bw.jpg`
+  }, [])
   const [viewportW, setViewportW] = useState(() => (typeof window !== 'undefined' ? window.innerWidth : 1920))
   const isMobileViewport = viewportW < 768
 
@@ -458,6 +462,15 @@ function App() {
   const bookStart = 0.60
   const bookEnd = 1.00
   const bookRange = bookEnd - bookStart
+
+  // Zoom-out range — starts while the intro slide is still finishing, so
+  // the slide and the zoom overlap with no visible break. The book is
+  // always mounted: at max zoom it *is* the intro image, sliding up
+  // before zooming out onto the cutting mat (see Sketchbook)
+  const zoomStart = 0.05
+  const zoomT = scrollProgress <= zoomStart ? 0 : scrollProgress >= bookStart ? 1 : (scrollProgress - zoomStart) / (bookStart - zoomStart)
+  // The cutting mat appears behind the book as the zoom-out begins
+  const matVisible = scrollProgress > zoomStart
   const totalSpreads = Math.ceil(bookPages.length / 2)
   const flatRatio = 0.35
 
@@ -470,7 +483,7 @@ function App() {
   const inFlatZone = sliceT <= flatRatio || currentSpread >= totalSpreads - 1
 
   // Show book arrows when in the book's flat zone
-  const bookArrowVisible = bookVisible && inFlatZone && scrollProgress >= bookStart && scrollProgress <= bookEnd
+  const bookArrowVisible = inFlatZone && scrollProgress >= bookStart && scrollProgress <= bookEnd
   const canTurnForward = bookArrowVisible && currentSpread < totalSpreads - 1 && !isMobileViewport
   const canTurnBack = bookArrowVisible && currentSpread > 0 && !isMobileViewport
   // Up arrow: at book flat zone on the first spread only
@@ -704,7 +717,7 @@ function App() {
 
   // Go back to the landing
   const goBack = () => {
-    if (bookVisible && inFlatZone) {
+    if (inFlatZone) {
       scrollToStep('landing', 2000)
     }
   }
@@ -809,22 +822,6 @@ function App() {
     return () => window.removeEventListener('wheel', handleWheel)
   }, [arrowVisible, atLanding, canGoUp, showProjects, videoOverlay, contactOverlay, moreOverlay])
 
-  const handleMatVisible = useCallback((show: boolean) => {
-    setMatVisible(show)
-  }, [])
-
-  const handleBookVisible = useCallback((show: boolean) => {
-    setBookVisible(show)
-  }, [])
-
-  const handleZoomProgress = useCallback((zoom: number) => {
-    setBookZoom(zoom)
-  }, [])
-
-  const handleImgAspect = useCallback((aspect: number) => {
-    setImgAspect(aspect)
-  }, [])
-
   useEffect(() => {
     if (showProjects || moreOverlay) {
       const t = setTimeout(() => setOverlayVisible(true), 10)
@@ -885,8 +882,8 @@ function App() {
         />
       </div>
 
-      {/* Scroll-driven image — fixed layer, moves/scales with scroll */}
-      <ScrollSequence onMatVisible={handleMatVisible} onBookVisible={handleBookVisible} onZoomProgress={handleZoomProgress} onImgAspect={handleImgAspect} />
+      {/* Mobile intro image layer — on desktop the book itself is the intro */}
+      {isMobileViewport && <ScrollSequence />}
 
       {/* Cutting mat — behind the image, appears when zoom-out starts */}
       <div
@@ -900,12 +897,13 @@ function App() {
         <CuttingMat startCm={7} />
       </div>
 
-      {/* Sketchbook — appears on the cutting mat after zoom-out completes */}
+      {/* Sketchbook — always mounted: at max zoom it is the intro image,
+          slides up, then zooms out onto the cutting mat */}
       <Sketchbook
         pages={bookPages}
-        visible={bookVisible}
+        visible={true}
         scrollProgress={scrollProgress}
-        bookZoom={bookZoom}
+        bookZoom={zoomT}
         imgAspect={imgAspect}
         onVideoOpen={setVideoOverlay}
         onMoreOpen={() => setMoreOverlay(true)}
