@@ -435,7 +435,7 @@ export default function Sketchbook({
       return (
         <div key={key} className="sketch-item sketch-holes" style={holesStyle}>
           {item.frame && (
-            <div style={{ position: 'absolute', inset: 0, border: '1px solid #cfcfcf', opacity: 0.10 }} />
+            <div style={{ position: 'absolute', inset: 0, border: '1px solid #cfcfcf', opacity: 0.15 }} />
           )}
           <div className="sketch-hole sketch-hole-tl" style={{ backgroundColor: holeColor }} />
           <div className="sketch-hole sketch-hole-tr" style={{ backgroundColor: holeColor }} />
