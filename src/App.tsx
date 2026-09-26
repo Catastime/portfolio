@@ -268,11 +268,10 @@ function App() {
     ? `${(1 - scrollProgress / titleMoveEnd) * 40}vh`
     : '0vh'
 
-  // Arrow visible at landing (progress < 0.02) and at the image stop (~0.33)
-  // so the user can click again to continue to the cutting mat
+  // Arrow visible at landing (progress < 0.02); one click rolls the whole
+  // sequence through to the book on the cutting mat
   const atLanding = scrollProgress < 0.02
-  const atImageStop = scrollProgress >= 0.30 && scrollProgress <= 0.36
-  const arrowOpacity = !arrowVisible ? 0 : (atLanding || atImageStop) ? 1 : 0
+  const arrowOpacity = !arrowVisible ? 0 : atLanding ? 1 : 0
 
   // Reset the landing click choreography once the user leaves the landing
   useEffect(() => {
@@ -471,8 +470,8 @@ function App() {
   const bookArrowVisible = bookVisible && inFlatZone && scrollProgress >= bookStart && scrollProgress <= bookEnd
   const canTurnForward = bookArrowVisible && currentSpread < totalSpreads - 1 && !isMobileViewport
   const canTurnBack = bookArrowVisible && currentSpread > 0 && !isMobileViewport
-  // Up arrow: at image stop, or at book flat zone on the first spread only
-  const canGoUp = atImageStop || (bookArrowVisible && currentSpread === 0)
+  // Up arrow: at book flat zone on the first spread only
+  const canGoUp = bookArrowVisible && currentSpread === 0
 
   // Scroll to a specific spread's flat zone center
   const scrollToSpreadFlat = (spread: number) => {
@@ -684,37 +683,26 @@ function App() {
     }
   }, [isMobileViewport])
 
-  // Navigation: three steps — landing (0), image (0.33), book (0.60)
-  const scrollToStep = (step: 'landing' | 'image' | 'book', duration = 1500) => {
+  // Navigation: two steps — landing (0) and book (0.60)
+  const scrollToStep = (step: 'landing' | 'book', duration = 1500) => {
     const max = document.documentElement.scrollHeight - window.innerHeight
     // Land inside spread 0's flat zone, not exactly on bookStart — pixel
     // rounding at the boundary can stop the scroll a hair short, which
     // hides the arrows (they require scrollProgress >= bookStart).
-    const targets = { landing: 0, image: titleMoveEnd, book: bookStart + bookRange * (flatRatio * 0.5) / totalSpreads }
+    const targets = { landing: 0, book: bookStart + bookRange * (flatRatio * 0.5) / totalSpreads }
     smoothScrollTo(max * targets[step], duration)
   }
 
-  // Two-phase auto-play: first click scrolls to the image, second click
-  // scrolls from there to the book on the cutting mat (zoom-out complete)
-  const autoPlayPhase = useRef(0)
+  // Auto-play rolls the whole sequence through — image slide-up, zoom-out,
+  // book reveal — without stopping on the full-size picture
   const autoPlay = () => {
-    if (autoPlayPhase.current === 0) {
-      scrollToStep('image', 1500)
-      autoPlayPhase.current = 1
-    } else {
-      scrollToStep('book', 2500)
-      autoPlayPhase.current = 0
-    }
+    scrollToStep('book', 3500)
   }
 
-  // Go back to the previous step
+  // Go back to the landing
   const goBack = () => {
-    if (atImageStop) {
-      autoPlayPhase.current = 0
-      scrollToStep('landing', 1500)
-    } else if (bookVisible && inFlatZone) {
-      autoPlayPhase.current = 1
-      scrollToStep('image', 1500)
+    if (bookVisible && inFlatZone) {
+      scrollToStep('landing', 2000)
     }
   }
 
@@ -722,7 +710,6 @@ function App() {
     setShowProjects(false)
     setVideoOverlay(null)
     setFadingHome(true)
-    autoPlayPhase.current = 0
     // Scroll up while fading to black, then cut scroll, jump to top and fade in
     smoothScrollTo(0, 1200)
     setTimeout(() => {
@@ -757,7 +744,7 @@ function App() {
       }
       // Block arrow interactions while any overlay is open
       if (showProjects || videoOverlay || contactOverlay || moreOverlay) return
-      if (e.key === 'ArrowDown' && arrowVisible && (atLanding || atImageStop)) {
+      if (e.key === 'ArrowDown' && arrowVisible && atLanding) {
         e.preventDefault()
         autoPlay()
       }
@@ -776,7 +763,7 @@ function App() {
     }
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [arrowVisible, atLanding, atImageStop, canGoUp, canTurnForward, canTurnBack, showProjects, videoOverlay, contactOverlay, moreOverlay, moreZoomed])
+  }, [arrowVisible, atLanding, canGoUp, canTurnForward, canTurnBack, showProjects, videoOverlay, contactOverlay, moreOverlay, moreZoomed])
 
   // Trigger autoPlay/goBack after 2 wheel ticks in the appropriate direction
   const wheelTickRef = useRef(0)
@@ -790,7 +777,7 @@ function App() {
       const goingUp = e.deltaY < 0
 
       // Determine which step we're at
-      const canGoForward = atLanding || atImageStop
+      const canGoForward = atLanding
       const canGoBack = canGoUp
 
       if (!canGoForward && !canGoBack) {
@@ -817,7 +804,7 @@ function App() {
     }
     window.addEventListener('wheel', handleWheel, { passive: false })
     return () => window.removeEventListener('wheel', handleWheel)
-  }, [arrowVisible, atLanding, atImageStop, canGoUp, showProjects, videoOverlay, contactOverlay, moreOverlay])
+  }, [arrowVisible, atLanding, canGoUp, showProjects, videoOverlay, contactOverlay, moreOverlay])
 
   const handleMatVisible = useCallback((show: boolean) => {
     setMatVisible(show)
