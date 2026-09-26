@@ -218,6 +218,13 @@ function App() {
   const [turnHint, setTurnHint] = useState<null | 'forward' | 'back'>(null)
   const turnHintRef = useRef<null | 'forward' | 'back'>(null)
 
+  // Landing click choreography: 1st click grows the scroll arrow, 2nd shows
+  // the hint text, 3rd+ moves the arrow to the click point
+  const [landingClickStep, setLandingClickStep] = useState(0)
+  const [landingHint, setLandingHint] = useState(false)
+  const [arrowOffset, setArrowOffset] = useState({ x: 0, y: 0 })
+  const arrowIconRef = useRef<HTMLSpanElement | null>(null)
+
   // Show arrow after DecryptedText finishes (28 chars * 80ms speed + buffer)
   useEffect(() => {
     const decryptDuration = 28 * 80 + 300
@@ -256,6 +263,40 @@ function App() {
   const atLanding = scrollProgress < 0.02
   const atImageStop = scrollProgress >= 0.30 && scrollProgress <= 0.36
   const arrowOpacity = !arrowVisible ? 0 : (atLanding || atImageStop) ? 1 : 0
+
+  // Reset the landing click choreography once the user leaves the landing
+  useEffect(() => {
+    if (!atLanding) {
+      setLandingClickStep(0)
+      setLandingHint(false)
+      setArrowOffset({ x: 0, y: 0 })
+    }
+  }, [atLanding])
+
+  // Landing clicks on non-interactive areas: grow the arrow, then show the
+  // hint text, then move the arrow to each click point
+  useEffect(() => {
+    if (!atLanding || !arrowVisible) return
+    const onLandingClick = (e: MouseEvent) => {
+      const target = e.target as HTMLElement
+      if (target.closest('button, a, [role="button"]')) return
+      if (landingClickStep === 0) {
+        setLandingClickStep(1)
+      } else if (landingClickStep === 1) {
+        setLandingClickStep(2)
+        setLandingHint(true)
+      } else {
+        const rect = arrowIconRef.current?.getBoundingClientRect()
+        if (!rect) return
+        setArrowOffset(prev => ({
+          x: prev.x + (e.clientX - (rect.left + rect.width / 2)),
+          y: prev.y + (e.clientY - (rect.top + rect.height / 2)),
+        }))
+      }
+    }
+    document.addEventListener('click', onLandingClick)
+    return () => document.removeEventListener('click', onLandingClick)
+  }, [atLanding, arrowVisible, landingClickStep])
 
   // Book page turn arrows — visible when the book is visible
   // The book scroll range is 0.60-1.00, with flat zones and turn zones
@@ -754,6 +795,19 @@ function App() {
         </div>
       </div>
 
+      {/* Landing hint — shown after the second non-interactive click */}
+      {landingHint && atLanding && (
+        <motion.div
+          className="pointer-events-none fixed inset-x-0 z-20 flex justify-center"
+          style={{ bottom: 132 }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5 }}
+        >
+          <span className="landing-hint">TO CONTINUE, PLEASE SCROLL OR USE THE ARROWS.</span>
+        </motion.div>
+      )}
+
       {/* Scroll arrow — appears after decrypt animation, lower right corner */}
       {arrowVisible && arrowOpacity > 0.01 && (
         <button
@@ -761,13 +815,22 @@ function App() {
           className="fixed bottom-8 right-8 z-20 flex cursor-pointer items-center justify-center border-none bg-transparent p-2 text-white"
           style={{
             opacity: arrowOpacity,
-            transition: 'opacity 0.5s ease',
+            transform: `translate(${arrowOffset.x}px, ${arrowOffset.y}px)`,
+            transition: 'opacity 0.5s ease, transform 0.5s ease',
             lineHeight: 0,
             paddingBottom: '48px',
           }}
           aria-label="Scroll to explore"
         >
-          <span className="book-arrow">
+          <span
+            ref={arrowIconRef}
+            className="book-arrow"
+            style={{
+              transform: `scale(${landingClickStep >= 1 ? 2 : 1})`,
+              transformOrigin: 'center',
+              transition: 'transform 0.4s ease',
+            }}
+          >
             <PixelArrowDown size={48} />
           </span>
         </button>

@@ -123,3 +123,11 @@ body,
   transform: scale(0.95);
   filter: brightness(1.4) drop-shadow(0 0 2px rgba(255, 255, 255, 0.9));
 }
+
+/* Landing hint — shown after repeated non-interactive clicks on the landing */
+.landing-hint {
+  font-family: 'Hitobito', sans-serif;
+  font-size: 0.8rem;
+  letter-spacing: 0.12em;
+  color: #cfcfcf;
+}
