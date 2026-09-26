@@ -224,6 +224,8 @@ function App() {
   const [landingHint, setLandingHint] = useState(false)
   const [arrowOffset, setArrowOffset] = useState({ x: 0, y: 0 })
   const arrowIconRef = useRef<HTMLSpanElement | null>(null)
+  const [arrowRotation, setArrowRotation] = useState(0)
+  const settleTimerRef = useRef<number | null>(null)
 
   // Show arrow after DecryptedText finishes (28 chars * 80ms speed + buffer)
   useEffect(() => {
@@ -270,8 +272,18 @@ function App() {
       setLandingClickStep(0)
       setLandingHint(false)
       setArrowOffset({ x: 0, y: 0 })
+      setArrowRotation(0)
+      if (settleTimerRef.current !== null) {
+        window.clearTimeout(settleTimerRef.current)
+        settleTimerRef.current = null
+      }
     }
   }, [atLanding])
+
+  // Clear a pending settle rotation on unmount
+  useEffect(() => () => {
+    if (settleTimerRef.current !== null) window.clearTimeout(settleTimerRef.current)
+  }, [])
 
   // Landing clicks on non-interactive areas: grow the arrow, then show the
   // hint text, then move the arrow to each click point
@@ -288,10 +300,21 @@ function App() {
       } else {
         const rect = arrowIconRef.current?.getBoundingClientRect()
         if (!rect) return
-        setArrowOffset(prev => ({
-          x: prev.x + (e.clientX - (rect.left + rect.width / 2)),
-          y: prev.y + (e.clientY - (rect.top + rect.height / 2)),
-        }))
+        const dx = e.clientX - (rect.left + rect.width / 2)
+        const dy = e.clientY - (rect.top + rect.height / 2)
+        if (dx === 0 && dy === 0) return
+        // Tip ahead: the neutral orientation points straight down (90deg),
+        // so rotate by the travel direction minus 90deg
+        setArrowRotation(Math.atan2(dy, dx) * 180 / Math.PI - 90)
+        setArrowOffset(prev => ({ x: prev.x + dx, y: prev.y + dy }))
+        // Once the glide ends, settle pointing mostly down but always a
+        // little crooked — never straight down
+        if (settleTimerRef.current !== null) window.clearTimeout(settleTimerRef.current)
+        settleTimerRef.current = window.setTimeout(() => {
+          const crook = (6 + Math.random() * 12) * (Math.random() < 0.5 ? -1 : 1)
+          setArrowRotation(crook)
+          settleTimerRef.current = null
+        }, 520)
       }
     }
     document.addEventListener('click', onLandingClick)
@@ -826,9 +849,9 @@ function App() {
             ref={arrowIconRef}
             className="book-arrow"
             style={{
-              transform: `scale(${landingClickStep >= 1 ? 2 : 1})`,
+              transform: `rotate(${arrowRotation}deg) scale(${landingClickStep >= 1 ? 2 : 1})`,
               transformOrigin: 'center',
-              transition: 'transform 0.4s ease',
+              transition: 'transform 0.3s ease',
             }}
           >
             <PixelArrowDown size={48} />
