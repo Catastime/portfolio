@@ -333,11 +333,9 @@
   padding-left: 0.45em;
 }
 
+/* Spacer between role and date — keeps the layout, draws no line */
 .cv-line {
   flex: 1;
-  border-bottom: 1px solid currentColor;
-  opacity: 0.5;
-  margin: 0 0 0.45em;
 }
 
 .cv-desc {

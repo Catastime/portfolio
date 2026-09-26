@@ -570,6 +570,13 @@ export default function Sketchbook({
     }
     const meta = pages[pageIndex]?.meta || pages[spread * 2]?.meta;
     if (!meta) return [];
+    // Impressum page: the header switches the WORK counter for IMPRESSUM
+    if (pages[pageIndex]?.impressum) {
+      return [
+        { type: 'corner-text', text: 'IMPRESSUM', x: 5, y: 2.5, align: 'left' },
+        { type: 'corner-text', text: meta.year || '', x: 5, y: 2.5, align: 'right' },
+      ];
+    }
     const isLeft = pageIndex % 2 === 0;
     const spreadNum = String(spread).padStart(2, '0');
     if (isLeft) {
