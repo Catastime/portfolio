@@ -10,7 +10,7 @@ import './ScrollSequence.css';
  * throughout the zoom-out (not a separate layer that fades away).
  *
  * 0.00 - 0.33: Image slides up from below into full view (ease-out)
- * 0.15 - 0.60: Zoom-out: image layer shrinks with the book, staying on the
+ * 0.05 - 0.60: Zoom-out: image layer shrinks with the book, staying on the
  *              right-page item. Book scales from zoomed-in to resting size.
  *              The zoom starts while the slide is still finishing, and the
  *              layer box blends from viewport box to book box, so there is
@@ -64,7 +64,7 @@ export default function ScrollSequence({ onMatVisible, onBookVisible, onZoomProg
   // Phase boundaries — the zoom starts before the slide finishes so the
   // two motions overlap instead of stopping in between
   const slideEnd = 0.33;
-  const zoomStart = 0.15;
+  const zoomStart = 0.05;
   const zoomEnd = 0.60;
 
   // Image translateY: slides from 100vh (below viewport) to 0 (filling viewport)
