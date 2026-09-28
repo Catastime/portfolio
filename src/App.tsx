@@ -98,10 +98,10 @@ const bookPages = [
     texture: 'left_page-black',
     meta: { year: '2024', place: 'Hannover', title: 'Artificial Intelligence in Architectural Design' },
     items: [
-      // Upper text block — full width (comic removed for now)
-      { type: 'text', text: 'The current development in the field of artificial intelligence promises unprecedented potentials for creative fields such as architecture. Instead of mere automation of simple processes and efficiency improvement through enhanced tools, it could herald the beginning of a true symbiosis between humans and machines, a vision pursued in the 20th century by researchers like John McCarthy and later Nicolas Negroponte.', x: 8, y: 10, w: 84, rotation: 0, font: "'tosh-b', sans-serif", fontSize: 0.58, fontSizeMobile: 0.44 },
-      // thesis-starter — between the two text blocks
-      { type: 'image', img: `${THESIS_IMG}/thesis-starter.jpeg`, x: 8, y: 27, w: 42, rotation: 0, taped: true, noBg: true, tackers: [1, 3, 2, 4] },
+      // Upper text block — right of the starter image, justified
+      { type: 'text', text: 'The current development in the field of artificial intelligence promises unprecedented potentials for creative fields such as architecture. Instead of mere automation of simple processes and efficiency improvement through enhanced tools, it could herald the beginning of a true symbiosis between humans and machines, a vision pursued in the 20th century by researchers like John McCarthy and later Nicolas Negroponte.', x: 52, y: 10, w: 42, rotation: 0, font: "'tosh-b', sans-serif", fontSize: 0.58, fontSizeMobile: 0.44, align: 'justify' },
+      // thesis-starter — top of the page, left of the text
+      { type: 'image', img: `${THESIS_IMG}/thesis-starter.jpeg`, x: 8, y: 10, w: 42, rotation: 0, taped: true, noBg: true, tackers: [1, 3, 2, 4] },
       // website-concept — below the lower text, poking into it, 20% bigger than original w:38
       { type: 'image', img: `${THESIS_IMG}/website-concept2.png`, x: 48, y: 80, w: 42, rotation: 0, noBg: true },
       // Second text block — part 1: below comic, right of starter, above concept
@@ -117,17 +117,8 @@ const bookPages = [
     items: [
       // Top text block
       { type: 'text', text: 'The rapid development in this renaissance of artificial intelligence has ignited in me a desire to delve into this topic through a master\'s thesis. The goal of this work is to examine the connections between past and current developments, describe the theoretical ideas and aspirations of these developments and their instigators, and develop a simple tool that showcases current possibilities of generative deep learning artificial intelligence in a user-friendly and helpful manner.', x: 8, y: 10, w: 84, rotation: 0, font: "'tosh-b', sans-serif", fontSize: 0.58, fontSizeMobile: 0.42 },
-      // AI history timeline
-      { type: 'timeline', x: 8, y: 48, w: 84, rotation: 0, fontSize: 0.6, fontSizeMobile: 0.4, entries: [
-        { date: '1950', label: 'Alan Turing proposes the Turing Test — can machines think?' },
-        { date: '1956', label: 'Dartmouth Conference: John McCarthy coins the term "artificial intelligence".' },
-        { date: '1970', label: 'Nicolas Negroponte envisions "The Architecture Machine" — the computer as a design partner.' },
-        { date: '1997', label: 'Deep Blue defeats chess world champion Garry Kasparov.' },
-        { date: '2012', label: 'AlexNet wins the ImageNet Challenge — the deep learning boom begins.' },
-        { date: '2017', label: 'The transformer architecture reshapes machine learning.' },
-        { date: '2022', label: 'Diffusion models and large language models reach the public.' },
-        { date: '2024', label: 'Master\'s thesis: AI in architectural design.' },
-      ]},
+      // Timeline — taped below the text
+      { type: 'image', img: `${THESIS_IMG}/Timeline.png`, x: 8, y: 45, w: 44, rotation: 0, taped: true, noBg: true, tackers: [1, 3, 2, 4] },
     ],
   },
 
