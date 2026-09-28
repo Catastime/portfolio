@@ -103,7 +103,7 @@ const bookPages = [
   // Left page — black paper
   {
     texture: 'left_page-black',
-    meta: { year: '2024', place: 'Hannover', title: 'Artificial Intelligence in Architectural Design' },
+    meta: { year: '2024', place: 'Hannover', title: 'Artificial Intelligence in Architectural Design', work: 1 },
     items: [
       // Upper text block — right of the starter image, justified
       { type: 'text', title: 'MASTER THESIS: Artificial Intelligence in Architectural Design', text: 'The current development in the field of artificial intelligence promises unprecedented potentials for creative fields such as architecture. Instead of mere automation of simple processes and efficiency improvement through enhanced tools, it could herald the beginning of a true symbiosis between humans and machines, a vision pursued in the 20th century by researchers like John McCarthy and later Nicolas Negroponte.', x: 60, y: 7, w: 34, rotation: 0, font: "'tosh-b', sans-serif", fontSize: 0.9, fontSizeMobile: 0.65, align: 'justify' },
@@ -118,7 +118,7 @@ const bookPages = [
   // Right page — black paper
   {
     texture: 'right_page-black',
-    meta: { year: '2024', place: 'Hannover', title: 'Artificial Intelligence in Architectural Design' },
+    meta: { year: '2024', place: 'Hannover', title: 'Artificial Intelligence in Architectural Design', work: 1 },
     items: [
       // Web sections — interactive negative strip; click left/right to pull the film
       { type: 'filmstrip', x: 8, y: 42, w: 84, rotation: 0, images: [
@@ -142,7 +142,7 @@ const bookPages = [
   // ===== SPREAD 2: WORK01 continued — images, video and MORE button =====
   {
     texture: 'left_page-black',
-    meta: { year: '2024', place: 'Hannover', title: 'Artificial Intelligence in Architectural Design' },
+    meta: { year: '2024', place: 'Hannover', title: 'Artificial Intelligence in Architectural Design', work: 1 },
     items: [
       // Cleanup — GroundingDINO vehicle detection, right of the text
       { type: 'image', img: `${THESIS_IMG}/cleanup/cleanup.png`, x: 48, y: 20, w: 42, rotation: 0, taped: true, noBg: true, tackers: [1, 3, 2, 4] },
@@ -150,7 +150,7 @@ const bookPages = [
   },
   {
     texture: 'right_page-black',
-    meta: { year: '2024', place: 'Hannover', title: 'Artificial Intelligence in Architectural Design' },
+    meta: { year: '2024', place: 'Hannover', title: 'Artificial Intelligence in Architectural Design', work: 1 },
     items: [
       { type: 'image', img: `${THESIS_IMG}/Example_start.png`, x: 8, y: 32, w: 35, rotation: 0, taped: true, noBg: true, tackers: [1, 3, 2, 4] },
       // Cityhotel Polaroid stack — slightly overlapping like stickers
