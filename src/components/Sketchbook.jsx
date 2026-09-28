@@ -354,7 +354,8 @@ export default function Sketchbook({
           onClick={item.video ? () => onVideoOpen?.(item.video) : undefined}
         >
           {item.taped && (() => {
-            const holeColor = holeColorFor(pageIndex);
+            // Per-item override: light page dots vanish on white-background images
+            const holeColor = item.holeColor || holeColorFor(pageIndex);
             return (
               <>
                 <div className="sketch-hole sketch-hole-tl" style={{ backgroundColor: holeColor }} />
