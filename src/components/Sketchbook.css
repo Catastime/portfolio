@@ -240,7 +240,7 @@
 /* Statement — big bold white caps on dark paper */
 .sketch-item-statement {
   color: var(--page-text, #cfcfcf);
-  font-family: 'automate', sans-serif;
+  font-family: 't26-carbon', monospace;
   font-weight: 700;
   text-transform: uppercase;
   text-align: justify;

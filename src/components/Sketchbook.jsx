@@ -516,7 +516,7 @@ export default function Sketchbook({
       if (item.h) statementStyle.height = `${item.h}%`;
       // Font scales with the page so the statement fills its block
       const blockH = pageH * 0.9 * ((item.h || 100) / 100);
-      statementStyle.fontSize = `${blockH * 0.15}px`;
+      statementStyle.fontSize = `${blockH * 0.16}px`;
       return (
         <div key={key} className="sketch-item sketch-item-statement" style={statementStyle}>
           {item.text.split('\n').map((line, i, all) => {
