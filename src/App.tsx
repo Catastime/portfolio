@@ -27,7 +27,8 @@ const projectItems = [
 // Sketchbook pages — 13 spreads (26 pages).
 // Spread 0: Introduction & CV (no corner text)
 // Spread 1: Master Thesis — "Artificial Intelligence in Architectural Design"
-// Spreads 2-12: Placeholder for future projects
+// Spread 2: Master Thesis continued (video + MORE)
+// Spreads 3-13: Placeholder for future projects
 // Corner text (spread number, year, place, title) is auto-injected by Sketchbook
 // for all spreads except spread 0, using the `meta` field on the left page.
 
@@ -125,6 +126,20 @@ const bookPages = [
       { type: 'image', img: `${THESIS_IMG}/Cityhotel_Concrete.jpg`, x: 60, y: 29, w: 28, rotation: 2, polaroid: true, bringToFront: true },
       { type: 'image', img: `${THESIS_IMG}/Cityhotel_Scandi.jpg`, x: 52, y: 38, w: 28, rotation: -1, polaroid: true, bringToFront: true },
       { type: 'image', img: `${THESIS_IMG}/Cityhotel_Blade-Runner.jpg`, x: 64, y: 43, w: 28, rotation: 4, polaroid: true, bringToFront: true },
+    ],
+  },
+
+  // ===== SPREAD 2: WORK01 continued — video and MORE button =====
+  {
+    texture: 'left_page-black',
+    meta: { year: '2024', place: 'Hannover', title: 'Artificial Intelligence in Architectural Design' },
+    items: [],
+  },
+  {
+    texture: 'right_page-black',
+    meta: { year: '2024', place: 'Hannover', title: 'Artificial Intelligence in Architectural Design' },
+    items: [
+      // Video poster — opens the thesis film in the video overlay
       { type: 'image', img: `${THESIS_IMG}/website.png`, x: 8, y: 72, w: 72, rotation: 0, taped: true, noBg: true, video: `${THESIS_IMG}/FinalVideo.mp4`, tackers: [4, 2, 3, 1] },
       // MORE — square button right of the video poster
       { type: 'button', label: 'MORE', x: 84, y: 91.25, w: 12, rotation: 0 },
@@ -132,9 +147,6 @@ const bookPages = [
   },
 
   // ===== SPREADS 2-12: Placeholder pages for future projects =====
-  // Spread 2
-  { meta: { year: '', place: '', title: '' }, items: [] },
-  { meta: { year: '', place: '', title: '' }, items: [] },
   // Spread 3
   { meta: { year: '', place: '', title: '' }, items: [] },
   { meta: { year: '', place: '', title: '' }, items: [] },
@@ -165,8 +177,11 @@ const bookPages = [
   // Spread 12
   { meta: { year: '', place: '', title: '' }, items: [] },
   { meta: { year: '', place: '', title: '' }, items: [] },
+  // Spread 13
+  { meta: { year: '', place: '', title: '' }, items: [] },
+  { meta: { year: '', place: '', title: '' }, items: [] },
 
-  // ===== SPREAD 13: IMPRESSUM — last page, black left, no right page =====
+  // ===== SPREAD 14: IMPRESSUM — last page, black left, no right page =====
   {
     meta: { year: '2026', place: '', title: '' },
     impressum: true,

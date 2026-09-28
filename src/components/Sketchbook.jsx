@@ -589,7 +589,7 @@ export default function Sketchbook({
 
   // Inject corner text items for a page based on spread metadata
   // Spread 0 (intro) has no corner text. All other spreads get:
-  //   Left page:  top-left = "WORK.NN/13", top-right = year
+  //   Left page:  top-left = "WORK.NN/NN" (total after the intro), top-right = year
   //   Right page: top-left = place, top-right = project title
   const cornerItemsForPage = (pageIndex, pages) => {
     const spread = Math.floor(pageIndex / 2);
@@ -613,9 +613,11 @@ export default function Sketchbook({
     }
     const isLeft = pageIndex % 2 === 0;
     const spreadNum = String(spread).padStart(2, '0');
+    // Total after the intro spread (the impressum spread counts, as before)
+    const totalWorks = Math.ceil(pages.length / 2) - 1;
     if (isLeft) {
       return [
-        { type: 'corner-text', text: `WORK.${spreadNum}/13`, x: 5, y: 2.5, align: 'left' },
+        { type: 'corner-text', text: `WORK.${spreadNum}/${totalWorks}`, x: 5, y: 2.5, align: 'left' },
         { type: 'corner-text', text: meta.year || '', x: 5, y: 2.5, align: 'right' },
       ];
     } else {
