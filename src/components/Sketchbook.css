@@ -88,15 +88,50 @@
     0 2px 4px rgba(0, 0, 0, 0.15);
 }
 
-/* Film strip — segment of 35mm negative film with sprocket holes */
-.sketch-item-image-filmstrip {
+/* Film strip — interactive negative strip; click left/right to pull the film */
+.sketch-filmstrip-window {
   background: #0d0d0d;
   padding: 16px 8px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+  overflow: hidden;
+  pointer-events: auto !important;
 }
 
-.sketch-item-image-filmstrip::before,
-.sketch-item-image-filmstrip::after {
+.sketch-filmstrip-track {
+  display: flex;
+  width: 100%;
+  transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform;
+}
+
+.sketch-filmstrip-frame {
+  flex: 0 0 100%;
+  width: 100%;
+  height: auto;
+  display: block;
+  user-select: none;
+}
+
+.sketch-filmstrip-pull {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 50%;
+  z-index: 2;
+}
+
+.sketch-filmstrip-pull-left {
+  left: 0;
+  cursor: w-resize;
+}
+
+.sketch-filmstrip-pull-right {
+  right: 0;
+  cursor: e-resize;
+}
+
+.sketch-filmstrip-window::before,
+.sketch-filmstrip-window::after {
   content: '';
   position: absolute;
   left: 8px;
@@ -105,13 +140,15 @@
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='7'%3E%3Crect x='3' y='1' width='8' height='5' rx='1.5' fill='%23cfcfcf' fill-opacity='0.4'/%3E%3C/svg%3E");
   background-repeat: repeat-x;
   background-size: 14px 7px;
+  z-index: 3;
+  pointer-events: none;
 }
 
-.sketch-item-image-filmstrip::before {
+.sketch-filmstrip-window::before {
   top: 4px;
 }
 
-.sketch-item-image-filmstrip::after {
+.sketch-filmstrip-window::after {
   bottom: 4px;
 }
 

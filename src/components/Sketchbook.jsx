@@ -63,6 +63,25 @@ const REF_PAGE_H = 1040;
 const REF_MOBILE_PAGE_H = 540;
 
 /** @param {SketchbookProps} props */
+// Interactive film strip — a fixed film gate with sprocket holes; the frames
+// slide through it. Clicking the left half pulls the strip left (next frame),
+// the right half pulls it right (previous frame).
+function FilmStrip({ images, style }) {
+  const [idx, setIdx] = useState(0);
+  const pull = (dir) => setIdx((i) => Math.max(0, Math.min(images.length - 1, i + dir)));
+  return (
+    <div className="sketch-item sketch-filmstrip-window" style={style}>
+      <div className="sketch-filmstrip-track" style={{ transform: `translateX(-${idx * 100}%)` }}>
+        {images.map((src, i) => (
+          <img key={i} src={src} alt="" className="sketch-filmstrip-frame" draggable={false} />
+        ))}
+      </div>
+      <div className="sketch-filmstrip-pull sketch-filmstrip-pull-left" onClick={() => pull(1)} aria-hidden="true" />
+      <div className="sketch-filmstrip-pull sketch-filmstrip-pull-right" onClick={() => pull(-1)} aria-hidden="true" />
+    </div>
+  );
+}
+
 export default function Sketchbook({
   pages = [],
   visible = false,
@@ -340,12 +359,15 @@ export default function Sketchbook({
       transform: `rotate(${item.rotation}deg)`,
     };
 
+    if (item.type === 'filmstrip') {
+      return <FilmStrip key={key} images={item.images} style={style} />;
+    }
+
     if (item.type === 'image') {
       const classes = ['sketch-item', 'sketch-item-image'];
       if (item.noBg) classes.push('sketch-item-image-nobg');
       if (item.polaroid) classes.push('sketch-item-image-polaroid');
       if (item.print) classes.push('sketch-item-image-print');
-      if (item.filmstrip) classes.push('sketch-item-image-filmstrip');
       if (item.bringToFront) classes.push('sketch-item-bring-to-front');
       if (item.video || item.overlay) classes.push('sketch-item-clickable');
       if (item.frame) classes.push('sketch-item-framed');

@@ -120,8 +120,16 @@ const bookPages = [
     texture: 'right_page-black',
     meta: { year: '2024', place: 'Hannover', title: 'Artificial Intelligence in Architectural Design' },
     items: [
-      // website — film strip, full width below text 3
-      { type: 'image', img: `${THESIS_IMG}/website.png`, x: 8, y: 42, w: 84, rotation: 0, filmstrip: true },
+      // Web sections — interactive negative strip; click left/right to pull the film
+      { type: 'filmstrip', x: 8, y: 42, w: 84, rotation: 0, images: [
+        `${THESIS_IMG}/sections/Web Section 2.png`,
+        `${THESIS_IMG}/sections/Web Section 3.png`,
+        `${THESIS_IMG}/sections/Web Section 4.png`,
+        `${THESIS_IMG}/sections/Web Section 6.png`,
+        `${THESIS_IMG}/sections/Web Section 7.png`,
+        `${THESIS_IMG}/sections/Web Section 9.png`,
+        `${THESIS_IMG}/sections/Web Section 10.png`,
+      ] },
       // Alternative Realities diagram — top of the page
       { type: 'image', img: `${THESIS_IMG}/Alternative Realities Diagramm.png`, x: 8, y: 5, w: 84, rotation: 0, noBg: true, overlay: true },
       // Third text block — swapped with the fourth, justified
