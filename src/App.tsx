@@ -127,7 +127,7 @@ const bookPages = [
       // Alternative Realities diagram — top of the page
       { type: 'image', img: `${THESIS_IMG}/Alternative Realities Diagramm.png`, x: 8, y: 5, w: 84, rotation: 0, noBg: true },
       // Third text block — swapped with the fourth, justified
-      { type: 'text', text: 'When someone speaks of AI today, it generally refers to a deep learning algorithm attempting to simulate cognitive functions based on vast amounts of data. However, truly autonomous thinking programs, as envisaged in the 1950s, have not been realized yet, as current computers lack the necessary level of perception or self-reflection to develop actual intelligence.', x: 56, y: 35, w: 38, rotation: 0, font: "'tosh-b', sans-serif", fontSize: 0.85, fontSizeMobile: 0.64, align: 'justify' },
+      { type: 'text', text: 'When someone speaks of AI today, it generally refers to a deep learning algorithm attempting to simulate cognitive functions based on vast amounts of data. However, truly autonomous thinking programs, as envisaged in the 1950s, have not been realized yet, as current computers lack the necessary level of perception or self-reflection to develop actual intelligence.', x: 56, y: 28, w: 38, rotation: 0, font: "'tosh-b', sans-serif", fontSize: 0.85, fontSizeMobile: 0.64, align: 'justify' },
     ],
   },
 
