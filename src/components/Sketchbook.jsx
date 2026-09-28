@@ -452,6 +452,7 @@ export default function Sketchbook({
       if (itemFontSize) textStyle.fontSize = `calc(${itemFontSize}rem * var(--page-scale, 1))`;
       if (item.align) textStyle.textAlign = item.align;
       if (item.weight) textStyle.fontWeight = item.weight;
+      if (item.opacity != null) textStyle.opacity = item.opacity;
       // An h box bottom-aligns the text: its lower edge sits at y + h
       if (item.h) {
         textStyle.height = `${item.h}%`;
