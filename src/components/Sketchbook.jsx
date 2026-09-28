@@ -182,8 +182,26 @@ export default function Sketchbook({
     if (scrollProgress >= slideEnd) return 0;
     const t = Math.max(0, scrollProgress / slideEnd);
     const eased = 1 - Math.pow(1 - t, 3);
-    return (1 - eased) * viewport.h;
-  }, [scrollProgress, viewport.h]);
+
+    // How far the book must travel so the intro image fully clears the
+    // bottom edge. On wide screens the max-zoom image covers the viewport
+    // by width, so it is taller than the screen — one viewport height of
+    // travel is not enough and the image would peek in at the landing page.
+    let distance = viewport.h;
+    if (!isMobile && bookH > 0 && pageW > 0) {
+      const pageInset = 0.05;
+      const contentW = pageW * (1 - 2 * pageInset);
+      const itemW = 1.08 * contentW;
+      const itemH = imgAspect > 0 ? itemW / imgAspect : itemW;
+      const itemY = (pageInset + 0.1 * (1 - 2 * pageInset)) * pageH;
+      const itemCenterY = itemY + itemH / 2;
+      const maxScale = Math.max(viewport.w / itemW, viewport.h / itemH);
+      const translateY = -maxScale * (itemCenterY - bookH / 2);
+      const imageTop = viewport.h / 2 + translateY + (itemY - bookH / 2) * maxScale;
+      distance = Math.max(viewport.h, viewport.h - imageTop);
+    }
+    return (1 - eased) * distance;
+  }, [scrollProgress, viewport.w, viewport.h, bookH, pageW, pageH, imgAspect, isMobile]);
 
   // Book zoom-out: at bookZoom=0 the book is scaled and translated so the
   // right-page image item fills the viewport (we're "zoomed in" on it).
