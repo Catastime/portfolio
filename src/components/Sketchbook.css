@@ -90,7 +90,7 @@
 
 /* Film strip — interactive negative strip; click left/right to pull the film */
 .sketch-filmstrip-window {
-  background: #0d0d0d;
+  background: rgba(13, 13, 13, 0.72);
   padding: 16px 8px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
   overflow: hidden;
@@ -122,12 +122,38 @@
 
 .sketch-filmstrip-pull-left {
   left: 0;
-  cursor: w-resize;
 }
 
 .sketch-filmstrip-pull-right {
   right: 0;
-  cursor: e-resize;
+}
+
+/* Chevron arrows appear on hover instead of a cursor change */
+.sketch-filmstrip-pull::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  width: 14px;
+  height: 14px;
+  border-top: 2px solid #cfcfcf;
+  border-right: 2px solid #cfcfcf;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.sketch-filmstrip-pull-left::after {
+  left: 14px;
+  transform: translateY(-50%) rotate(-135deg);
+}
+
+.sketch-filmstrip-pull-right::after {
+  right: 14px;
+  transform: translateY(-50%) rotate(45deg);
+}
+
+.sketch-filmstrip-pull-left:hover::after,
+.sketch-filmstrip-pull-right:hover::after {
+  opacity: 0.9;
 }
 
 .sketch-filmstrip-window::before,

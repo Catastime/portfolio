@@ -37,15 +37,17 @@ PT = PW / W                # design px -> pt
 # hhea ascent per em — the baseline offset differs per font, mirroring
 # how the browser places each face's baseline.
 FACES = {
-    'Carbon':        ('Carbon-400.ttf',   0.801),  # introduction label
-    'Carbon-Bold':   ('Carbon-700.ttf',   0.801),  # statement
-    'Automate':      ('Automate-400.ttf', 1.034),  # contacts, section names, dates
-    'Automate-Light': ('Automate-300.ttf', 1.034),  # descriptions, skill lists
-    'ToshB':         ('ToshB-400.ttf',    1.382),  # CV roles
+    # (file, hhea ascent/em, hhea descent/em)
+    'Carbon':        ('Carbon-400.ttf',   0.801, 0.200),  # introduction label
+    'Carbon-Bold':   ('Carbon-700.ttf',   0.801, 0.200),  # statement
+    'Automate':      ('Automate-400.ttf', 1.034, 0.317),  # contacts, section names, dates
+    'Automate-Light': ('Automate-300.ttf', 1.034, 0.317),  # descriptions, skill lists
+    'ToshB':         ('ToshB-400.ttf',    1.382, 0.598),  # CV roles
 }
-for name, (fn, _) in FACES.items():
+for name, (fn, _, _) in FACES.items():
     pdfmetrics.registerFont(TTFont(name, os.path.join(HERE, fn)))
-ASC = {name: asc for name, (_, asc) in FACES.items()}
+ASC = {name: a for name, (_, a, _) in FACES.items()}
+DESC = {name: d for name, (_, _, d) in FACES.items()}
 
 PAPER = (207 / 255, 207 / 255, 207 / 255)
 DARK = (46 / 255, 46 / 255, 46 / 255)
@@ -55,9 +57,15 @@ LINE = (150 / 255, 150 / 255, 150 / 255)
 def X(dx):
     return dx * PT
 
-def YB(dy, size, font='Automate'):
-    # design top-y + font size -> pdf baseline (ascent from the font's hhea)
-    return PH - (dy + size * ASC[font]) * PT
+def YB(dy, size, font='Automate', lh=None):
+    # design top-y + font size -> pdf baseline. With lh (the CSS line box
+    # height) this mirrors the browser: half-leading centers the font box
+    # in the line box, then the baseline sits ascent below its top.
+    a = ASC[font]
+    if lh is None:
+        return PH - (dy + size * a) * PT
+    half = (lh - size * (a + DESC[font])) / 2
+    return PH - (dy + half + size * a) * PT
 
 def sw(text, size, font='Automate'):
     return pdfmetrics.stringWidth(text, font, size * PT)
@@ -95,19 +103,19 @@ def draw_block(c, dx, dy, width, text, size, fill, lh, mode='justify', ragged_la
         last = i == len(lines) - 1
         if mode == 'right':
             line = ' '.join(ln)
-            c.drawString(X(dx) + wpt - sw(line, size, font), YB(dy, size, font), line)
+            c.drawString(X(dx) + wpt - sw(line, size, font), YB(dy, size, font, lh), line)
         elif last and ragged_last:
-            c.drawString(X(dx), YB(dy, size, font), ' '.join(ln))
+            c.drawString(X(dx), YB(dy, size, font, lh), ' '.join(ln))
         else:
             if len(ln) > 1:
                 word_w = sum(sw(w, size, font) for w in ln)
                 gap = (wpt - word_w) / (len(ln) - 1)
                 cx = X(dx)
                 for w in ln:
-                    c.drawString(cx, YB(dy, size, font), w)
+                    c.drawString(cx, YB(dy, size, font, lh), w)
                     cx += sw(w, size, font) + gap
             else:
-                c.drawString(X(dx), YB(dy, size, font), ln[0])
+                c.drawString(X(dx), YB(dy, size, font, lh), ln[0])
         dy += lh
     return dy
 
@@ -184,30 +192,30 @@ inset = 42.2  # 3.5cqw of the image box
 for cx, cyy in ((ix + inset, iy + inset), (ix + iw_d - inset, iy + inset), (ix + inset, iy + ih_d - inset), (ix + iw_d - inset, iy + ih_d - inset)):
     c.circle(X(cx), PH - cyy * PT, r, stroke=0, fill=1)
 
-# CV — every metric mirrors the web CV: font = 0.85rem x page-scale
-# (measured 13.6px in a 709px column), em = 23.12 design px.
-EM = 23.12
-y = 853.6 + EM  # y 48.5% of content + 1em first-section margin
+# CV — every metric mirrors the web CV: font = 0.88rem x page-scale,
+# em = 23.94 design px (23.12 measured at 0.85rem, scaled to 0.88).
+EM = 23.94
+y = 839.4 + EM  # y 47.6% of content + 1em first-section margin
 
-def section(name, gap=1.8 * EM):
+def section(name, gap=1.4 * EM):
     global y
     y += gap
     c.setFillColor(DARK)
     c.setFont('Automate', 1.5 * EM * PT)
-    c.drawString(X(17.4), YB(y, 1.5 * EM, 'Automate'), name)
-    y += 1.1 * 1.5 * EM  # section-name line-height 1.1
+    c.drawString(X(17.4), YB(y, 1.5 * EM, 'Automate', 1.65 * EM), name)
+    y += 1.65 * EM  # section-name line box: line-height 1.1 x 1.5em
 
 def entry(head, date, desc):
     global y
     c.setFillColor(DARK)
     c.setFont('ToshB', EM * PT)
-    c.drawString(X(17.4), YB(y, EM, 'ToshB'), head)
+    c.drawString(X(17.4), YB(y, EM, 'ToshB', 1.4 * EM), head)
     if date:
         c.setFont('Automate', EM * PT)
-        c.drawRightString(X(17.4) + 1205.3 * PT, YB(y, EM, 'Automate'), date)
-    y += 1.4 * EM  # line-height
+        c.drawRightString(X(17.4) + 1205.3 * PT, YB(y, EM, 'Automate', 1.4 * EM), date)
+    y += 1.4 * EM  # .cv-head line box (line-height 1.4)
     if desc:
-        y = draw_block(c, 17.4, y - 0.2 * EM, 1205.3, desc, EM, LIGHT, 1.4 * EM, font='Automate-Light') + 0.5 * EM  # desc margin-top -0.2em, entry margin-bottom 0.5em
+        y = draw_block(c, 17.4, y - 0.2 * EM, 1205.3, desc, EM, LIGHT, 1.4 * EM, font='Automate-Light') + 0.4 * EM  # desc margin-top -0.2em, .cv-entry margin-bottom 0.4em
 
 section('EDUCATION', gap=0)
 entry('M. Sc. Architecture, Leibniz University Hannover', '10.2021 - 01.2024',
@@ -232,12 +240,16 @@ for s in ('Design & BIM: Rhinoceros, Revit, Archicad',
           'Other: Python, QGIS, 3D printing, large-format plotting, web/server hosting',
           'Languages: German (mother tongue), English (fluent)'):
     # Web split: label (before the colon) in Tosh B, list in Automate Light
+    # at 0.65 opacity (LIGHT). Both are inline in one .cv-head line, so they
+    # share the Tosh B strut baseline.
     ci = s.index(':')
     label, rest = s[:ci + 1], s[ci + 1:]
+    c.setFillColor(DARK)
     c.setFont('ToshB', EM * PT)
-    c.drawString(X(17.4), YB(y, EM, 'ToshB'), label)
+    c.drawString(X(17.4), YB(y, EM, 'ToshB', 1.4 * EM), label)
+    c.setFillColor(LIGHT)
     c.setFont('Automate-Light', EM * PT)
-    c.drawString(X(17.4) + sw(label, EM, 'ToshB') / PT, YB(y, EM, 'Automate-Light'), rest)
+    c.drawString(X(17.4) + sw(label, EM, 'ToshB') / PT, YB(y, EM, 'ToshB', 1.4 * EM), rest)
     y += 1.4 * EM + 0.15 * EM  # skills entries: margin-bottom 0.15em
 
 print('CV ends at y =', y, 'of', H)
