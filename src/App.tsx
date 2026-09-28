@@ -121,7 +121,7 @@ const bookPages = [
     meta: { year: '2024', place: 'Hannover', title: 'Artificial Intelligence in Architectural Design', work: 1 },
     items: [
       // Web sections — interactive negative strip; click left/right to pull the film
-      { type: 'filmstrip', x: 8, y: 42, w: 84, rotation: 0, images: [
+      { type: 'filmstrip', x: 8, y: 45, w: 84, rotation: 0, images: [
         `${THESIS_IMG}/Sections/Web Section 2.png`,
         `${THESIS_IMG}/Sections/Web Section 3.png`,
         `${THESIS_IMG}/Sections/Web Section 4.png`,
@@ -135,11 +135,11 @@ const bookPages = [
       // Subtitle — grey caption like the CV descriptions
       { type: 'text', text: 'Conceptual Diagram', x: 8, y: 26, w: 84, rotation: 0, font: "'automate', sans-serif", fontSize: 0.55, fontSizeMobile: 0.4, weight: 300, opacity: 0.65 },
       // Third text block — swapped with the fourth, justified
-      { type: 'text', text: 'When someone speaks of AI today, it generally refers to a deep learning algorithm attempting to simulate cognitive functions based on vast amounts of data. However, truly autonomous thinking programs, as envisaged in the 1950s, have not been realized yet, as current computers lack the necessary level of perception or self-reflection to develop actual intelligence.', x: 8, y: 28, w: 84, rotation: 0, font: "'tosh-b', sans-serif", fontSize: 0.85, fontSizeMobile: 0.64, align: 'justify' },
+      { type: 'text', text: 'When someone speaks of AI today, it generally refers to a deep learning algorithm attempting to simulate cognitive functions based on vast amounts of data. However, truly autonomous thinking programs, as envisaged in the 1950s, have not been realized yet, as current computers lack the necessary level of perception or self-reflection to develop actual intelligence.', x: 8, y: 30, w: 84, rotation: 0, font: "'tosh-b', sans-serif", fontSize: 0.85, fontSizeMobile: 0.64, align: 'justify' },
       // Subtitle — grey caption like the CV descriptions
-      { type: 'text', text: 'Website Interface', x: 8, y: 78, w: 84, rotation: 0, font: "'automate', sans-serif", fontSize: 0.55, fontSizeMobile: 0.4, weight: 300, opacity: 0.65 },
+      { type: 'text', text: 'Website Interface', x: 8, y: 81.5, w: 84, rotation: 0, font: "'automate', sans-serif", fontSize: 0.55, fontSizeMobile: 0.4, weight: 300, opacity: 0.65 },
       // Fourth text block — below the images, justified
-      { type: 'text', text: 'The rapid development in this renaissance of artificial intelligence has ignited in me a desire to delve into this topic through a master\'s thesis. The goal of this work is to examine the connections between past and current developments, describe the theoretical ideas and aspirations of these developments and their instigators, and develop a simple tool that showcases current possibilities of generative deep learning artificial intelligence in a user-friendly and helpful manner.', x: 8, y: 80, w: 84, rotation: 0, font: "'tosh-b', sans-serif", fontSize: 0.9, fontSizeMobile: 0.64, align: 'justify' },
+      { type: 'text', text: 'The rapid development in this renaissance of artificial intelligence has ignited in me a desire to delve into this topic through a master\'s thesis. The goal of this work is to examine the connections between past and current developments, describe the theoretical ideas and aspirations of these developments and their instigators, and develop a simple tool that showcases current possibilities of generative deep learning artificial intelligence in a user-friendly and helpful manner.', x: 8, y: 84, w: 84, rotation: 0, font: "'tosh-b', sans-serif", fontSize: 0.9, fontSizeMobile: 0.64, align: 'justify' },
     ],
   },
 
