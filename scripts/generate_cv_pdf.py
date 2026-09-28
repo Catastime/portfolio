@@ -8,13 +8,12 @@ positions/texts below and re-run:  python scripts/generate_cv_pdf.py
 
 All writing is embedded as vector outlines (sharp at any zoom, selectable,
 searchable). Paper textures and the photo stay raster images, which suits
-them. The text uses scripts/Epoch.ttf — a TrueType conversion of
-public/fonts/Epoch.otf, because reportlab cannot embed CFF outlines.
-Regenerate it only if the font changes (one-off, needs fontTools + cu2qu):
-
-    from fontTools.ttLib import TTFont, newTable
-    from fontTools.pens.ttGlyphPen import TTGlyphPen
-    from cu2qu.pens import Cu2QuPen
+them. The text mirrors the web typefaces (Typekit): the statement and
+introduction label use t26-carbon, the CV section names / dates /
+descriptions / skill lists use Automate, the CV roles use Tosh B. The
+Typekit OTFs are CFF-flavoured; scripts/convert_otf_to_ttf.py converts
+them to TTF (reportlab cannot embed CFF outlines). Re-run it only when
+the kit or the type map changes.
 
 Dependencies: pip install pillow reportlab pypdf
 """
@@ -33,9 +32,20 @@ ROOT = os.path.abspath(os.path.join(HERE, '..', 'public'))
 W, H = 1240, 1754          # A4 design space
 PW, PH = A4                # 595.276 x 841.89 pt
 PT = PW / W                # design px -> pt
-ASC = 701 / 1000           # Epoch ascent / em (from hhea)
 
-pdfmetrics.registerFont(TTFont('Epoch', os.path.join(HERE, 'Epoch.ttf')))
+# Typekit faces (TTF conversions, see convert_otf_to_ttf.py) with their
+# hhea ascent per em — the baseline offset differs per font, mirroring
+# how the browser places each face's baseline.
+FACES = {
+    'Carbon':        ('Carbon-400.ttf',   0.801),  # introduction label
+    'Carbon-Bold':   ('Carbon-700.ttf',   0.801),  # statement
+    'Automate':      ('Automate-400.ttf', 1.034),  # contacts, section names, dates
+    'Automate-Light': ('Automate-300.ttf', 1.034),  # descriptions, skill lists
+    'ToshB':         ('ToshB-400.ttf',    1.382),  # CV roles
+}
+for name, (fn, _) in FACES.items():
+    pdfmetrics.registerFont(TTFont(name, os.path.join(HERE, fn)))
+ASC = {name: asc for name, (_, asc) in FACES.items()}
 
 PAPER = (207 / 255, 207 / 255, 207 / 255)
 DARK = (46 / 255, 46 / 255, 46 / 255)
@@ -45,12 +55,12 @@ LINE = (150 / 255, 150 / 255, 150 / 255)
 def X(dx):
     return dx * PT
 
-def YB(dy, size):
-    # design top-y + font size -> pdf baseline (PIL drew from the ascender top)
-    return PH - (dy + size * ASC) * PT
+def YB(dy, size, font='Automate'):
+    # design top-y + font size -> pdf baseline (ascent from the font's hhea)
+    return PH - (dy + size * ASC[font]) * PT
 
-def sw(text, size):
-    return pdfmetrics.stringWidth(text, 'Epoch', size * PT)
+def sw(text, size, font='Automate'):
+    return pdfmetrics.stringWidth(text, font, size * PT)
 
 def prep_texture(name, crop=20, width=1500):
     # Crop the scan borders baked into the paper textures so the paper tone
@@ -64,40 +74,40 @@ def prep_texture(name, crop=20, width=1500):
     buf.seek(0)
     return buf
 
-def wrap(words, size, width):
+def wrap(words, size, width, font='Automate'):
     lines, cur = [], []
     for w in words:
-        if sw(' '.join(cur + [w]), size) <= width or not cur:
+        if sw(' '.join(cur + [w]), size, font) <= width or not cur:
             cur.append(w)
         else:
             lines.append(cur); cur = [w]
     lines.append(cur)
     return lines
 
-def draw_block(c, dx, dy, width, text, size, fill, lh, mode='justify', ragged_last=True, slack=0.0):
+def draw_block(c, dx, dy, width, text, size, fill, lh, mode='justify', ragged_last=True, slack=0.0, font='Automate'):
     wpt = width * PT
     c.setFillColor(fill)
-    c.setFont('Epoch', size * PT)
+    c.setFont(font, size * PT)
     # Browsers round glyph advances ~0.8% narrower than the raw metrics;
     # slack widens only the wrap decision so breaks match the website.
-    lines = wrap(text.split(), size, wpt + slack * PT)
+    lines = wrap(text.split(), size, wpt + slack * PT, font)
     for i, ln in enumerate(lines):
         last = i == len(lines) - 1
         if mode == 'right':
             line = ' '.join(ln)
-            c.drawString(X(dx) + wpt - sw(line, size), YB(dy, size), line)
+            c.drawString(X(dx) + wpt - sw(line, size, font), YB(dy, size, font), line)
         elif last and ragged_last:
-            c.drawString(X(dx), YB(dy, size), ' '.join(ln))
+            c.drawString(X(dx), YB(dy, size, font), ' '.join(ln))
         else:
             if len(ln) > 1:
-                word_w = sum(sw(w, size) for w in ln)
+                word_w = sum(sw(w, size, font) for w in ln)
                 gap = (wpt - word_w) / (len(ln) - 1)
                 cx = X(dx)
                 for w in ln:
-                    c.drawString(cx, YB(dy, size), w)
-                    cx += sw(w, size) + gap
+                    c.drawString(cx, YB(dy, size, font), w)
+                    cx += sw(w, size, font) + gap
             else:
-                c.drawString(X(dx), YB(dy, size), ln[0])
+                c.drawString(X(dx), YB(dy, size, font), ln[0])
         dy += lh
     return dy
 
@@ -117,7 +127,7 @@ c.setStrokeAlpha(0.15)
 c.setLineWidth(PT)
 c.rect(X(17.4), PH - 829.7 * PT, 1205.3 * PT, (829.7 - 245.6) * PT, stroke=1, fill=0)
 c.setStrokeAlpha(1)
-c.setFont('Epoch', 27 * PT)  # 1rem x page-scale, measured on the web
+c.setFont('Carbon', 27 * PT)  # 1rem x page-scale, measured on the web
 c.drawCentredString(X(W // 2), PH - 537.7 * PT, 'introduction')
 # Statement — explicit line breaks, matching the website authored breaks
 STATEMENT = [
@@ -135,11 +145,11 @@ STATEMENT = [
 sy = 1017.4
 for line, mode in STATEMENT:
     if mode == 'right':
-        sy = draw_block(c, 17.4, sy, 1205.3, line, 96.2, PAPER, 67.3, mode='right')
+        sy = draw_block(c, 17.4, sy, 1205.3, line, 96.2, PAPER, 67.3, mode='right', font='Carbon-Bold')
     elif mode == 'justify':
-        sy = draw_block(c, 17.4, sy, 1205.3, line, 96.2, PAPER, 67.3, mode='justify', ragged_last=False)
+        sy = draw_block(c, 17.4, sy, 1205.3, line, 96.2, PAPER, 67.3, mode='justify', ragged_last=False, font='Carbon-Bold')
     else:
-        sy = draw_block(c, 17.4, sy, 1205.3, line, 96.2, PAPER, 67.3)
+        sy = draw_block(c, 17.4, sy, 1205.3, line, 96.2, PAPER, 67.3, font='Carbon-Bold')
 
 # ---------------- Page 2 ----------------
 c.showPage()
@@ -154,9 +164,9 @@ contacts = [
 cy = 35.1  # y 2% of page height (corner text sits at stack level)
 for text, target in contacts:
     c.setFillColor(DARK)
-    c.setFont('Epoch', 20.2 * PT)  # 0.75rem x page-scale
-    c.drawRightString(X(W - 17.4), YB(cy, 20.2), text)
-    x0 = W - 17.4 - sw(text, 20.2) / PT
+    c.setFont('Automate', 20.2 * PT)  # 0.75rem x page-scale
+    c.drawRightString(X(W - 17.4), YB(cy, 20.2, 'Automate'), text)
+    x0 = W - 17.4 - sw(text, 20.2, 'Automate') / PT
     c.linkURL(target, (X(x0), (H - cy - 24) * PT, X(W - 17.4), (H - cy + 4) * PT))
     cy += 40.3  # 2.3% of page height between corner lines
 
@@ -183,20 +193,21 @@ def section(name, gap=1.8 * EM):
     global y
     y += gap
     c.setFillColor(DARK)
-    c.setFont('Epoch', 1.5 * EM * PT)
-    c.drawString(X(17.4), YB(y, 1.5 * EM), name)
+    c.setFont('Automate', 1.5 * EM * PT)
+    c.drawString(X(17.4), YB(y, 1.5 * EM, 'Automate'), name)
     y += 1.1 * 1.5 * EM  # section-name line-height 1.1
 
 def entry(head, date, desc):
     global y
     c.setFillColor(DARK)
-    c.setFont('Epoch', EM * PT)
-    c.drawString(X(17.4), YB(y, EM), head)
+    c.setFont('ToshB', EM * PT)
+    c.drawString(X(17.4), YB(y, EM, 'ToshB'), head)
     if date:
-        c.drawRightString(X(17.4) + 1205.3 * PT, YB(y, EM), date)
+        c.setFont('Automate', EM * PT)
+        c.drawRightString(X(17.4) + 1205.3 * PT, YB(y, EM, 'Automate'), date)
     y += 1.4 * EM  # line-height
     if desc:
-        y = draw_block(c, 17.4, y - 0.2 * EM, 1205.3, desc, EM, LIGHT, 1.4 * EM) + 0.5 * EM  # desc margin-top -0.2em, entry margin-bottom 0.5em
+        y = draw_block(c, 17.4, y - 0.2 * EM, 1205.3, desc, EM, LIGHT, 1.4 * EM, font='Automate-Light') + 0.5 * EM  # desc margin-top -0.2em, entry margin-bottom 0.5em
 
 section('EDUCATION', gap=0)
 entry('M. Sc. Architecture, Leibniz University Hannover', '10.2021 - 01.2024',
@@ -216,12 +227,17 @@ entry('Student Assistant, Faculty of Architecture & Landscape, Leibniz Universit
        'IT support for teaching staff and students.')
 section('SKILLS')
 c.setFillColor(DARK)
-c.setFont('Epoch', EM * PT)
 for s in ('Design & BIM: Rhinoceros, Revit, Archicad',
           'Visualization: V-Ray, D5, Unity, Photoshop, Illustrator, InDesign',
           'Other: Python, QGIS, 3D printing, large-format plotting, web/server hosting',
           'Languages: German (mother tongue), English (fluent)'):
-    c.drawString(X(17.4), YB(y, EM), s)
+    # Web split: label (before the colon) in Tosh B, list in Automate Light
+    ci = s.index(':')
+    label, rest = s[:ci + 1], s[ci + 1:]
+    c.setFont('ToshB', EM * PT)
+    c.drawString(X(17.4), YB(y, EM, 'ToshB'), label)
+    c.setFont('Automate-Light', EM * PT)
+    c.drawString(X(17.4) + sw(label, EM, 'ToshB') / PT, YB(y, EM, 'Automate-Light'), rest)
     y += 1.4 * EM + 0.15 * EM  # skills entries: margin-bottom 0.15em
 
 print('CV ends at y =', y, 'of', H)
