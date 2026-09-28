@@ -102,12 +102,10 @@ const bookPages = [
       { type: 'text', title: 'MASTER THESIS: Artificial Intelligence in Architectural Design', text: 'The current development in the field of artificial intelligence promises unprecedented potentials for creative fields such as architecture. Instead of mere automation of simple processes and efficiency improvement through enhanced tools, it could herald the beginning of a true symbiosis between humans and machines, a vision pursued in the 20th century by researchers like John McCarthy and later Nicolas Negroponte.', x: 60, y: 10, w: 34, rotation: 0, font: "'tosh-b', sans-serif", fontSize: 0.9, fontSizeMobile: 0.65, align: 'justify' },
       // thesis-starter — top of the page, left of the text
       { type: 'image', img: `${THESIS_IMG}/thesis-starter.jpeg`, x: 8, y: 10, w: 48, rotation: 0, taped: true, noBg: true, tackers: [1, 3, 2, 4] },
-      // website-concept — below the lower text, poking into it, 20% bigger than original w:38
-      { type: 'image', img: `${THESIS_IMG}/website-concept2.png`, x: 48, y: 80, w: 42, rotation: 0, noBg: true },
-      // Second text block — part 1: below comic, right of starter, above concept
-      { type: 'text', text: 'However, the concept of artificial intelligence has undergone significant changes since its inception in the 1950s by John McCarthy. While he viewed AI as the understanding and reproduction of human intelligence, the term has now become vastly expansive, encompassing various categories of programs, from personal assistants to deep learning algorithms.', x: 52, y: 60, w: 38, rotation: 0, font: "'tosh-b', sans-serif", fontSize: 0.85, fontSizeMobile: 0.64, align: 'right' },
-      // Second text block — part 2: left of concept, below starter
-      { type: 'text', text: 'When someone speaks of AI today, it generally refers to a deep learning algorithm attempting to simulate cognitive functions based on vast amounts of data. However, truly autonomous thinking programs, as envisaged in the 1950s, have not been realized yet, as current computers lack the necessary level of perception or self-reflection to develop actual intelligence.', x: 8, y: 80, w: 34, rotation: 0, font: "'tosh-b', sans-serif", fontSize: 0.85, fontSizeMobile: 0.64 },
+      // Second text block — bottom left (the position of the former third block)
+      { type: 'text', text: 'However, the concept of artificial intelligence has undergone significant changes since its inception in the 1950s by John McCarthy. While he viewed AI as the understanding and reproduction of human intelligence, the term has now become vastly expansive, encompassing various categories of programs, from personal assistants to deep learning algorithms.', x: 8, y: 80, w: 34, rotation: 0, font: "'tosh-b', sans-serif", fontSize: 0.85, fontSizeMobile: 0.64 },
+      // Timeline — lower right corner
+      { type: 'image', img: `${THESIS_IMG}/Timeline.png`, x: 52, y: 52, w: 44, rotation: 0, taped: true, noBg: true, frame: true, holeColor: '#1d1d1d', tackers: [1, 3, 2, 4] },
     ],
   },
   // Right page — black paper
@@ -117,8 +115,6 @@ const bookPages = [
     items: [
       // Top text block — right of the timeline image, justified
       { type: 'text', text: 'The rapid development in this renaissance of artificial intelligence has ignited in me a desire to delve into this topic through a master\'s thesis. The goal of this work is to examine the connections between past and current developments, describe the theoretical ideas and aspirations of these developments and their instigators, and develop a simple tool that showcases current possibilities of generative deep learning artificial intelligence in a user-friendly and helpful manner.', x: 56, y: 10, w: 38, rotation: 0, font: "'tosh-b', sans-serif", fontSize: 0.9, fontSizeMobile: 0.64, align: 'justify' },
-      // Timeline — top of the page, left of the text; dark dots (white image background)
-      { type: 'image', img: `${THESIS_IMG}/Timeline.png`, x: 8, y: 10, w: 44, rotation: 0, taped: true, noBg: true, frame: true, holeColor: '#1d1d1d', tackers: [1, 3, 2, 4] },
     ],
   },
 
@@ -126,7 +122,12 @@ const bookPages = [
   {
     texture: 'left_page-black',
     meta: { year: '2024', place: 'Hannover', title: 'Artificial Intelligence in Architectural Design' },
-    items: [],
+    items: [
+      // Third text block — moved here from spread 1 (overflowed there)
+      { type: 'text', text: 'When someone speaks of AI today, it generally refers to a deep learning algorithm attempting to simulate cognitive functions based on vast amounts of data. However, truly autonomous thinking programs, as envisaged in the 1950s, have not been realized yet, as current computers lack the necessary level of perception or self-reflection to develop actual intelligence.', x: 8, y: 20, w: 34, rotation: 0, font: "'tosh-b', sans-serif", fontSize: 0.85, fontSizeMobile: 0.64 },
+      // website-concept — moved here from spread 1 (overflowed there)
+      { type: 'image', img: `${THESIS_IMG}/website-concept2.png`, x: 48, y: 20, w: 42, rotation: 0, noBg: true },
+    ],
   },
   {
     texture: 'right_page-black',
