@@ -99,7 +99,7 @@ const bookPages = [
     meta: { year: '2024', place: 'Hannover', title: 'Artificial Intelligence in Architectural Design' },
     items: [
       // Upper text block — right of the starter image, justified
-      { type: 'text', text: 'The current development in the field of artificial intelligence promises unprecedented potentials for creative fields such as architecture. Instead of mere automation of simple processes and efficiency improvement through enhanced tools, it could herald the beginning of a true symbiosis between humans and machines, a vision pursued in the 20th century by researchers like John McCarthy and later Nicolas Negroponte.', x: 60, y: 10, w: 34, rotation: 0, font: "'tosh-b', sans-serif", fontSize: 0.75, fontSizeMobile: 0.57, align: 'justify' },
+      { type: 'text', title: 'MASTER THESIS: Artificial Intelligence in Architectural Design', text: 'The current development in the field of artificial intelligence promises unprecedented potentials for creative fields such as architecture. Instead of mere automation of simple processes and efficiency improvement through enhanced tools, it could herald the beginning of a true symbiosis between humans and machines, a vision pursued in the 20th century by researchers like John McCarthy and later Nicolas Negroponte.', x: 60, y: 10, w: 34, rotation: 0, font: "'tosh-b', sans-serif", fontSize: 0.75, fontSizeMobile: 0.57, align: 'justify' },
       // thesis-starter — top of the page, left of the text
       { type: 'image', img: `${THESIS_IMG}/thesis-starter.jpeg`, x: 8, y: 10, w: 48, rotation: 0, taped: true, noBg: true, tackers: [1, 3, 2, 4] },
       // website-concept — below the lower text, poking into it, 20% bigger than original w:38
