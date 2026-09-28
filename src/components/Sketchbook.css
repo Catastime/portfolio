@@ -79,6 +79,15 @@
     0 2px 4px rgba(0, 0, 0, 0.15);
 }
 
+/* Printed photo — uniform white border like an analogue print */
+.sketch-item-image-print {
+  background: white;
+  padding: 4px;
+  box-shadow:
+    0 4px 12px rgba(0, 0, 0, 0.25),
+    0 2px 4px rgba(0, 0, 0, 0.15);
+}
+
 /* Bring to front on hover */
 .sketch-item-bring-to-front {
   cursor: pointer;

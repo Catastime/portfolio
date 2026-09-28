@@ -123,7 +123,7 @@ const bookPages = [
       // website-concept — below the diagram
       { type: 'image', img: `${THESIS_IMG}/website-concept.png`, x: 8, y: 52, w: 44, rotation: 0, noBg: true },
       // website — below the concept
-      { type: 'image', img: `${THESIS_IMG}/website.png`, x: 8, y: 78, w: 44, rotation: 0, noBg: true },
+      { type: 'image', img: `${THESIS_IMG}/website.png`, x: 8, y: 78, w: 44, rotation: 0, print: true },
       // Alternative Realities diagram — top of the page
       { type: 'image', img: `${THESIS_IMG}/Alternative Realities Diagramm.png`, x: 8, y: 5, w: 84, rotation: 0, noBg: true, overlay: true },
       // Third text block — swapped with the fourth, justified

@@ -344,6 +344,7 @@ export default function Sketchbook({
       const classes = ['sketch-item', 'sketch-item-image'];
       if (item.noBg) classes.push('sketch-item-image-nobg');
       if (item.polaroid) classes.push('sketch-item-image-polaroid');
+      if (item.print) classes.push('sketch-item-image-print');
       if (item.bringToFront) classes.push('sketch-item-bring-to-front');
       if (item.video || item.overlay) classes.push('sketch-item-clickable');
       if (item.frame) classes.push('sketch-item-framed');
