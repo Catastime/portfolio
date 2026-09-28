@@ -126,10 +126,10 @@
   height: auto;
 }
 
-/* Text blocks — Epoch typeface */
+/* Text blocks — Tosh A for texts (page convention), headers use Automate */
 .sketch-item-text {
   color: var(--page-text, #3d3d3d);
-  font-family: 'Epoch', 'Futura', sans-serif;
+  font-family: 'tosh-a', sans-serif;
   pointer-events: none !important;
   z-index: 0 !important;
 }
@@ -144,16 +144,17 @@
 
 .sketch-corner-text {
   color: var(--page-text, #3d3d3d);
-  font-family: 'Epoch', 'Futura', sans-serif;
-  font-size: calc(0.75rem * var(--page-scale, 1));
-  font-weight: 500;
+  font-family: 'automate', sans-serif;
+  font-size: calc(0.7rem * var(--page-scale, 1));
+  font-weight: 300;
   line-height: 1.2;
   white-space: nowrap;
 }
 
 .sketch-text-title {
-  font-size: calc(0.8rem * var(--page-scale, 1));
-  font-weight: 600;
+  font-family: 'automate', sans-serif;
+  font-size: calc(0.75rem * var(--page-scale, 1));
+  font-weight: 300;
   margin-bottom: 0.3em;
   text-decoration: underline;
   text-decoration-color: color-mix(in srgb, var(--page-text, #3d3d3d) 40%, transparent);
@@ -161,7 +162,8 @@
 }
 
 .sketch-text-body {
-  font-size: calc(0.7rem * var(--page-scale, 1));
+  font-weight: 300;
+  font-size: calc(0.65rem * var(--page-scale, 1));
   line-height: 1.6;
   white-space: pre-wrap;
 }
@@ -230,7 +232,7 @@
   position: absolute;
   bottom: 8px;
   right: 12px;
-  font-size: calc(0.75rem * var(--page-scale, 1));
+  font-size: calc(0.65rem * var(--page-scale, 1));
   color: rgba(0, 0, 0, 0.4);
   pointer-events: none;
 }
@@ -238,7 +240,7 @@
 /* Statement — big bold white caps on dark paper */
 .sketch-item-statement {
   color: var(--page-text, #cfcfcf);
-  font-family: 'Epoch', 'Futura', sans-serif;
+  font-family: 't26-carbon', monospace;
   font-weight: 700;
   text-transform: uppercase;
   text-align: justify;
@@ -290,7 +292,7 @@
 }
 
 .cv-section {
-  margin-bottom: 1.5em;
+  margin-bottom: 1.2em;
 }
 
 .cv-section:first-child {
@@ -300,7 +302,7 @@
 /* Desktop-only: a little more air between CV sections (mobile is at its fit ceiling) */
 @media (min-width: 768px) {
   .cv-section {
-    margin-bottom: 1.8em;
+    margin-bottom: 1.4em;
   }
 
   .cv-section:first-child {
@@ -309,6 +311,7 @@
 }
 
 .cv-section-name {
+  font-family: 'automate', sans-serif;
   font-weight: 400;
   font-size: 1.5em;
   line-height: 1.1;
@@ -316,7 +319,7 @@
 }
 
 .cv-entry {
-  margin-bottom: 0.5em;
+  margin-bottom: 0.4em;
 }
 
 .cv-head {
@@ -325,10 +328,14 @@
 }
 
 .cv-role {
+  font-family: 'tosh-b', sans-serif;
+  font-weight: 400;
   padding-right: 0.45em;
 }
 
 .cv-date {
+  font-family: 'automate', sans-serif;
+  font-weight: 400;
   white-space: nowrap;
   padding-left: 0.45em;
 }
@@ -338,7 +345,15 @@
   flex: 1;
 }
 
+.cv-skill-list {
+  opacity: 0.65;
+  font-family: 'automate', sans-serif;
+  font-weight: 300;
+}
+
 .cv-desc {
+  font-family: 'automate', sans-serif;
+  font-weight: 300;
   text-align: justify;
   opacity: 0.65;
   margin-top: -0.2em;

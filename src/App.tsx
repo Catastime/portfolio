@@ -55,7 +55,7 @@ const bookPages = [
       // frame: black outline around the dots, same size as the right image
       { type: 'holes', x: -4, y: 10, w: 108, h: 37, rotation: 0, frame: true },
       // Introduction — centered between the hole marks
-      { type: 'text', text: 'introduction', x: -4, y: 26.8, w: 108, rotation: 0, align: 'center', sizes: [1], weight: 300 },
+      { type: 'text', text: 'introduction', x: -4, y: 26.8, w: 108, rotation: 0, align: 'center', sizes: [1], font: "'t26-carbon', monospace", weight: 100 },
     ],
   },
   // Right page — Anthrazit image + CV
@@ -67,18 +67,18 @@ const bookPages = [
       { type: 'holes', x: -4, y: 10, w: 108, h: 37, rotation: 0 },
       // CV — single column below the image: leader lines to right-aligned dates
       {
-        type: 'cv', x: -4, y: 48.5, w: 108, rotation: 0, fontSize: 0.85, fontSizeMobile: 0.46,
+        type: 'cv', x: -4, y: 47.6, w: 108, rotation: 0, fontSize: 0.88, fontSizeMobile: 0.46,
         sections: [
           { name: 'EDUCATION', entries: [
-            { head: 'M. Sc. Architecture, Leibniz University Hannover', date: '10.2021 - 01.2024', desc: 'Thesis on AI in architectural design, with a practical AI interface focused on accessibility.' },
-            { head: 'B. Sc. Architecture, Leibniz University Hannover', date: '10.2017 - 01.2021', desc: 'Focus on conceptual, digital work in new formats such as VR and AR, deepened in the bachelor\'s thesis.' },
+            { head: 'M. Sc. Architecture, Leibniz University Hannover', date: '10.2021 - 01.2024', desc: 'Thesis on AI in architectural design, focused on practicality and accessibility.' },
+            { head: 'B. Sc. Architecture, Leibniz University Hannover', date: '10.2017 - 01.2021', desc: 'Focus on conceptual, digital work in new formats such as VR and AR.' },
           ]},
           { name: 'EXPERIENCE', entries: [
             { head: 'Architectural Designer, Mosaik Architekt:innen Hannover', date: '10.2024 - today', desc: 'Competitions for public-sector clients, agentic automations and some IT.' },
             { head: 'Lecturer, Institute of Digital Methods in Architecture, Leibniz University Hannover', date: '04.2024 - today', desc: 'Teaching "Digital Simulation", researching open-source AI in architecture.' },
             { head: 'Guest Lecturer, Digital Design Unit, TU Darmstadt', date: '05.2025', desc: 'Weekend Arduino seminar; students built sensor-based musical instruments.' },
             { head: 'Architectural Intern, Design & Concept, Angelis & Partner', date: '04.2021 - 10.2021', desc: 'Design and concept work on competitions.' },
-            { head: 'Student Assistant - IT, Faculty of Architecture & Landscape, Leibniz University Hannover', date: '01.2018 - 01.2025', desc: 'IT support for teaching staff and students.' },
+            { head: 'Student Assistant, Faculty of Architecture & Landscape, Leibniz University Hannover', date: '01.2018 - 01.2025', desc: 'IT support for teaching staff and students.' },
           ]},
           { name: 'SKILLS', entries: [
             { head: 'Design & BIM: Rhinoceros, Revit, Archicad' },
@@ -98,7 +98,7 @@ const bookPages = [
     meta: { year: '2024', place: 'Hannover', title: 'Artificial Intelligence in Architectural Design' },
     items: [
       // Upper text block — narrowed to make room for comics on the right
-      { type: 'text', text: 'The current development in the field of artificial intelligence promises unprecedented potentials for creative fields such as architecture. Instead of mere automation of simple processes and efficiency improvement through enhanced tools, it could herald the beginning of a true symbiosis between humans and machines, a vision pursued in the 20th century by researchers like John McCarthy and later Nicolas Negroponte.', x: 8, y: 10, w: 58, rotation: 0, font: "'Epoch', sans-serif", fontSize: 0.55, fontSizeMobile: 0.42 },
+      { type: 'text', text: 'The current development in the field of artificial intelligence promises unprecedented potentials for creative fields such as architecture. Instead of mere automation of simple processes and efficiency improvement through enhanced tools, it could herald the beginning of a true symbiosis between humans and machines, a vision pursued in the 20th century by researchers like John McCarthy and later Nicolas Negroponte.', x: 8, y: 10, w: 58, rotation: 0, font: "'tosh-b', sans-serif", fontSize: 0.52, fontSizeMobile: 0.4 },
       // Comics image — right side, 10% smaller, slightly more right
       { type: 'image', img: `${THESIS_IMG}/comics-pipelineRendering.png`, x: 73, y: 9.5, w: 18, rotation: 0, noBg: true, taped: true, tackers: [2, 4, 1, 3] },
       // thesis-starter — between the two text blocks
@@ -106,9 +106,9 @@ const bookPages = [
       // website-concept — below the lower text, poking into it, 20% bigger than original w:38
       { type: 'image', img: `${THESIS_IMG}/website-concept2.png`, x: 48, y: 80, w: 42, rotation: 0, noBg: true },
       // Second text block — part 1: below comic, right of starter, above concept
-      { type: 'text', text: 'However, the concept of artificial intelligence has undergone significant changes since its inception in the 1950s by John McCarthy. While he viewed AI as the understanding and reproduction of human intelligence, the term has now become vastly expansive, encompassing various categories of programs, from personal assistants to deep learning algorithms.', x: 52, y: 60, w: 38, rotation: 0, font: "'Epoch', sans-serif", fontSize: 0.5, fontSizeMobile: 0.4, align: 'right' },
+      { type: 'text', text: 'However, the concept of artificial intelligence has undergone significant changes since its inception in the 1950s by John McCarthy. While he viewed AI as the understanding and reproduction of human intelligence, the term has now become vastly expansive, encompassing various categories of programs, from personal assistants to deep learning algorithms.', x: 52, y: 60, w: 38, rotation: 0, font: "'tosh-b', sans-serif", fontSize: 0.47, fontSizeMobile: 0.38, align: 'right' },
       // Second text block — part 2: left of concept, below starter
-      { type: 'text', text: 'When someone speaks of AI today, it generally refers to a deep learning algorithm attempting to simulate cognitive functions based on vast amounts of data. However, truly autonomous thinking programs, as envisaged in the 1950s, have not been realized yet, as current computers lack the necessary level of perception or self-reflection to develop actual intelligence.', x: 8, y: 80, w: 34, rotation: 0, font: "'Epoch', sans-serif", fontSize: 0.5, fontSizeMobile: 0.4 },
+      { type: 'text', text: 'When someone speaks of AI today, it generally refers to a deep learning algorithm attempting to simulate cognitive functions based on vast amounts of data. However, truly autonomous thinking programs, as envisaged in the 1950s, have not been realized yet, as current computers lack the necessary level of perception or self-reflection to develop actual intelligence.', x: 8, y: 80, w: 34, rotation: 0, font: "'tosh-b', sans-serif", fontSize: 0.47, fontSizeMobile: 0.38 },
     ],
   },
   // Right page — black paper
@@ -117,7 +117,7 @@ const bookPages = [
     meta: { year: '2024', place: 'Hannover', title: 'Artificial Intelligence in Architectural Design' },
     items: [
       // Top text block
-      { type: 'text', text: 'The rapid development in this renaissance of artificial intelligence has ignited in me a desire to delve into this topic through a master\'s thesis. The goal of this work is to examine the connections between past and current developments, describe the theoretical ideas and aspirations of these developments and their instigators, and develop a simple tool that showcases current possibilities of generative deep learning artificial intelligence in a user-friendly and helpful manner.', x: 8, y: 10, w: 84, rotation: 0, font: "'Epoch', sans-serif", fontSize: 0.55, fontSizeMobile: 0.4 },
+      { type: 'text', text: 'The rapid development in this renaissance of artificial intelligence has ignited in me a desire to delve into this topic through a master\'s thesis. The goal of this work is to examine the connections between past and current developments, describe the theoretical ideas and aspirations of these developments and their instigators, and develop a simple tool that showcases current possibilities of generative deep learning artificial intelligence in a user-friendly and helpful manner.', x: 8, y: 10, w: 84, rotation: 0, font: "'tosh-b', sans-serif", fontSize: 0.52, fontSizeMobile: 0.38 },
       // Three images — positioned below the text (y:30 to y:95)
       { type: 'image', img: `${THESIS_IMG}/Example_start.png`, x: 8, y: 32, w: 35, rotation: 0, taped: true, noBg: true, tackers: [1, 3, 2, 4] },
       // Cityhotel Polaroid stack — slightly overlapping like stickers

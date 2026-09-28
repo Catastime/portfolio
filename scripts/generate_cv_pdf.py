@@ -200,9 +200,9 @@ def entry(head, date, desc):
 
 section('EDUCATION', gap=0)
 entry('M. Sc. Architecture, Leibniz University Hannover', '10.2021 - 01.2024',
-       'Thesis on AI in architectural design, with a practical AI interface focused on accessibility.')
+       'Thesis on AI in architectural design, focused on practicality and accessibility.')
 entry('B. Sc. Architecture, Leibniz University Hannover', '10.2017 - 01.2021',
-       'Focus on conceptual, digital work in new formats such as VR and AR, deepened in the bachelor\'s thesis.')
+       'Focus on conceptual, digital work in new formats such as VR and AR.')
 section('EXPERIENCE')
 entry('Architectural Designer, Mosaik Architekt:innen Hannover', '10.2024 - today',
        'Competitions for public-sector clients, agentic automations and some IT.')
@@ -212,7 +212,7 @@ entry('Guest Lecturer, Digital Design Unit, TU Darmstadt', '05.2025',
        'Weekend Arduino seminar; students built sensor-based musical instruments.')
 entry('Architectural Intern, Design & Concept, Angelis & Partner', '04.2021 - 10.2021',
        'Design and concept work on competitions.')
-entry('Student Assistant - IT, Faculty of Architecture & Landscape, Leibniz University Hannover', '01.2018 - 01.2025',
+entry('Student Assistant, Faculty of Architecture & Landscape, Leibniz University Hannover', '01.2018 - 01.2025',
        'IT support for teaching staff and students.')
 section('SKILLS')
 c.setFillColor(DARK)

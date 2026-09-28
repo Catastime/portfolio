@@ -447,6 +447,12 @@ export default function Sketchbook({
 
     if (item.type === 'cv') {
       const cvStyle = { ...style };
+      // SKILLS heads are "Label: list" — the list behind the colon renders grey + light
+      const renderCvHead = (head) => {
+        const ci = head.indexOf(':');
+        if (ci < 0) return head;
+        return <>{head.slice(0, ci + 1)}<span className="cv-skill-list">{head.slice(ci + 1)}</span></>;
+      };
       const cvFontSize = isMobile && item.fontSizeMobile != null ? item.fontSizeMobile : item.fontSize;
       if (cvFontSize) cvStyle.fontSize = `calc(${cvFontSize}rem * var(--page-scale, 1))`;
       return (
@@ -457,7 +463,7 @@ export default function Sketchbook({
               {sec.entries.map((e, i) => (
                 <div key={i} className="cv-entry">
                   <div className="cv-head">
-                    <span className="cv-role">{e.head}</span>
+                    <span className="cv-role">{!e.date ? renderCvHead(e.head) : e.head}</span>
                     {e.date && (
                       <>
                         <span className="cv-line" />
@@ -543,7 +549,7 @@ export default function Sketchbook({
   };
 
   // Font for all pages
-  const fontForPage = () => "'Epoch', 'Futura', sans-serif";
+  const fontForPage = () => "'tosh-a', sans-serif";
 
   // Paper texture for a page — pages can override via the `texture` field
   const pageTexture = (pageIndex) =>
