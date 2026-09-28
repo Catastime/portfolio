@@ -76,8 +76,8 @@ function FilmStrip({ images, style }) {
           <img key={i} src={src} alt="" className="sketch-filmstrip-frame" draggable={false} />
         ))}
       </div>
-      <div className="sketch-filmstrip-pull sketch-filmstrip-pull-left" onClick={() => pull(-1)} aria-hidden="true" />
-      <div className="sketch-filmstrip-pull sketch-filmstrip-pull-right" onClick={() => pull(1)} aria-hidden="true" />
+      <div className={`sketch-filmstrip-pull sketch-filmstrip-pull-left${idx === 0 ? ' sketch-filmstrip-pull-end' : ''}`} onClick={() => pull(-1)} aria-hidden="true" />
+      <div className={`sketch-filmstrip-pull sketch-filmstrip-pull-right${idx === images.length - 1 ? ' sketch-filmstrip-pull-end' : ''}`} onClick={() => pull(1)} aria-hidden="true" />
     </div>
   );
 }

@@ -156,6 +156,11 @@
   opacity: 0.9;
 }
 
+/* No arrow when there are no frames left in that direction */
+.sketch-filmstrip-pull-end::after {
+  display: none;
+}
+
 .sketch-filmstrip-window::before,
 .sketch-filmstrip-window::after {
   content: '';
