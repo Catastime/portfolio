@@ -31,6 +31,7 @@ import './Sketchbook.css';
  * @property {number} w - width as % of page width (0-100)
  * @property {number} rotation - rotation in degrees
  * @property {boolean} [taped] - show black corner dots
+ * @property {string[]} [images] - film strip frames (type: 'filmstrip')
  */
 
 /**
@@ -62,7 +63,6 @@ const PAGE_ASPECT = 1510 / 2153; // average of left (1505) and right (1515) page
 const REF_PAGE_H = 1040;
 const REF_MOBILE_PAGE_H = 540;
 
-/** @param {SketchbookProps} props */
 // Interactive film strip — a fixed film gate with sprocket holes; the frames
 // slide through it. Clicking the left half pulls the strip left (next frame),
 // the right half pulls it right (previous frame).
@@ -82,6 +82,7 @@ function FilmStrip({ images, style }) {
   );
 }
 
+/** @param {SketchbookProps} props */
 export default function Sketchbook({
   pages = [],
   visible = false,
