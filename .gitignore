@@ -27,3 +27,4 @@ vite.config.d.ts
 *.njsproj
 *.sln
 *.sw?
+_cv_p2.png
