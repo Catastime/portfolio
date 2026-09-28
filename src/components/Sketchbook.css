@@ -156,9 +156,6 @@
   font-size: calc(0.75rem * var(--page-scale, 1));
   font-weight: 300;
   margin-bottom: 0.3em;
-  text-decoration: underline;
-  text-decoration-color: color-mix(in srgb, var(--page-text, #3d3d3d) 40%, transparent);
-  text-underline-offset: 3px;
 }
 
 .sketch-text-body {
@@ -260,7 +257,6 @@
 .sketch-corner-link:hover,
 .sketch-corner-link:active {
   color: #fff;
-  text-decoration: underline;
 }
 
 /* Punched holes — dots that hold images in place, colored per page paper.
