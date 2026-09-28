@@ -249,7 +249,7 @@ for s in ('Design & BIM: Rhinoceros, Revit, Archicad',
     c.drawString(X(17.4), YB(y, EM, 'ToshB', 1.4 * EM), label)
     c.setFillColor(LIGHT)
     c.setFont('Automate-Light', EM * PT)
-    c.drawString(X(17.4) + sw(label, EM, 'ToshB') / PT, YB(y, EM, 'ToshB', 1.4 * EM), rest)
+    c.drawString(X(17.4) + sw(label, EM, 'ToshB'), YB(y, EM, 'ToshB', 1.4 * EM), rest)
     y += 1.4 * EM + 0.15 * EM  # skills entries: margin-bottom 0.15em
 
 print('CV ends at y =', y, 'of', H)
