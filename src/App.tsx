@@ -121,7 +121,7 @@ const bookPages = [
     meta: { year: '2024', place: 'Hannover', title: 'Artificial Intelligence in Architectural Design' },
     items: [
       // website-concept — below the diagram
-      { type: 'image', img: `${THESIS_IMG}/website-concept2.png`, x: 8, y: 35, w: 44, rotation: 0, noBg: true },
+      { type: 'image', img: `${THESIS_IMG}/website-concept.png`, x: 8, y: 35, w: 44, rotation: 0, noBg: true },
       // website — below the concept
       { type: 'image', img: `${THESIS_IMG}/website.png`, x: 8, y: 62, w: 44, rotation: 0, noBg: true },
       // Alternative Realities diagram — top of the page

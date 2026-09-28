@@ -30,7 +30,7 @@ export function startPreload() {
       `${BASE}textures/right_page.png`,
       `${BASE}master-thesis/comics-pipelineRendering.png`,
       `${BASE}master-thesis/thesis-starter.jpeg`,
-      `${BASE}master-thesis/website-concept2.png`,
+      `${BASE}master-thesis/website-concept.png`,
       `${BASE}master-thesis/Example_start.png`,
       `${BASE}master-thesis/Cityhotel_Sketch.jpg`,
       `${BASE}master-thesis/Cityhotel_Concrete.jpg`,
