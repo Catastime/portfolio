@@ -154,8 +154,13 @@
 .sketch-text-title {
   font-family: 'automate', sans-serif;
   font-size: calc(1.15rem * var(--page-scale, 1));
-  font-weight: 400;
+  font-weight: 300;
   margin-bottom: 1.2em;
+}
+
+/* Label before the colon in a text title renders heavier */
+.sketch-text-title-strong {
+  font-weight: 400;
 }
 
 .sketch-text-body {

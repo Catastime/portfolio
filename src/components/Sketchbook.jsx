@@ -429,7 +429,14 @@ export default function Sketchbook({
       const floatImg = item.floatImage;
       return (
         <div key={key} className="sketch-item sketch-item-text" style={textStyle}>
-          {item.title && <div className="sketch-text-title">{item.title}</div>}
+          {item.title && (() => {
+            // The label before the first colon renders heavier (e.g. "MASTER THESIS:")
+            const ci = item.title.indexOf(':');
+            const titleContent = ci < 0
+              ? item.title
+              : <><span className="sketch-text-title-strong">{item.title.slice(0, ci + 1)}</span>{item.title.slice(ci + 1)}</>;
+            return <div className="sketch-text-title">{titleContent}</div>;
+          })()}
           {floatImg && (
             <img
               src={floatImg.img}
