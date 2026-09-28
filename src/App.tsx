@@ -136,6 +136,8 @@ const bookPages = [
     texture: 'left_page-black',
     meta: { year: '2024', place: 'Hannover', title: 'Artificial Intelligence in Architectural Design' },
     items: [
+      // Cleanup — GroundingDINO vehicle detection, right of the text
+      { type: 'image', img: `${THESIS_IMG}/cleanup/cleanup.png`, x: 48, y: 20, w: 42, rotation: 0, taped: true, noBg: true, tackers: [1, 3, 2, 4] },
       // Fourth text block — swapped with the third
       { type: 'text', text: 'The rapid development in this renaissance of artificial intelligence has ignited in me a desire to delve into this topic through a master\'s thesis. The goal of this work is to examine the connections between past and current developments, describe the theoretical ideas and aspirations of these developments and their instigators, and develop a simple tool that showcases current possibilities of generative deep learning artificial intelligence in a user-friendly and helpful manner.', x: 8, y: 20, w: 34, rotation: 0, font: "'tosh-b', sans-serif", fontSize: 0.9, fontSizeMobile: 0.64, align: 'justify' },
     ],
