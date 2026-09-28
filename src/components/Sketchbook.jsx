@@ -46,6 +46,7 @@ import './Sketchbook.css';
  * @property {number} [bookZoom] - 0 to 1, scales book from zoomed-in on image to resting size
  * @property {number} [imgAspect] - natural aspect ratio of the zoom image (w/h)
  * @property {(src: string) => void} [onVideoOpen]
+ * @property {(src: string) => void} [onImageOpen]
  * @property {() => void} [onMoreOpen]
  * @property {(page: number) => void} [onNavigatePage]
  * @property {'forward' | 'back' | null} [turnHint] - desktop scroll hint: highlights the page side being scrolled toward
@@ -69,6 +70,7 @@ export default function Sketchbook({
   bookZoom = 1,
   imgAspect = 0,
   onVideoOpen,
+  onImageOpen,
   onMoreOpen,
   onNavigatePage,
   turnHint,
@@ -343,7 +345,8 @@ export default function Sketchbook({
       if (item.noBg) classes.push('sketch-item-image-nobg');
       if (item.polaroid) classes.push('sketch-item-image-polaroid');
       if (item.bringToFront) classes.push('sketch-item-bring-to-front');
-      if (item.video) classes.push('sketch-item-clickable');
+      if (item.video || item.overlay) classes.push('sketch-item-clickable');
+      if (item.frame) classes.push('sketch-item-framed');
       const imageStyle = { ...style };
       if (item.shadow) imageStyle.boxShadow = item.shadow;
       return (
@@ -351,7 +354,7 @@ export default function Sketchbook({
           key={key}
           className={classes.join(' ')}
           style={imageStyle}
-          onClick={item.video ? () => onVideoOpen?.(item.video) : undefined}
+          onClick={item.video ? () => onVideoOpen?.(item.video) : item.overlay ? () => onImageOpen?.(item.img) : undefined}
         >
           {item.taped && (() => {
             // Per-item override: light page dots vanish on white-background images
@@ -366,7 +369,7 @@ export default function Sketchbook({
             );
           })()}
           {item.frame && (
-            <div style={{ position: 'absolute', inset: item.frameLift ? `-${item.frameLift}cqw 0 0 0` : 0, border: '1px solid #cfcfcf', opacity: 0.15 }} />
+            <div className="sketch-frame" style={{ position: 'absolute', inset: item.frameLift ? `-${item.frameLift}cqw 0 0 0` : 0, border: '1px solid #cfcfcf' }} />
           )}
           {item.video && (
             <div className="sketch-play-btn"><div className="sketch-play-triangle" /></div>

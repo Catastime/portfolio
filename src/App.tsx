@@ -105,7 +105,7 @@ const bookPages = [
       // Second text block — bottom left (the position of the former third block)
       { type: 'text', text: 'However, the concept of artificial intelligence has undergone significant changes since its inception in the 1950s by John McCarthy. While he viewed AI as the understanding and reproduction of human intelligence, the term has now become vastly expansive, encompassing various categories of programs, from personal assistants to deep learning algorithms.', x: 8, y: 68.45, w: 34, h: 30, rotation: 0, font: "'tosh-b', sans-serif", fontSize: 0.85, fontSizeMobile: 0.64 },
       // Timeline — lower right corner
-      { type: 'image', img: `${THESIS_IMG}/Timeline.png`, x: 51.2, y: 57.15, w: 44, rotation: 0, taped: true, noBg: true, frame: true, frameLift: 1.5, tackers: [1, 3, 2, 4] },
+      { type: 'image', img: `${THESIS_IMG}/Timeline.png`, x: 51.2, y: 57.15, w: 44, rotation: 0, taped: true, noBg: true, frame: true, frameLift: 1.5, overlay: true, tackers: [1, 3, 2, 4] },
     ],
   },
   // Right page — black paper
@@ -198,6 +198,7 @@ function App() {
   const [showProjects, setShowProjects] = useState(false)
   const [overlayVisible, setOverlayVisible] = useState(false)
   const [videoOverlay, setVideoOverlay] = useState<string | null>(null)
+  const [imageOverlay, setImageOverlay] = useState<string | null>(null)
   const [contactOverlay, setContactOverlay] = useState(false)
   const [moreOverlay, setMoreOverlay] = useState(false)
   const [moreZoomed, setMoreZoomed] = useState<number | null>(null)
@@ -767,6 +768,7 @@ function App() {
       // ESC closes any open overlay
       if (e.key === 'Escape') {
         if (videoOverlay) { setVideoOverlay(null); return }
+        if (imageOverlay) { setImageOverlay(null); return }
         if (contactOverlay) { setContactOverlay(false); return }
         if (moreZoomed !== null) { setMoreZoomed(null); return }
         if (moreOverlay) { setMoreOverlay(false); return }
@@ -786,7 +788,7 @@ function App() {
         return
       }
       // Block arrow interactions while any overlay is open
-      if (showProjects || videoOverlay || contactOverlay || moreOverlay) return
+      if (showProjects || videoOverlay || contactOverlay || moreOverlay || imageOverlay) return
       if (e.key === 'ArrowDown' && arrowVisible && atLanding) {
         e.preventDefault()
         autoPlay()
@@ -806,7 +808,7 @@ function App() {
     }
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [arrowVisible, atLanding, canGoUp, canTurnForward, canTurnBack, showProjects, videoOverlay, contactOverlay, moreOverlay, moreZoomed])
+  }, [arrowVisible, atLanding, canGoUp, canTurnForward, canTurnBack, showProjects, videoOverlay, contactOverlay, moreOverlay, imageOverlay, moreZoomed])
 
   // Trigger autoPlay/goBack after 2 wheel ticks in the appropriate direction
   const wheelTickRef = useRef(0)
@@ -865,13 +867,13 @@ function App() {
 
   // Lock scroll when video or contact overlay is open
   useEffect(() => {
-    if (videoOverlay || contactOverlay || moreOverlay) {
+    if (videoOverlay || contactOverlay || moreOverlay || imageOverlay) {
       document.body.style.overflow = 'hidden'
       return () => {
         if (!showProjects) document.body.style.overflow = ''
       }
     }
-  }, [videoOverlay, contactOverlay, moreOverlay, showProjects])
+  }, [videoOverlay, contactOverlay, moreOverlay, imageOverlay, showProjects])
 
   const dockItems = [
     { icon: <PixelHome size={18} />, label: 'Home', onClick: goHome },
@@ -934,6 +936,7 @@ function App() {
         imgAspect={imgAspect}
         onVideoOpen={setVideoOverlay}
         onMoreOpen={() => setMoreOverlay(true)}
+        onImageOpen={setImageOverlay}
         onNavigatePage={scrollToMobilePage}
         turnHint={turnHint}
       />
@@ -1185,6 +1188,28 @@ function App() {
             muted
             playsInline
             controls
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              maxWidth: '90vw',
+              maxHeight: '90vh',
+            }}
+          />
+        </div>
+      )}
+
+      {/* Image overlay — like the video overlay, click outside or ESC to close */}
+      {imageOverlay && (
+        <div
+          className="fixed inset-0 flex items-center justify-center"
+          onClick={() => setImageOverlay(null)}
+          style={{
+            zIndex: 60,
+            backgroundColor: 'rgba(0, 0, 0, 0.9)',
+          }}
+        >
+          <img
+            src={imageOverlay}
+            alt=""
             onClick={(e) => e.stopPropagation()}
             style={{
               maxWidth: '90vw',
