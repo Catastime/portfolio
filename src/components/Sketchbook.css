@@ -153,7 +153,7 @@
 
 .sketch-text-title {
   font-family: 'automate', sans-serif;
-  font-size: calc(0.9rem * var(--page-scale, 1));
+  font-size: calc(1.15rem * var(--page-scale, 1));
   font-weight: 300;
   margin-bottom: 1.2em;
 }
