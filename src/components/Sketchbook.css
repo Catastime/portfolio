@@ -184,7 +184,7 @@
 
 /* Frame around images — the frame itself is the hover indicator on clickable images */
 .sketch-frame {
-  opacity: 0.15;
+  opacity: 0;
   transition: opacity 0.25s ease;
 }
 

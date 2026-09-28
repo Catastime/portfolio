@@ -110,9 +110,9 @@ const bookPages = [
       // thesis-starter — top of the page, left of the text
       { type: 'image', img: `${THESIS_IMG}/thesis-starter.jpeg`, x: 8, y: 7, w: 48, rotation: 0, taped: true, noBg: true, tackers: [1, 3, 2, 4] },
       // Second text block — bottom left (the position of the former third block)
-      { type: 'text', text: 'However, the concept of artificial intelligence has undergone significant changes since its inception in the 1950s by John McCarthy. While he viewed AI as the understanding and reproduction of human intelligence, the term has now become vastly expansive, encompassing various categories of programs, from personal assistants to deep learning algorithms.', x: 8, y: 65.45, w: 34, h: 30, rotation: 0, align: 'justify', font: "'tosh-b', sans-serif", fontSize: 0.85, fontSizeMobile: 0.64 },
+      { type: 'text', text: 'However, the concept of artificial intelligence has undergone significant changes since its inception in the 1950s by John McCarthy. While he viewed AI as the understanding and reproduction of human intelligence, the term has now become vastly expansive, encompassing various categories of programs, from personal assistants to deep learning algorithms.', x: 8, y: 68.45, w: 34, h: 30, rotation: 0, align: 'justify', font: "'tosh-b', sans-serif", fontSize: 0.85, fontSizeMobile: 0.64 },
       // Timeline — lower right corner
-      { type: 'image', img: `${THESIS_IMG}/Timeline.png`, x: 51.2, y: 54.15, w: 44, rotation: 0, taped: true, noBg: true, frame: true, frameLift: 1.5, overlay: true, tackers: [1, 3, 2, 4] },
+      { type: 'image', img: `${THESIS_IMG}/Timeline.png`, x: 51.2, y: 57.15, w: 44, rotation: 0, taped: true, noBg: true, frame: true, frameLift: 1.5, overlay: true, tackers: [1, 3, 2, 4] },
     ],
   },
   // Right page — black paper
@@ -122,13 +122,13 @@ const bookPages = [
     items: [
       // Web sections — interactive negative strip; click left/right to pull the film
       { type: 'filmstrip', x: 8, y: 42, w: 84, rotation: 0, images: [
-        `${THESIS_IMG}/sections/Web Section 2.png`,
-        `${THESIS_IMG}/sections/Web Section 3.png`,
-        `${THESIS_IMG}/sections/Web Section 4.png`,
-        `${THESIS_IMG}/sections/Web Section 6.png`,
-        `${THESIS_IMG}/sections/Web Section 7.png`,
-        `${THESIS_IMG}/sections/Web Section 9.png`,
-        `${THESIS_IMG}/sections/Web Section 10.png`,
+        `${THESIS_IMG}/Sections/Web Section 2.png`,
+        `${THESIS_IMG}/Sections/Web Section 3.png`,
+        `${THESIS_IMG}/Sections/Web Section 4.png`,
+        `${THESIS_IMG}/Sections/Web Section 6.png`,
+        `${THESIS_IMG}/Sections/Web Section 7.png`,
+        `${THESIS_IMG}/Sections/Web Section 9.png`,
+        `${THESIS_IMG}/Sections/Web Section 10.png`,
       ] },
       // Alternative Realities diagram — top of the page
       { type: 'image', img: `${THESIS_IMG}/Alternative Realities Diagramm.png`, x: 8, y: 5, w: 84, rotation: 0, noBg: true, overlay: true },
