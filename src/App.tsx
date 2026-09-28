@@ -118,7 +118,7 @@ const bookPages = [
       // Top text block — right of the timeline image, justified
       { type: 'text', text: 'The rapid development in this renaissance of artificial intelligence has ignited in me a desire to delve into this topic through a master\'s thesis. The goal of this work is to examine the connections between past and current developments, describe the theoretical ideas and aspirations of these developments and their instigators, and develop a simple tool that showcases current possibilities of generative deep learning artificial intelligence in a user-friendly and helpful manner.', x: 56, y: 10, w: 38, rotation: 0, font: "'tosh-b', sans-serif", fontSize: 0.75, fontSizeMobile: 0.55, align: 'justify' },
       // Timeline — top of the page, left of the text; dark dots (white image background)
-      { type: 'image', img: `${THESIS_IMG}/Timeline.png`, x: 8, y: 10, w: 44, rotation: 0, taped: true, noBg: true, holeColor: '#1d1d1d', tackers: [1, 3, 2, 4] },
+      { type: 'image', img: `${THESIS_IMG}/Timeline.png`, x: 8, y: 10, w: 44, rotation: 0, taped: true, noBg: true, frame: true, holeColor: '#1d1d1d', tackers: [1, 3, 2, 4] },
     ],
   },
 

@@ -365,6 +365,9 @@ export default function Sketchbook({
               </>
             );
           })()}
+          {item.frame && (
+            <div style={{ position: 'absolute', inset: 0, border: '1px solid #cfcfcf', opacity: 0.15 }} />
+          )}
           {item.video && (
             <div className="sketch-play-btn"><div className="sketch-play-triangle" /></div>
           )}
