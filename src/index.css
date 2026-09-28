@@ -73,7 +73,6 @@ body,
   border-radius: 12px;
   background-color: rgba(18, 15, 23, 0.35);
   backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
   border: 1px solid rgba(255, 255, 255, 0.08);
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
   cursor: pointer;
@@ -130,4 +129,12 @@ body,
   font-size: 1.4rem;
   letter-spacing: 0.12em;
   color: #cfcfcf;
+}
+
+/* Safari < 18 needs the prefixed alias; kept in @supports so the CSS build
+   cannot collapse it into the standard property above */
+@supports not (backdrop-filter: blur(2px)) {
+  .contact-btn {
+    -webkit-backdrop-filter: blur(8px);
+  }
 }

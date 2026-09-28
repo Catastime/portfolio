@@ -4,7 +4,14 @@
   overflow: hidden;
   background-color: rgba(20, 22, 26, 0.55);
   backdrop-filter: blur(2px);
-  -webkit-backdrop-filter: blur(2px);
+}
+
+/* Safari < 18 needs the prefixed alias; kept in @supports so the CSS build
+   cannot collapse it into the standard property above */
+@supports not (backdrop-filter: blur(2px)) {
+  .cutting-mat {
+    -webkit-backdrop-filter: blur(2px);
+  }
 }
 
 .cutting-mat-vlines {

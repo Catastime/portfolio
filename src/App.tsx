@@ -55,7 +55,7 @@ const bookPages = [
       // frame: black outline around the dots, same size as the right image
       { type: 'holes', x: -4, y: 10, w: 108, h: 37, rotation: 0, frame: true },
       // Introduction — centered between the hole marks
-      { type: 'text', text: 'introduction', x: -4, y: 26.8, w: 108, rotation: 0, align: 'center', sizes: [1], font: "'t26-carbon', monospace", weight: 100 },
+      { type: 'text', text: 'introduction', x: -4, y: 26.8, w: 108, rotation: 0, align: 'center', sizes: [1], font: "'t26-carbon', monospace", weight: 400 },
     ],
   },
   // Right page — Anthrazit image + CV
