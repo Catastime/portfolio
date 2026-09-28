@@ -105,7 +105,7 @@ const bookPages = [
       // Second text block — bottom left (the position of the former third block)
       { type: 'text', text: 'However, the concept of artificial intelligence has undergone significant changes since its inception in the 1950s by John McCarthy. While he viewed AI as the understanding and reproduction of human intelligence, the term has now become vastly expansive, encompassing various categories of programs, from personal assistants to deep learning algorithms.', x: 8, y: 80, w: 34, rotation: 0, font: "'tosh-b', sans-serif", fontSize: 0.85, fontSizeMobile: 0.64 },
       // Timeline — lower right corner
-      { type: 'image', img: `${THESIS_IMG}/Timeline.png`, x: 51.2, y: 57.3, w: 44, rotation: 0, taped: true, noBg: true, frame: true, tackers: [1, 3, 2, 4] },
+      { type: 'image', img: `${THESIS_IMG}/Timeline.png`, x: 51.2, y: 57.22, w: 44, rotation: 0, taped: true, noBg: true, frame: true, tackers: [1, 3, 2, 4] },
     ],
   },
   // Right page — black paper
