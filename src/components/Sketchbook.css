@@ -88,9 +88,31 @@
     0 2px 4px rgba(0, 0, 0, 0.15);
 }
 
-/* Analogue photo negative — inverted tones */
-.sketch-item-image-negative .sketch-image {
-  filter: invert(1) contrast(1.05);
+/* Film strip — segment of 35mm negative film with sprocket holes */
+.sketch-item-image-filmstrip {
+  background: #0d0d0d;
+  padding: 16px 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+}
+
+.sketch-item-image-filmstrip::before,
+.sketch-item-image-filmstrip::after {
+  content: '';
+  position: absolute;
+  left: 8px;
+  right: 8px;
+  height: 7px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='7'%3E%3Crect x='3' y='1' width='8' height='5' rx='1.5' fill='%23cfcfcf' fill-opacity='0.4'/%3E%3C/svg%3E");
+  background-repeat: repeat-x;
+  background-size: 14px 7px;
+}
+
+.sketch-item-image-filmstrip::before {
+  top: 4px;
+}
+
+.sketch-item-image-filmstrip::after {
+  bottom: 4px;
 }
 
 /* Bring to front on hover */
