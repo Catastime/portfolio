@@ -420,6 +420,13 @@ export default function Sketchbook({
       if (itemFontSize) textStyle.fontSize = `calc(${itemFontSize}rem * var(--page-scale, 1))`;
       if (item.align) textStyle.textAlign = item.align;
       if (item.weight) textStyle.fontWeight = item.weight;
+      // An h box bottom-aligns the text: its lower edge sits at y + h
+      if (item.h) {
+        textStyle.height = `${item.h}%`;
+        textStyle.display = 'flex';
+        textStyle.flexDirection = 'column';
+        textStyle.justifyContent = 'flex-end';
+      }
       // The body needs its own inline size — .sketch-text-body's class
       // font-size overrides the inherited container size on desktop
       const bodyStyle = {};
