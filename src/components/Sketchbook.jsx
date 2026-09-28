@@ -420,6 +420,12 @@ export default function Sketchbook({
       if (itemFontSize) textStyle.fontSize = `calc(${itemFontSize}rem * var(--page-scale, 1))`;
       if (item.align) textStyle.textAlign = item.align;
       if (item.weight) textStyle.fontWeight = item.weight;
+      // The body needs its own inline size — .sketch-text-body's class
+      // font-size overrides the inherited container size on desktop
+      const bodyStyle = {};
+      if (itemFontSize) bodyStyle.fontSize = `calc(${itemFontSize}rem * var(--page-scale, 1))`;
+      if (item.bodySize) bodyStyle.fontSize = `calc(${item.bodySize}rem * var(--page-scale, 1))`;
+      if (item.bodyLineHeight) bodyStyle.lineHeight = item.bodyLineHeight;
       const floatImg = item.floatImage;
       return (
         <div key={key} className="sketch-item sketch-item-text" style={textStyle}>
@@ -444,7 +450,7 @@ export default function Sketchbook({
               </div>
             ))
           ) : (
-            <div className="sketch-text-body" style={(isMobile && item.fontSizeMobile != null) ? { fontSize: `calc(${item.fontSizeMobile}rem * var(--page-scale, 1))` } : (item.bodySize || item.bodyLineHeight) ? { fontSize: item.bodySize ? `calc(${item.bodySize}rem * var(--page-scale, 1))` : undefined, lineHeight: item.bodyLineHeight } : undefined}>{item.text}</div>
+            <div className="sketch-text-body" style={Object.keys(bodyStyle).length ? bodyStyle : undefined}>{item.text}</div>
           )}
         </div>
       );
