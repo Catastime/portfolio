@@ -120,8 +120,10 @@ const bookPages = [
     texture: 'right_page-black',
     meta: { year: '2024', place: 'Hannover', title: 'Artificial Intelligence in Architectural Design' },
     items: [
-      // Top text block — right of the timeline image, justified
-      { type: 'text', text: 'The rapid development in this renaissance of artificial intelligence has ignited in me a desire to delve into this topic through a master\'s thesis. The goal of this work is to examine the connections between past and current developments, describe the theoretical ideas and aspirations of these developments and their instigators, and develop a simple tool that showcases current possibilities of generative deep learning artificial intelligence in a user-friendly and helpful manner.', x: 56, y: 10, w: 38, rotation: 0, font: "'tosh-b', sans-serif", fontSize: 0.9, fontSizeMobile: 0.64, align: 'justify' },
+      // website-concept — top left, like the starter on the facing page
+      { type: 'image', img: `${THESIS_IMG}/website-concept2.png`, x: 8, y: 10, w: 44, rotation: 0, noBg: true },
+      // Third text block — swapped with the fourth, justified
+      { type: 'text', text: 'When someone speaks of AI today, it generally refers to a deep learning algorithm attempting to simulate cognitive functions based on vast amounts of data. However, truly autonomous thinking programs, as envisaged in the 1950s, have not been realized yet, as current computers lack the necessary level of perception or self-reflection to develop actual intelligence.', x: 56, y: 10, w: 38, rotation: 0, font: "'tosh-b', sans-serif", fontSize: 0.85, fontSizeMobile: 0.64, align: 'justify' },
     ],
   },
 
@@ -130,10 +132,8 @@ const bookPages = [
     texture: 'left_page-black',
     meta: { year: '2024', place: 'Hannover', title: 'Artificial Intelligence in Architectural Design' },
     items: [
-      // Third text block — moved here from spread 1 (overflowed there)
-      { type: 'text', text: 'When someone speaks of AI today, it generally refers to a deep learning algorithm attempting to simulate cognitive functions based on vast amounts of data. However, truly autonomous thinking programs, as envisaged in the 1950s, have not been realized yet, as current computers lack the necessary level of perception or self-reflection to develop actual intelligence.', x: 8, y: 20, w: 34, rotation: 0, font: "'tosh-b', sans-serif", fontSize: 0.85, fontSizeMobile: 0.64 },
-      // website-concept — moved here from spread 1 (overflowed there)
-      { type: 'image', img: `${THESIS_IMG}/website-concept2.png`, x: 48, y: 20, w: 42, rotation: 0, noBg: true },
+      // Fourth text block — swapped with the third
+      { type: 'text', text: 'The rapid development in this renaissance of artificial intelligence has ignited in me a desire to delve into this topic through a master\'s thesis. The goal of this work is to examine the connections between past and current developments, describe the theoretical ideas and aspirations of these developments and their instigators, and develop a simple tool that showcases current possibilities of generative deep learning artificial intelligence in a user-friendly and helpful manner.', x: 8, y: 20, w: 34, rotation: 0, font: "'tosh-b', sans-serif", fontSize: 0.9, fontSizeMobile: 0.64, align: 'justify' },
     ],
   },
   {
