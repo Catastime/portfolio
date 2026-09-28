@@ -37,6 +37,7 @@ import './Sketchbook.css';
 /**
  * @typedef {Object} SketchbookPage
  * @property {SketchbookItem[]} items
+ * @property {Object} [meta] - corner text (year, place, title); work = shared number for multi-spread projects
  */
 
 /**
@@ -667,12 +668,13 @@ export default function Sketchbook({
       ];
     }
     const isLeft = pageIndex % 2 === 0;
-    const spreadNum = String(spread).padStart(2, '0');
+    // Projects spanning several spreads keep their work number
+    const workNum = String(meta.work != null ? meta.work : spread).padStart(2, '0');
     // Total after the intro spread (the impressum spread counts, as before)
     const totalWorks = Math.ceil(pages.length / 2) - 1;
     if (isLeft) {
       return [
-        { type: 'corner-text', text: `WORK.${spreadNum}/${totalWorks}`, x: 5, y: 2.5, align: 'left' },
+        { type: 'corner-text', text: `WORK.${workNum}/${totalWorks}`, x: 5, y: 2.5, align: 'left' },
         { type: 'corner-text', text: meta.year || '', x: 5, y: 2.5, align: 'right' },
       ];
     } else {
