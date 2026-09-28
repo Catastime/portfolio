@@ -33,6 +33,13 @@ const projectItems = [
 // for all spreads except spread 0, using the `meta` field on the left page.
 
 const THESIS_IMG = `${BASE}master-thesis`
+// Cityhotel polaroids — shared gallery for the fullscreen image overlay
+const POLAROID_SET = [
+  `${THESIS_IMG}/Cityhotel_Sketch.jpg`,
+  `${THESIS_IMG}/Cityhotel_Concrete.jpg`,
+  `${THESIS_IMG}/Cityhotel_Scandi.jpg`,
+  `${THESIS_IMG}/Cityhotel_Blade-Runner.jpg`,
+]
 
 // Master thesis pages — MORE overlay grid, numbered in reading order
 const thesisPageCount = 140
@@ -135,10 +142,10 @@ const bookPages = [
     items: [
       { type: 'image', img: `${THESIS_IMG}/Example_start.png`, x: 8, y: 32, w: 35, rotation: 0, taped: true, noBg: true, tackers: [1, 3, 2, 4] },
       // Cityhotel Polaroid stack — slightly overlapping like stickers
-      { type: 'image', img: `${THESIS_IMG}/Cityhotel_Sketch.jpg`, x: 48, y: 24, w: 28, rotation: -3, polaroid: true, bringToFront: true },
-      { type: 'image', img: `${THESIS_IMG}/Cityhotel_Concrete.jpg`, x: 60, y: 29, w: 28, rotation: 2, polaroid: true, bringToFront: true },
-      { type: 'image', img: `${THESIS_IMG}/Cityhotel_Scandi.jpg`, x: 52, y: 38, w: 28, rotation: -1, polaroid: true, bringToFront: true },
-      { type: 'image', img: `${THESIS_IMG}/Cityhotel_Blade-Runner.jpg`, x: 64, y: 43, w: 28, rotation: 4, polaroid: true, bringToFront: true },
+      { type: 'image', img: `${THESIS_IMG}/Cityhotel_Sketch.jpg`, x: 48, y: 24, w: 28, rotation: -3, polaroid: true, bringToFront: true, overlay: true, overlaySet: POLAROID_SET },
+      { type: 'image', img: `${THESIS_IMG}/Cityhotel_Concrete.jpg`, x: 60, y: 29, w: 28, rotation: 2, polaroid: true, bringToFront: true, overlay: true, overlaySet: POLAROID_SET },
+      { type: 'image', img: `${THESIS_IMG}/Cityhotel_Scandi.jpg`, x: 52, y: 38, w: 28, rotation: -1, polaroid: true, bringToFront: true, overlay: true, overlaySet: POLAROID_SET },
+      { type: 'image', img: `${THESIS_IMG}/Cityhotel_Blade-Runner.jpg`, x: 64, y: 43, w: 28, rotation: 4, polaroid: true, bringToFront: true, overlay: true, overlaySet: POLAROID_SET },
       // Video poster — opens the thesis film in the video overlay
       { type: 'image', img: `${THESIS_IMG}/website.png`, x: 8, y: 72, w: 72, rotation: 0, taped: true, noBg: true, video: `${THESIS_IMG}/FinalVideo.mp4`, tackers: [4, 2, 3, 1] },
       // MORE — square button right of the video poster
@@ -198,7 +205,8 @@ function App() {
   const [showProjects, setShowProjects] = useState(false)
   const [overlayVisible, setOverlayVisible] = useState(false)
   const [videoOverlay, setVideoOverlay] = useState<string | null>(null)
-  const [imageOverlay, setImageOverlay] = useState<string | null>(null)
+  const [imageOverlay, setImageOverlay] = useState<string[] | null>(null)
+  const [imageOverlayIdx, setImageOverlayIdx] = useState(0)
   const [contactOverlay, setContactOverlay] = useState(false)
   const [moreOverlay, setMoreOverlay] = useState(false)
   const [moreZoomed, setMoreZoomed] = useState<number | null>(null)
@@ -768,7 +776,7 @@ function App() {
       // ESC closes any open overlay
       if (e.key === 'Escape') {
         if (videoOverlay) { setVideoOverlay(null); return }
-        if (imageOverlay) { setImageOverlay(null); return }
+        if (imageOverlay) { setImageOverlay(null); setImageOverlayIdx(0); return }
         if (contactOverlay) { setContactOverlay(false); return }
         if (moreZoomed !== null) { setMoreZoomed(null); return }
         if (moreOverlay) { setMoreOverlay(false); return }
@@ -785,6 +793,12 @@ function App() {
           e.preventDefault()
           setMoreZoomed((m) => (m !== null && m > 0 ? m - 1 : m))
         }
+        return
+      }
+      // Arrow keys switch images in the image overlay
+      if (imageOverlay) {
+        if (e.key === 'ArrowRight') { e.preventDefault(); setImageOverlayIdx((i) => Math.min(i + 1, imageOverlay.length - 1)) }
+        if (e.key === 'ArrowLeft') { e.preventDefault(); setImageOverlayIdx((i) => Math.max(i - 1, 0)) }
         return
       }
       // Block arrow interactions while any overlay is open
@@ -936,7 +950,7 @@ function App() {
         imgAspect={imgAspect}
         onVideoOpen={setVideoOverlay}
         onMoreOpen={() => setMoreOverlay(true)}
-        onImageOpen={setImageOverlay}
+        onImageOpen={(set, idx) => { setImageOverlay(set); setImageOverlayIdx(idx) }}
         onNavigatePage={scrollToMobilePage}
         turnHint={turnHint}
       />
@@ -1207,8 +1221,19 @@ function App() {
             backgroundColor: 'rgba(0, 0, 0, 0.9)',
           }}
         >
+          {imageOverlayIdx > 0 && (
+            <button
+              onClick={(e) => { e.stopPropagation(); setImageOverlayIdx(imageOverlayIdx - 1) }}
+              className="fixed left-8 top-1/2 z-50 flex -translate-y-1/2 cursor-pointer items-center justify-center border-none bg-transparent p-2 text-white"
+              style={{ lineHeight: 0 }}
+              aria-label="Previous image"
+            >
+              <PixelArrowLeft size={48} />
+            </button>
+          )}
           <img
-            src={imageOverlay}
+            key={imageOverlayIdx}
+            src={imageOverlay[imageOverlayIdx]}
             alt=""
             onClick={(e) => e.stopPropagation()}
             style={{
@@ -1216,6 +1241,16 @@ function App() {
               maxHeight: '90vh',
             }}
           />
+          {imageOverlayIdx < imageOverlay.length - 1 && (
+            <button
+              onClick={(e) => { e.stopPropagation(); setImageOverlayIdx(imageOverlayIdx + 1) }}
+              className="fixed right-8 top-1/2 z-50 flex -translate-y-1/2 cursor-pointer items-center justify-center border-none bg-transparent p-2 text-white"
+              style={{ lineHeight: 0 }}
+              aria-label="Next image"
+            >
+              <PixelArrowRight size={48} />
+            </button>
+          )}
         </div>
       )}
 

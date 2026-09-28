@@ -46,7 +46,7 @@ import './Sketchbook.css';
  * @property {number} [bookZoom] - 0 to 1, scales book from zoomed-in on image to resting size
  * @property {number} [imgAspect] - natural aspect ratio of the zoom image (w/h)
  * @property {(src: string) => void} [onVideoOpen]
- * @property {(src: string) => void} [onImageOpen]
+ * @property {(set: string[], index: number) => void} [onImageOpen]
  * @property {() => void} [onMoreOpen]
  * @property {(page: number) => void} [onNavigatePage]
  * @property {'forward' | 'back' | null} [turnHint] - desktop scroll hint: highlights the page side being scrolled toward
@@ -354,7 +354,10 @@ export default function Sketchbook({
           key={key}
           className={classes.join(' ')}
           style={imageStyle}
-          onClick={item.video ? () => onVideoOpen?.(item.video) : item.overlay ? () => onImageOpen?.(item.img) : undefined}
+          onClick={item.video ? () => onVideoOpen?.(item.video) : item.overlay ? () => {
+            const set = item.overlaySet || [item.img];
+            onImageOpen?.(set, Math.max(0, set.indexOf(item.img)));
+          } : undefined}
         >
           {item.taped && (() => {
             // Per-item override: light page dots vanish on white-background images
