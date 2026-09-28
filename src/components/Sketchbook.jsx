@@ -463,6 +463,22 @@ export default function Sketchbook({
       );
     }
 
+    if (item.type === 'timeline') {
+      const timelineStyle = { ...style };
+      const timelineFontSize = isMobile && item.fontSizeMobile != null ? item.fontSizeMobile : item.fontSize;
+      if (timelineFontSize) timelineStyle.fontSize = `calc(${timelineFontSize}rem * var(--page-scale, 1))`;
+      return (
+        <div key={key} className="sketch-item sketch-item-text sketch-timeline" style={timelineStyle}>
+          {(item.entries || []).map((e, i) => (
+            <div key={i} className="sketch-timeline-entry">
+              <span className="sketch-timeline-date">{e.date}</span>
+              <div className="sketch-timeline-label">{e.label}</div>
+            </div>
+          ))}
+        </div>
+      );
+    }
+
     if (item.type === 'cv') {
       const cvStyle = { ...style };
       // SKILLS heads are "Label: list" — the list behind the colon renders grey + light

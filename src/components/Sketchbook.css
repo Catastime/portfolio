@@ -310,6 +310,50 @@
   }
 }
 
+/* Timeline — vertical line with dated entries (dates: Automate, labels: Tosh A) */
+.sketch-timeline {
+  border-left: 1px solid color-mix(in srgb, var(--page-text, #3d3d3d) 45%, transparent);
+  padding-left: 1.2em;
+  pointer-events: none !important;
+  z-index: 0 !important;
+}
+
+.sketch-timeline-entry {
+  position: relative;
+  margin-bottom: 1.1em;
+}
+
+.sketch-timeline-entry:last-child {
+  margin-bottom: 0;
+}
+
+/* Square marker sitting on the line */
+.sketch-timeline-entry::before {
+  content: '';
+  position: absolute;
+  left: calc(-1.2em - 3px);
+  top: 0.4em;
+  width: 5px;
+  height: 5px;
+  background: var(--page-text, #3d3d3d);
+}
+
+.sketch-timeline-date {
+  font-family: 'automate', sans-serif;
+  font-weight: 400;
+  font-size: 0.9em;
+  line-height: 1.2;
+}
+
+.sketch-timeline-label {
+  font-family: 'tosh-a', sans-serif;
+  font-weight: 300;
+  font-size: 0.85em;
+  line-height: 1.45;
+  opacity: 0.75;
+  margin-top: 0.1em;
+}
+
 .cv-section-name {
   font-family: 'automate', sans-serif;
   font-weight: 400;

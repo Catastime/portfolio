@@ -117,6 +117,17 @@ const bookPages = [
     items: [
       // Top text block
       { type: 'text', text: 'The rapid development in this renaissance of artificial intelligence has ignited in me a desire to delve into this topic through a master\'s thesis. The goal of this work is to examine the connections between past and current developments, describe the theoretical ideas and aspirations of these developments and their instigators, and develop a simple tool that showcases current possibilities of generative deep learning artificial intelligence in a user-friendly and helpful manner.', x: 8, y: 10, w: 84, rotation: 0, font: "'tosh-b', sans-serif", fontSize: 0.58, fontSizeMobile: 0.42 },
+      // AI history timeline
+      { type: 'timeline', x: 8, y: 48, w: 84, rotation: 0, fontSize: 0.6, fontSizeMobile: 0.4, entries: [
+        { date: '1950', label: 'Alan Turing proposes the Turing Test — can machines think?' },
+        { date: '1956', label: 'Dartmouth Conference: John McCarthy coins the term "artificial intelligence".' },
+        { date: '1970', label: 'Nicolas Negroponte envisions "The Architecture Machine" — the computer as a design partner.' },
+        { date: '1997', label: 'Deep Blue defeats chess world champion Garry Kasparov.' },
+        { date: '2012', label: 'AlexNet wins the ImageNet Challenge — the deep learning boom begins.' },
+        { date: '2017', label: 'The transformer architecture reshapes machine learning.' },
+        { date: '2022', label: 'Diffusion models and large language models reach the public.' },
+        { date: '2024', label: 'Master\'s thesis: AI in architectural design.' },
+      ]},
     ],
   },
 
