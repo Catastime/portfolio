@@ -345,6 +345,7 @@ export default function Sketchbook({
       if (item.noBg) classes.push('sketch-item-image-nobg');
       if (item.polaroid) classes.push('sketch-item-image-polaroid');
       if (item.print) classes.push('sketch-item-image-print');
+      if (item.negative) classes.push('sketch-item-image-negative');
       if (item.bringToFront) classes.push('sketch-item-bring-to-front');
       if (item.video || item.overlay) classes.push('sketch-item-clickable');
       if (item.frame) classes.push('sketch-item-framed');

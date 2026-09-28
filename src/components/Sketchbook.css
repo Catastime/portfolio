@@ -88,6 +88,11 @@
     0 2px 4px rgba(0, 0, 0, 0.15);
 }
 
+/* Analogue photo negative — inverted tones */
+.sketch-item-image-negative .sketch-image {
+  filter: invert(1) contrast(1.05);
+}
+
 /* Bring to front on hover */
 .sketch-item-bring-to-front {
   cursor: pointer;
