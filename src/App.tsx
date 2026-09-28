@@ -120,16 +120,14 @@ const bookPages = [
     texture: 'right_page-black',
     meta: { year: '2024', place: 'Hannover', title: 'Artificial Intelligence in Architectural Design' },
     items: [
-      // website-concept — below the diagram
-      { type: 'image', img: `${THESIS_IMG}/website-concept2.png`, x: 8, y: 42, w: 44, rotation: 0, noBg: true },
       // website — below the concept
-      { type: 'image', img: `${THESIS_IMG}/website.png`, x: 56, y: 42, w: 38, rotation: 0, filmstrip: true },
+      { type: 'image', img: `${THESIS_IMG}/website.png`, x: 8, y: 42, w: 84, rotation: 0, filmstrip: true },
       // Alternative Realities diagram — top of the page
       { type: 'image', img: `${THESIS_IMG}/Alternative Realities Diagramm.png`, x: 8, y: 5, w: 84, rotation: 0, noBg: true, overlay: true },
       // Third text block — swapped with the fourth, justified
       { type: 'text', text: 'When someone speaks of AI today, it generally refers to a deep learning algorithm attempting to simulate cognitive functions based on vast amounts of data. However, truly autonomous thinking programs, as envisaged in the 1950s, have not been realized yet, as current computers lack the necessary level of perception or self-reflection to develop actual intelligence.', x: 8, y: 28, w: 84, rotation: 0, font: "'tosh-b', sans-serif", fontSize: 0.85, fontSizeMobile: 0.64, align: 'justify' },
       // Fourth text block — below the images, justified
-      { type: 'text', text: 'The rapid development in this renaissance of artificial intelligence has ignited in me a desire to delve into this topic through a master\'s thesis. The goal of this work is to examine the connections between past and current developments, describe the theoretical ideas and aspirations of these developments and their instigators, and develop a simple tool that showcases current possibilities of generative deep learning artificial intelligence in a user-friendly and helpful manner.', x: 8, y: 68, w: 84, rotation: 0, font: "'tosh-b', sans-serif", fontSize: 0.9, fontSizeMobile: 0.64, align: 'justify' },
+      { type: 'text', text: 'The rapid development in this renaissance of artificial intelligence has ignited in me a desire to delve into this topic through a master\'s thesis. The goal of this work is to examine the connections between past and current developments, describe the theoretical ideas and aspirations of these developments and their instigators, and develop a simple tool that showcases current possibilities of generative deep learning artificial intelligence in a user-friendly and helpful manner.', x: 8, y: 80, w: 84, rotation: 0, font: "'tosh-b', sans-serif", fontSize: 0.9, fontSizeMobile: 0.64, align: 'justify' },
     ],
   },
 
