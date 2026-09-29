@@ -32,6 +32,8 @@ import './Sketchbook.css';
  * @property {number} rotation - rotation in degrees
  * @property {boolean} [taped] - show black corner dots
  * @property {string[]} [images] - film strip frames (type: 'filmstrip')
+ * @property {Object} [mobile] - geometry overrides merged on phones only
+ * (x, y, w, h; h: 0 removes a desktop bottom-align box)
  */
 
 /**
@@ -64,21 +66,28 @@ const PAGE_ASPECT = 1510 / 2153; // average of left (1505) and right (1515) page
 const REF_PAGE_H = 1040;
 const REF_MOBILE_PAGE_H = 540;
 
-// Interactive film strip — a fixed film gate with sprocket holes; the frames
-// slide through it. Clicking the left half pulls the strip left (next frame),
-// the right half pulls it right (previous frame).
-function FilmStrip({ images, style }) {
+// Interactive film strip — one long pre-composed strip image (film base,
+// sprocket holes and gaps baked in) slides behind a window. Each step
+// centers one frame; the neighbouring frames peek in at the edges. The
+// strip never scrolls past its own ends. Clicking the left half pulls the
+// previous frame, the right half the next.
+function FilmStrip({ strip, frames = 7, style }) {
   const [idx, setIdx] = useState(0);
-  const pull = (dir) => setIdx((i) => Math.max(0, Math.min(images.length - 1, i + dir)));
+  const pull = (dir) => setIdx((i) => Math.max(0, Math.min(frames - 1, i + dir)));
+  // Slot width as a fraction of the window width — tuned so the window
+  // height matches the old simulated film (desktop stays as tuned)
+  const SLOT = 0.857;
+  const IMG = SLOT * frames;
+  // Left edge of the strip image in window widths, centered on frame idx,
+  // clamped so the strip never leaves the window at the ends
+  const left = Math.max(1 - IMG, Math.min(0, 0.5 - (idx + 0.5) * SLOT));
   return (
     <div className="sketch-item sketch-filmstrip-window" style={style}>
-      <div className="sketch-filmstrip-track" style={{ transform: `translateX(-${idx * 100}%)` }}>
-        {images.map((src, i) => (
-          <img key={i} src={src} alt="" className="sketch-filmstrip-frame" draggable={false} />
-        ))}
+      <div className="sketch-filmstrip-track" style={{ width: `${IMG * 100}%`, transform: `translateX(${(left / IMG) * 100}%)` }}>
+        <img src={strip} alt="" className="sketch-filmstrip-strip" draggable={false} />
       </div>
       <div className={`sketch-filmstrip-pull sketch-filmstrip-pull-left${idx === 0 ? ' sketch-filmstrip-pull-end' : ''}`} onClick={() => pull(-1)} aria-hidden="true" />
-      <div className={`sketch-filmstrip-pull sketch-filmstrip-pull-right${idx === images.length - 1 ? ' sketch-filmstrip-pull-end' : ''}`} onClick={() => pull(1)} aria-hidden="true" />
+      <div className={`sketch-filmstrip-pull sketch-filmstrip-pull-right${idx === frames - 1 ? ' sketch-filmstrip-pull-end' : ''}`} onClick={() => pull(1)} aria-hidden="true" />
     </div>
   );
 }
@@ -327,14 +336,14 @@ export default function Sketchbook({
     // All touch navigation happens here; suppress the synthetic click that follows
     suppressClickRef.current = true;
     setTimeout(() => { suppressClickRef.current = false; }, 400);
-    // Don't turn the page when tapping interactive items (video, MORE, links)
-    if (e.target.closest('.sketch-item-clickable, .sketch-more-btn, a')) return;
     const diff = touchStartX.current - e.changedTouches[0].clientX;
+    // Swipes turn the page from anywhere
     if (Math.abs(diff) >= 40) {
       navigateToPage(mobilePage + (diff > 0 ? 1 : -1));
       return;
     }
-    // Tap: left half goes back, right half goes forward
+    // Taps only turn the page when not on something interactable
+    if (e.target.closest('.sketch-item-clickable, .sketch-more-btn, .sketch-filmstrip-window, a')) return;
     const rect = e.currentTarget.getBoundingClientRect();
     const x = e.changedTouches[0].clientX - rect.left;
     navigateToPage(mobilePage + (x > rect.width / 2 ? 1 : -1));
@@ -343,7 +352,7 @@ export default function Sketchbook({
   const handleClick = (e) => {
     if (suppressClickRef.current) return;
     // Don't turn the page when tapping interactive items (video, MORE, links)
-    if (e.target.closest('.sketch-item-clickable, .sketch-more-btn, a')) return;
+    if (e.target.closest('.sketch-item-clickable, .sketch-more-btn, .sketch-filmstrip-window, a')) return;
     const rect = e.currentTarget.getBoundingClientRect();
     const x = e.clientX - rect.left;
     navigateToPage(mobilePage + (x > rect.width / 2 ? 1 : -1));
@@ -701,7 +710,7 @@ export default function Sketchbook({
     if (!page) return <div key={key} className="sketchbook-page sketchbook-page-empty" />;
     return (
       <div key={key} className="sketchbook-page" style={{ fontFamily, '--page-text': textColorFor(pageIndex) }}>
-        {page.items?.map((item, i) => renderItem(item, i, pageIndex))}
+        {page.items?.map((item, i) => renderItem(isMobile && item.mobile ? { ...item, ...item.mobile } : item, i, pageIndex))}
       </div>
     );
   };
@@ -734,7 +743,7 @@ export default function Sketchbook({
           </div>
           {isTurning && (
             <div
-              className="sketchbook-mobile-layer"
+              className={`sketchbook-mobile-layer${mobileTurnP > 0.5 ? '' : ' sketch-layer-inactive'}`}
               style={{
                 backgroundImage: `url('${BASE}textures/${pageTexture(nextMobilePage)}.png')`,
                 transform: `translateX(${6 * (1 - mobileTurnP)}%)`,
@@ -799,7 +808,7 @@ export default function Sketchbook({
               <div style={{ position: 'absolute', inset: 0, opacity: 1 - underT, backgroundImage: textureUrl(leftIndex), backgroundSize: '100% 100%' }}>
                 {renderPage(pages[leftIndex], 'left-current', fontForPage(leftIndex), leftIndex)}
               </div>
-              <div style={{ position: 'absolute', inset: 0, opacity: underT, backgroundImage: textureUrl(nextLeftIndex), backgroundSize: '100% 100%' }}>
+              <div className={underT > 0.5 ? undefined : 'sketch-layer-inactive'} style={{ position: 'absolute', inset: 0, opacity: underT, backgroundImage: textureUrl(nextLeftIndex), backgroundSize: '100% 100%' }}>
                 {renderPage(pages[nextLeftIndex], 'left-next', fontForPage(nextLeftIndex), nextLeftIndex)}
               </div>
             </>

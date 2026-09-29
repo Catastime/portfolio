@@ -282,6 +282,46 @@
   font-weight: 400;
 }
 
+/* Phones: the title scales down with the cramped single-page layout */
+@media (max-width: 767px) {
+  .sketch-text-title {
+    font-size: calc(0.9rem * var(--page-scale, 1));
+  }
+
+  .sketch-corner-text {
+    font-size: calc(0.45rem * var(--page-scale, 1));
+  }
+
+  /* Contact links in the corner stay tappable: the hit box grows around
+     the unchanged text position (padding + matching negative margin) */
+  .sketch-corner-link {
+    padding: 5px 10px;
+    margin: -5px -10px;
+  }
+
+  /* Film base and sprocket holes scale with the narrow window — the fixed
+     16px/7px sizes are ~3x too thick relative to the phone page */
+  .sketch-filmstrip-window {
+    padding: 2.4% 1.2%;
+  }
+
+  .sketch-filmstrip-window::before,
+  .sketch-filmstrip-window::after {
+    height: 4px;
+    left: 4px;
+    right: 4px;
+    background-size: 9px 4px;
+  }
+
+  .sketch-filmstrip-window::before {
+    top: 1px;
+  }
+
+  .sketch-filmstrip-window::after {
+    bottom: 1px;
+  }
+}
+
 .sketch-text-body {
   font-weight: 300;
   font-size: calc(0.65rem * var(--page-scale, 1));
@@ -529,3 +569,15 @@
   background-color: rgba(207, 207, 207, 0.12);
   border-color: #cfcfcf;
 }
+
+/* A page layer that is still fading in must not catch clicks anywhere in
+   its subtree — interactive items (clickable images, corner links, the
+   film strip) force pointer-events back on, so the kill must outrank them.
+   The layer becomes interactive again once it is more than half visible. */
+.sketchbook-mobile .sketch-layer-inactive,
+.sketchbook-mobile .sketch-layer-inactive *,
+.sketchbook-page-stack .sketch-layer-inactive,
+.sketchbook-page-stack .sketch-layer-inactive * {
+  pointer-events: none !important;
+}
+
