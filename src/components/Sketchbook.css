@@ -162,6 +162,106 @@
   display: none;
 }
 
+/* Flip card — click turns the image around to reveal its backside. The
+   front face stays in flow and sizes the card; the back is a column with
+   the back image at the top and an optional caption below it. With a
+   flipBox the card expands while flipped — left/top/width/height
+   transition alongside the rotation. */
+.sketch-flip {
+  perspective: 1200px;
+  container-type: inline-size;
+  transition: left 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+              top 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+              width 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+              height 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* The expanded card covers its neighbours */
+.sketch-flip-flipped {
+  z-index: 2;
+}
+
+/* Tape dots fade out while the card is expanded — they are placed relative
+   to the small card box and would float loose on the expanded one */
+.sketch-flip-expanded .sketch-hole {
+  opacity: 0;
+}
+
+.sketch-hole {
+  transition: opacity 0.4s ease;
+}
+
+.sketch-flip-inner {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+  transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.sketch-flip-flipped .sketch-flip-inner {
+  transform: rotateY(180deg);
+}
+
+.sketch-flip-face {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  user-select: none;
+}
+
+.sketch-flip-back {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transform: rotateY(180deg);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.sketch-flip-back img,
+.sketch-flip-back video {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin-top: 6cqw;
+  user-select: none;
+}
+
+/* Caption below the back image — grey caption style */
+.sketch-flip-back-text {
+  font-family: 'automate', sans-serif;
+  font-weight: 300;
+  font-size: calc(0.7rem * var(--page-scale, 1));
+  line-height: 1.5;
+  color: #cfcfcf;
+  opacity: 0.65;
+  margin-top: 4cqw;
+}
+
+/* Dotted pixel arrow — the book arrows' pixel head on a pixel-dotted shaft */
+.sketch-pixel-arrow {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #cfcfcf;
+  pointer-events: none !important;
+  z-index: 0 !important;
+}
+
+.sketch-pixel-arrow-shaft {
+  flex: 1;
+  /* Square dots — one pixel cell of the arrow head, with a cell of gap.
+     Anchored to the bottom so the pattern always meets the head with a
+     complete dot; any remainder hides in the top gap. */
+  background: repeating-linear-gradient(to top, currentColor 0 var(--dot, 7px), transparent var(--dot, 7px) calc(var(--dot, 7px) * 2));
+}
+
 /* Bring to front on hover */
 .sketch-item-bring-to-front {
   cursor: pointer;
@@ -265,6 +365,7 @@
 @media (max-width: 767px) {
   .sketch-text-title {
     font-size: calc(0.9rem * var(--page-scale, 1));
+    margin-bottom: 0.5em;
   }
 
   .sketch-corner-text {
@@ -276,6 +377,11 @@
   .sketch-corner-link {
     padding: 5px 10px;
     margin: -5px -10px;
+  }
+
+  /* Flip card back caption — the narrow phone card needs caption size */
+  .sketch-flip-back-text {
+    font-size: calc(0.4rem * var(--page-scale, 1));
   }
 }
 

@@ -33,6 +33,9 @@ const projectItems = [
 // for all spreads except spread 0, using the `meta` field on the left page.
 
 const THESIS_IMG = `${BASE}master-thesis`
+// Body text blocks share one size across all spreads — text stays consistent
+const BODY_TEXT_SIZE = 0.85;
+const BODY_TEXT_SIZE_MOBILE = 0.55;
 // Cityhotel polaroids — shared gallery for the fullscreen image overlay
 const POLAROID_SET = [
   `${THESIS_IMG}/Cityhotel_Sketch.jpg`,
@@ -106,11 +109,11 @@ const bookPages = [
     meta: { year: '2024', place: 'Hannover', title: 'Artificial Intelligence in Architectural Design', work: 1 },
     items: [
       // Upper text block — right of the starter image, justified
-      { type: 'text', title: 'MASTER THESIS: Artificial Intelligence in Architectural Design', text: 'The current development in the field of artificial intelligence promises unprecedented potentials for creative fields such as architecture. Instead of mere automation of simple processes and efficiency improvement through enhanced tools, it could herald the beginning of a true symbiosis between humans and machines, a vision pursued in the 20th century by researchers like John McCarthy and later Nicolas Negroponte.', x: 60, y: 7, w: 34, rotation: 0, font: "'tosh-b', sans-serif", fontSize: 0.9, fontSizeMobile: 0.55, align: 'justify', mobile: { x: 8, y: 44, w: 84 } },
+      { type: 'text', title: 'MASTER THESIS: Artificial Intelligence in Architectural Design', text: 'The current development in the field of artificial intelligence promises unprecedented potentials for creative fields such as architecture. Instead of mere automation of simple processes and efficiency improvement through enhanced tools, it could herald the beginning of a true symbiosis between humans and machines, a vision pursued in the 20th century by researchers like John McCarthy and later Nicolas Negroponte.', x: 60, y: 7, w: 34, rotation: 0, font: "'tosh-b', sans-serif", fontSize: BODY_TEXT_SIZE, fontSizeMobile: BODY_TEXT_SIZE_MOBILE, align: 'justify', mobile: { x: 8, y: 44, w: 84 } },
       // thesis-starter — top of the page, left of the text
       { type: 'image', img: `${THESIS_IMG}/thesis-starter.jpeg`, x: 8, y: 7, w: 48, rotation: 0, taped: true, noBg: true, tackers: [1, 3, 2, 4], mobile: { x: 8, y: 6, w: 34 } },
       // Second text block — top aligns with the timeline's top edge
-      { type: 'text', text: 'However, the concept of artificial intelligence has undergone significant changes since its inception in the 1950s by John McCarthy. While he viewed AI as the understanding and reproduction of human intelligence, the term has now become vastly expansive, encompassing various categories of programs, from personal assistants to deep learning algorithms.', x: 8, y: 60.15, w: 34, rotation: 0, align: 'justify', font: "'tosh-b', sans-serif", fontSize: 0.85, fontSizeMobile: 0.55, mobile: { x: 8, y: 81, w: 84, h: 0 } },
+      { type: 'text', text: 'However, the concept of artificial intelligence has undergone significant changes since its inception in the 1950s by John McCarthy. While he viewed AI as the understanding and reproduction of human intelligence, the term has now become vastly expansive, encompassing various categories of programs, from personal assistants to deep learning algorithms.', x: 8, y: 60.15, w: 34, rotation: 0, align: 'justify', font: "'tosh-b', sans-serif", fontSize: BODY_TEXT_SIZE, fontSizeMobile: BODY_TEXT_SIZE_MOBILE, mobile: { x: 8, y: 81, w: 84, h: 0 } },
       // Timeline — lower right corner
       { type: 'image', img: `${THESIS_IMG}/Timeline.png`, x: 51.2, y: 60.15, w: 44, rotation: 0, taped: true, noBg: true, frame: true, frameLift: 1.5, overlay: true, tackers: [1, 3, 2, 4], mobile: { x: 54, y: 6, w: 38.1 } },
     ],
@@ -121,18 +124,18 @@ const bookPages = [
     meta: { year: '2024', place: 'Hannover', title: 'Artificial Intelligence in Architectural Design', work: 1 },
     items: [
       // Web sections — scanned negative strip; click left/right to pull the film
-      { type: 'filmstrip', x: 8, y: 53.6, w: 84, rotation: 0, mobile: { x: 8, y: 52.4, w: 74 }, strip: `${THESIS_IMG}/Sections/filmstrip1.png`, frames: 7 },
+      { type: 'filmstrip', x: 8, y: 53.6, w: 84, rotation: 0, opacity: 0.85, mobile: { x: 8, y: 52.4, w: 74 }, strip: `${THESIS_IMG}/Sections/filmstrip1.png`, frames: 7 },
       // Alternative Realities diagram — film scan, full width; the caption,
       // text and film strip below reflow around its taller box
-      { type: 'image', img: `${THESIS_IMG}/Alternative Realities Diagramm film.png`, x: 8, y: 5, w: 84, rotation: 0, noBg: true, overlay: true, mobile: { x: 8, y: 5, w: 72 } },
+      { type: 'image', img: `${THESIS_IMG}/Alternative Realities Diagramm film.png`, x: 8, y: 5, w: 84, rotation: 0, opacity: 0.85, noBg: true, overlay: true, mobile: { x: 8, y: 5, w: 72 } },
       // Subtitle — grey caption like the CV descriptions
       { type: 'text', text: 'Conceptual Diagram', x: 8, y: 34.9, w: 84, rotation: 0, font: "'automate', sans-serif", fontSize: 0.55, fontSizeMobile: 0.4, weight: 300, opacity: 0.65, mobile: { y: 30.7 } },
       // Third text block — swapped with the fourth, justified
-      { type: 'text', text: 'When someone speaks of AI today, it generally refers to a deep learning algorithm attempting to simulate cognitive functions based on vast amounts of data. However, truly autonomous thinking programs, as envisaged in the 1950s, have not been realized yet, as current computers lack the necessary level of perception or self-reflection to develop actual intelligence.', x: 8, y: 38.9, w: 84, rotation: 0, font: "'tosh-b', sans-serif", fontSize: 0.85, fontSizeMobile: 0.55, align: 'justify', mobile: { x: 8, y: 33.7, w: 84 } },
+      { type: 'text', text: 'When someone speaks of AI today, it generally refers to a deep learning algorithm attempting to simulate cognitive functions based on vast amounts of data. However, truly autonomous thinking programs, as envisaged in the 1950s, have not been realized yet, as current computers lack the necessary level of perception or self-reflection to develop actual intelligence.', x: 8, y: 38.9, w: 84, rotation: 0, font: "'tosh-b', sans-serif", fontSize: BODY_TEXT_SIZE, fontSizeMobile: BODY_TEXT_SIZE_MOBILE, align: 'justify', mobile: { x: 8, y: 33.7, w: 84 } },
       // Subtitle — grey caption like the CV descriptions
       { type: 'text', text: 'Website Interface', x: 8, y: 81.25, w: 84, rotation: 0, font: "'automate', sans-serif", fontSize: 0.55, fontSizeMobile: 0.4, weight: 300, opacity: 0.65, mobile: { y: 76.6 } },
       // Fourth text block — below the images, justified
-      { type: 'text', text: 'The rapid development in this renaissance of artificial intelligence has ignited in me a desire to delve into this topic through a master\'s thesis. The goal of this work is to examine the connections between past and current developments, describe the theoretical ideas and aspirations of these developments and their instigators, and develop a simple tool that showcases current possibilities of generative deep learning artificial intelligence in a user-friendly and helpful manner.', x: 8, y: 85.25, w: 84, rotation: 0, font: "'tosh-b', sans-serif", fontSize: 0.9, fontSizeMobile: 0.55, align: 'justify', mobile: { x: 8, y: 79.7, w: 84 } },
+      { type: 'text', text: 'The rapid development in this renaissance of artificial intelligence has ignited in me a desire to delve into this topic through a master\'s thesis. The goal of this work is to examine the connections between past and current developments, describe the theoretical ideas and aspirations of these developments and their instigators, and develop a simple tool that showcases current possibilities of generative deep learning artificial intelligence in a user-friendly and helpful manner.', x: 8, y: 85.25, w: 84, rotation: 0, font: "'tosh-b', sans-serif", fontSize: BODY_TEXT_SIZE, fontSizeMobile: BODY_TEXT_SIZE_MOBILE, align: 'justify', mobile: { x: 8, y: 79.7, w: 84 } },
     ],
   },
 
@@ -141,22 +144,41 @@ const bookPages = [
     texture: 'left_page-black',
     meta: { year: '2024', place: 'Hannover', title: 'Artificial Intelligence in Architectural Design', work: 1 },
     items: [
-      // Cleanup — GroundingDINO vehicle detection, right of the text
-      { type: 'image', img: `${THESIS_IMG}/cleanup/cleanup.png`, x: 48, y: 20, w: 42, rotation: 0, taped: true, noBg: true, tackers: [1, 3, 2, 4] },
+      // Comic pages — comic1 flips around to reveal the cleanup process it depicts
+      { type: 'image', img: `${THESIS_IMG}/comic/comic1.png`, flipImg: `${THESIS_IMG}/cleanup/cleanup.jpg`, flipText: 'The technical happenings of the image cleanup running automated in the background', flipTextMobile: 'Image Cleanup process running automated in the background', x: 8, y: 5, w: 17, rotation: 0, taped: true, noBg: true, tackers: [1, 3, 2, 4] },
+      { type: 'image', img: `${THESIS_IMG}/comic/comic2.png`, x: 30.3, y: 5, w: 17, rotation: 0, taped: true, noBg: true, tackers: [2, 4, 1, 3] },
+      { type: 'image', img: `${THESIS_IMG}/comic/comic3.png`, x: 52.7, y: 5, w: 17, rotation: 0, taped: true, noBg: true, tackers: [3, 1, 4, 2] },
+      // Fourth column — the two shorter comics, top and bottom of the row
+      { type: 'image', img: `${THESIS_IMG}/comic/comic4.png`, flipVideo: `${THESIS_IMG}/Gif3.mp4`, flipBox: { x: 8, y: 5, w: 84 }, x: 75, y: 5, w: 17, rotation: 0, taped: true, noBg: true, tackers: [4, 2, 3, 1] },
+      { type: 'image', img: `${THESIS_IMG}/comic/comic-terminate.png`, x: 75, y: 40, w: 17, rotation: 0, taped: true, noBg: true, tackers: [1, 4, 2, 3] },
+      // Subtitles — grey captions under each comic
+      { type: 'text', text: 'Upload & Cleanup', x: 8, y: 52.3, w: 17, rotation: 0, font: "'automate', sans-serif", fontSize: 0.55, fontSizeMobile: 0.4, weight: 300, opacity: 0.65 },
+      { type: 'text', text: 'Downscaling & Filing', x: 30.3, y: 52.3, w: 17, rotation: 0, font: "'automate', sans-serif", fontSize: 0.55, fontSizeMobile: 0.4, weight: 300, opacity: 0.65 },
+      { type: 'text', text: 'Instructing & Generating', x: 52.7, y: 52.3, w: 17, rotation: 0, font: "'automate', sans-serif", fontSize: 0.55, fontSizeMobile: 0.4, weight: 300, opacity: 0.65 },
+      { type: 'text', text: 'Results', x: 75, y: 17.1, w: 17, rotation: 0, font: "'automate', sans-serif", fontSize: 0.55, fontSizeMobile: 0.4, weight: 300, opacity: 0.65 },
+      // Dotted arrow — Results leads into the restart
+      { type: 'pixel-arrow', x: 75, y: 19.5, w: 17, h: 20, rotation: 0, headSize: 36 },
+      { type: 'text', text: 'Restart the Process', x: 75, y: 52.3, w: 17, rotation: 0, font: "'automate', sans-serif", fontSize: 0.55, fontSizeMobile: 0.4, weight: 300, opacity: 0.65 },
+      // How it works — the technical pipeline behind the comics
+      { type: 'text', title: 'How it works', text: 'The process begins with Grounding Dino, an AI trained to detect objects in images. We tell it what to look for — here, people and vehicles — and it marks each match with a bounding box, along with a confidence score.\n\nThese bounding boxes are passed to SAM, a second AI that doesn\'t know what objects are, but is excellent at finding their exact boundaries. It converts each bounding box into a precise mask.\n\nThe masks and the original image then get passed to Stable Diffusion, which removes everything inside the masks — cleaning the image of unwanted elements.\n\nThe user can optionally add a prompt. It isn\'t required — it simply builds on an optimized base prompt — but when given, it is weighted more heavily, steering the result in the desired direction.\n\nFinally, the Stable Diffusion API receives parameters tuned for a high-resolution, refined output. Once generation completes, the upscaling pipeline runs.\n\nIn short: the API receives our parameters, the image, and the prompt — and the more precisely we describe what we want, the better the result.', x: 8, y: 55.3, w: 84, rotation: 0, font: "'tosh-b', sans-serif", fontSize: BODY_TEXT_SIZE, fontSizeMobile: BODY_TEXT_SIZE_MOBILE, align: 'justify', bodyLineHeight: 1.35 },
     ],
   },
   {
     texture: 'right_page-black',
     meta: { year: '2024', place: 'Hannover', title: 'Artificial Intelligence in Architectural Design', work: 1 },
     items: [
-      { type: 'image', img: `${THESIS_IMG}/Example_start.png`, x: 8, y: 32, w: 35, rotation: 0, taped: true, noBg: true, tackers: [1, 3, 2, 4] },
+      { type: 'image', img: `${THESIS_IMG}/Example_start.png`, x: 8, y: 5, w: 35, rotation: 0, taped: true, noBg: true, tackers: [1, 3, 2, 4] },
       // Cityhotel Polaroid stack — slightly overlapping like stickers
-      { type: 'image', img: `${THESIS_IMG}/Cityhotel_Sketch.jpg`, x: 48, y: 24, w: 28, rotation: -3, polaroid: true, bringToFront: true, overlay: true, overlaySet: POLAROID_SET },
-      { type: 'image', img: `${THESIS_IMG}/Cityhotel_Concrete.jpg`, x: 60, y: 29, w: 28, rotation: 2, polaroid: true, bringToFront: true, overlay: true, overlaySet: POLAROID_SET },
-      { type: 'image', img: `${THESIS_IMG}/Cityhotel_Scandi.jpg`, x: 52, y: 38, w: 28, rotation: -1, polaroid: true, bringToFront: true, overlay: true, overlaySet: POLAROID_SET },
-      { type: 'image', img: `${THESIS_IMG}/Cityhotel_Blade-Runner.jpg`, x: 64, y: 43, w: 28, rotation: 4, polaroid: true, bringToFront: true, overlay: true, overlaySet: POLAROID_SET },
+      { type: 'image', img: `${THESIS_IMG}/Cityhotel_Sketch.jpg`, x: 8, y: 31.5, w: 22, rotation: -3, polaroid: true, bringToFront: true, overlay: true, overlaySet: POLAROID_SET },
+      { type: 'image', img: `${THESIS_IMG}/Cityhotel_Concrete.jpg`, x: 20, y: 36.5, w: 22, rotation: 2, polaroid: true, bringToFront: true, overlay: true, overlaySet: POLAROID_SET },
+      { type: 'image', img: `${THESIS_IMG}/Cityhotel_Scandi.jpg`, x: 12, y: 45.5, w: 22, rotation: -1, polaroid: true, bringToFront: true, overlay: true, overlaySet: POLAROID_SET },
+      { type: 'image', img: `${THESIS_IMG}/Cityhotel_Blade-Runner.jpg`, x: 24, y: 50.5, w: 22, rotation: 4, polaroid: true, bringToFront: true, overlay: true, overlaySet: POLAROID_SET },
+      // In Context — the thesis in its historical context
+      { type: 'text', title: 'In Context', text: 'This master thesis was written in 2023, at a time when the field of AI image generation was still young and largely inaccessible to creative professionals. Commercial solutions such as Midjourney and DALL·E existed, but they remained niche tools that offered little to no utility for architectural visualization. Meanwhile, Stable Diffusion — the most promising technology for this use case — was primarily accessible through its API, and the few existing interfaces required a level of technical proficiency far beyond what could be expected of a non-technical audience.\n\nAt that point, no commercialized solution addressed the specific needs of architects. This thesis therefore set out to close that gap: its goal was to build an AI interface for generating architectural renderings and images, with a deliberate focus on ease of use, making this powerful technology genuinely accessible to architectural professionals.', x: 52, y: 5, w: 40, rotation: 0, font: "'tosh-b', sans-serif", fontSize: BODY_TEXT_SIZE, fontSizeMobile: BODY_TEXT_SIZE_MOBILE, align: 'justify', bodyLineHeight: 1.4 },
       // Video poster — opens the thesis film in the video overlay
       { type: 'image', img: `${THESIS_IMG}/website.png`, x: 8, y: 72, w: 72, rotation: 0, taped: true, noBg: true, video: `${THESIS_IMG}/FinalVideo.mp4`, tackers: [4, 2, 3, 1] },
+      // Subtitle — grey caption under the video poster
+      { type: 'text', text: 'Interface Showcase', x: 8, y: 100.3, w: 72, rotation: 0, font: "'automate', sans-serif", fontSize: 0.55, fontSizeMobile: 0.4, weight: 300, opacity: 0.65 },
       // MORE — square button right of the video poster
       { type: 'button', label: 'MORE', x: 84, y: 91.25, w: 12, rotation: 0 },
     ],
@@ -209,6 +231,20 @@ const bookPages = [
     ],
   },
 ]
+
+// Hitobito-style close X — top-right affordance on every openable overlay
+function OverlayCloseX({ onClose }: { onClose: () => void }) {
+  return (
+    <button
+      type="button"
+      aria-label="Close"
+      className="overlay-close-x"
+      onClick={(e) => { e.stopPropagation(); onClose() }}
+    >
+      X
+    </button>
+  )
+}
 
 function App() {
   const [showProjects, setShowProjects] = useState(false)
@@ -1096,6 +1132,7 @@ function App() {
             pointerEvents: overlayVisible ? 'auto' : 'none',
           }}
         >
+          <OverlayCloseX onClose={() => setShowProjects(false)} />
           <div
             className="mx-auto w-full max-w-6xl px-6 pb-32 pt-20"
             onClick={(e) => e.stopPropagation()}
@@ -1130,6 +1167,7 @@ function App() {
             pointerEvents: overlayVisible ? 'auto' : 'none',
           }}
         >
+          <OverlayCloseX onClose={() => setMoreOverlay(false)} />
           <div
             className="mx-auto w-full max-w-6xl px-6 pb-32 pt-20"
             onClick={(e) => e.stopPropagation()}
@@ -1161,6 +1199,7 @@ function App() {
           transition={{ duration: 0.25, ease: 'easeOut' }}
           style={{ zIndex: 50, backgroundColor: 'rgba(0, 0, 0, 0.85)' }}
         >
+          <OverlayCloseX onClose={() => setMoreZoomed(null)} />
           {moreZoomed > 0 && (
             <button
               onClick={(e) => { e.stopPropagation(); setMoreZoomed(moreZoomed - 1) }}
@@ -1204,6 +1243,7 @@ function App() {
             backgroundColor: 'rgba(0, 0, 0, 0.9)',
           }}
         >
+          <OverlayCloseX onClose={() => setVideoOverlay(null)} />
           <video
             src={videoOverlay}
             autoPlay
@@ -1230,6 +1270,7 @@ function App() {
             backgroundColor: 'rgba(0, 0, 0, 0.9)',
           }}
         >
+          <OverlayCloseX onClose={() => setImageOverlay(null)} />
           {imageOverlayIdx > 0 && (
             <button
               onClick={(e) => { e.stopPropagation(); setImageOverlayIdx(imageOverlayIdx - 1) }}
@@ -1278,6 +1319,7 @@ function App() {
             WebkitBackdropFilter: 'blur(4px)',
           }}
         >
+          <OverlayCloseX onClose={() => setContactOverlay(false)} />
           <div className="contact-overlay" onClick={(e) => e.stopPropagation()}>
             <motion.button
               type="button"

@@ -31,6 +31,14 @@ import './Sketchbook.css';
  * @property {number} w - width as % of page width (0-100)
  * @property {number} rotation - rotation in degrees
  * @property {boolean} [taped] - show black corner dots
+ * @property {string} [flipImg] - backside image; the image flips on click (type: 'image')
+ * @property {string} [flipVideo] - backside video, loops muted; alternative to flipImg (type: 'image')
+ * @property {Object} [flipBox] - expanded geometry {x, y, w} while flipped (type: 'image')
+ * @property {string} [flipText] - caption below the backside image (type: 'image')
+ * @property {string} [flipTextMobile] - mobile variant of flipText (type: 'image')
+ * @property {number} [h] - box height as % of page height (pixel-arrow; bottom-align box on text)
+ * @property {number} [headSize] - pixel arrow head size in px (type: 'pixel-arrow')
+ * @property {number} [opacity] - item opacity (0-1), any type
  * @property {string} [strip] - pre-composed scanned film strip image (type: 'filmstrip')
  * @property {number} [frames] - frame count in the strip image (type: 'filmstrip')
  * @property {Object} [mobile] - geometry overrides merged on phones only
@@ -102,6 +110,82 @@ function FilmStrip({ strip, frames = 7, style }) {
       </div>
       <div className={`sketch-filmstrip-pull sketch-filmstrip-pull-left${idx === 0 ? ' sketch-filmstrip-pull-end' : ''}`} onClick={() => pull(-1)} aria-hidden="true" />
       <div className={`sketch-filmstrip-pull sketch-filmstrip-pull-right${idx === frames - 1 ? ' sketch-filmstrip-pull-end' : ''}`} onClick={() => pull(1)} aria-hidden="true" />
+    </div>
+  );
+}
+
+// Flip card — the image turns around its vertical axis on click to reveal a
+// second image (or a looping video) on its back. The box keeps the front
+// image's size; with flipBox it expands to the given page geometry while
+// flipped. The back is a column with the back media at the top and an
+// optional caption in the space below it.
+function FlipCard({ front, back, backVideo, backText, flipBox, w, taped, holeColor, style }) {
+  const [flipped, setFlipped] = useState(false);
+  const [frontA, setFrontA] = useState(0);
+  const [backA, setBackA] = useState(0);
+  const expanded = flipped && flipBox;
+  const boxStyle = { ...style };
+  if (expanded) {
+    boxStyle.left = `${flipBox.x}%`;
+    boxStyle.top = `${flipBox.y}%`;
+    boxStyle.width = `${flipBox.w}%`;
+  }
+  // Explicit box height from the visible face's aspect once measured — both
+  // states need lengths so the expand/collapse transition animates. The
+  // expanded height adds the back media's 6cqw top offset (in page-%).
+  const activeW = expanded ? flipBox.w : w;
+  const activeA = expanded ? backA : frontA;
+  if (activeA) {
+    const margin = expanded ? 0.06 * activeW * PAGE_ASPECT : 0;
+    boxStyle.height = `${(activeW * PAGE_ASPECT) / activeA + margin}%`;
+  }
+  return (
+    <div
+      className={`sketch-item sketch-item-clickable sketch-flip${flipped ? ' sketch-flip-flipped' : ''}${expanded ? ' sketch-flip-expanded' : ''}`}
+      style={boxStyle}
+      role="button"
+      tabIndex={0}
+      aria-label={flipped ? 'Show the comic' : 'Show the technical image'}
+      onClick={() => setFlipped((f) => !f)}
+      onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setFlipped((f) => !f); } }}
+    >
+      {taped && (
+        <>
+          <div className="sketch-hole sketch-hole-tl" style={{ backgroundColor: holeColor }} />
+          <div className="sketch-hole sketch-hole-tr" style={{ backgroundColor: holeColor }} />
+          <div className="sketch-hole sketch-hole-bl" style={{ backgroundColor: holeColor }} />
+          <div className="sketch-hole sketch-hole-br" style={{ backgroundColor: holeColor }} />
+        </>
+      )}
+      <div className="sketch-flip-inner">
+        <img
+          src={front}
+          alt=""
+          className="sketch-flip-face"
+          draggable={false}
+          onLoad={(e) => setFrontA(e.currentTarget.naturalWidth / e.currentTarget.naturalHeight)}
+        />
+        <div className="sketch-flip-back">
+          {backVideo ? (
+            <video
+              src={backVideo}
+              autoPlay
+              loop
+              muted
+              playsInline
+              onLoadedMetadata={(e) => setBackA(e.currentTarget.videoWidth / e.currentTarget.videoHeight)}
+            />
+          ) : (
+            <img
+              src={back}
+              alt=""
+              draggable={false}
+              onLoad={(e) => setBackA(e.currentTarget.naturalWidth / e.currentTarget.naturalHeight)}
+            />
+          )}
+          {backText && <div className="sketch-flip-back-text">{backText}</div>}
+        </div>
+      </div>
     </div>
   );
 }
@@ -383,6 +467,7 @@ export default function Sketchbook({
       width: `${item.w}%`,
       transform: `rotate(${item.rotation}deg)`,
     };
+    if (item.opacity != null) style.opacity = item.opacity;
 
     if (item.type === 'filmstrip') {
       return <FilmStrip key={key} strip={item.strip} frames={item.frames} style={style} />;
@@ -398,6 +483,23 @@ export default function Sketchbook({
       if (item.frame) classes.push('sketch-item-framed');
       const imageStyle = { ...style };
       if (item.shadow) imageStyle.boxShadow = item.shadow;
+      // Flip card — front image turns around to reveal the back image/video
+      if (item.flipImg || item.flipVideo) {
+        return (
+          <FlipCard
+            key={key}
+            front={isMobile && item.imgMobile ? item.imgMobile : item.img}
+            back={item.flipImg}
+            backVideo={item.flipVideo}
+            backText={isMobile && item.flipTextMobile ? item.flipTextMobile : item.flipText}
+            flipBox={item.flipBox}
+            w={item.w}
+            taped={item.taped}
+            holeColor={item.holeColor || holeColorFor(pageIndex)}
+            style={imageStyle}
+          />
+        );
+      }
       return (
         <div
           key={key}
@@ -439,6 +541,21 @@ export default function Sketchbook({
               <path d="M5 50 C 20 40, 40 55, 60 45 S 85 50, 95 50" />
               <path d="M88 44 L 95 50 L 88 56" />
             </g>
+          </svg>
+        </div>
+      );
+    }
+
+    if (item.type === 'pixel-arrow') {
+      // Dotted pixel arrow — the book arrows' pixel head (slightly smaller)
+      // on a pixel-dotted shaft; h spans the distance it points across
+      const head = item.headSize || 36;
+      const arrowStyle = { ...style, height: `${item.h}%` };
+      return (
+        <div key={key} className="sketch-item sketch-pixel-arrow" style={arrowStyle}>
+          <div className="sketch-pixel-arrow-shaft" style={{ width: head * 0.2, '--dot': `${head * 0.2}px` }} />
+          <svg width={head} height={head * 0.4} viewBox="0 0 20 8" fill="currentColor" shapeRendering="crispEdges">
+            <path d="M4 0 H16 V4 H12 V8 H8 V4 H4 Z" />
           </svg>
         </div>
       );
@@ -692,10 +809,27 @@ export default function Sketchbook({
       ];
     }
     const isLeft = pageIndex % 2 === 0;
-    // Projects spanning several spreads keep their work number
-    const workNum = String(meta.work != null ? meta.work : spread).padStart(2, '0');
-    // Total after the intro spread (the impressum spread counts, as before)
-    const totalWorks = Math.ceil(pages.length / 2) - 1;
+    // Work number: multi-spread projects share meta.work; every other
+    // spread is its own work. The label counts DISTINCT works up to this
+    // spread, so a project spanning two spreads only advances the count once.
+    const workIdFor = (s) => {
+      const m = pages[s * 2]?.meta;
+      return m?.work != null ? m.work : `s${s}`;
+    };
+    const ids = [];
+    for (let s = 1; s <= spread; s++) {
+      const id = workIdFor(s);
+      if (!ids.includes(id)) ids.push(id);
+    }
+    const workNum = String(ids.length).padStart(2, '0');
+    // Total: distinct works across all labelled spreads (impressum counts)
+    const lastSpread = Math.ceil(pages.length / 2) - 1;
+    const allIds = [];
+    for (let s = 1; s <= lastSpread; s++) {
+      const id = workIdFor(s);
+      if (!allIds.includes(id)) allIds.push(id);
+    }
+    const totalWorks = allIds.length;
     if (isLeft) {
       return [
         { type: 'corner-text', text: `WORK.${workNum}/${totalWorks}`, x: 5, y: 2.5, align: 'left' },
