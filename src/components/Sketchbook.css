@@ -88,10 +88,12 @@
     0 2px 4px rgba(0, 0, 0, 0.15);
 }
 
-/* Film strip — interactive negative strip; click left/right to pull the film */
+/* Film strip — scanned negative strip; click left/right to pull the film.
+   The strip image carries its own film base and sprocket holes. The window
+   keeps a fixed aspect (the invariant film height) so the layout below is
+   stable while the scan loads. */
 .sketch-filmstrip-window {
-  background: rgba(13, 13, 13, 0.72);
-  padding: 16px 8px;
+  aspect-ratio: 1000 / 458;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
   overflow: hidden;
   pointer-events: auto !important;
@@ -104,8 +106,7 @@
   will-change: transform;
 }
 
-.sketch-filmstrip-frame {
-  flex: 0 0 100%;
+.sketch-filmstrip-strip {
   width: 100%;
   height: auto;
   display: block;
@@ -159,28 +160,6 @@
 /* No arrow when there are no frames left in that direction */
 .sketch-filmstrip-pull-end::after {
   display: none;
-}
-
-.sketch-filmstrip-window::before,
-.sketch-filmstrip-window::after {
-  content: '';
-  position: absolute;
-  left: 8px;
-  right: 8px;
-  height: 7px;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='7'%3E%3Crect x='3' y='1' width='8' height='5' rx='1.5' fill='%23cfcfcf' fill-opacity='0.4'/%3E%3C/svg%3E");
-  background-repeat: repeat-x;
-  background-size: 14px 7px;
-  z-index: 3;
-  pointer-events: none;
-}
-
-.sketch-filmstrip-window::before {
-  top: 4px;
-}
-
-.sketch-filmstrip-window::after {
-  bottom: 4px;
 }
 
 /* Bring to front on hover */
@@ -297,28 +276,6 @@
   .sketch-corner-link {
     padding: 5px 10px;
     margin: -5px -10px;
-  }
-
-  /* Film base and sprocket holes scale with the narrow window — the fixed
-     16px/7px sizes are ~3x too thick relative to the phone page */
-  .sketch-filmstrip-window {
-    padding: 2.4% 1.2%;
-  }
-
-  .sketch-filmstrip-window::before,
-  .sketch-filmstrip-window::after {
-    height: 4px;
-    left: 4px;
-    right: 4px;
-    background-size: 9px 4px;
-  }
-
-  .sketch-filmstrip-window::before {
-    top: 1px;
-  }
-
-  .sketch-filmstrip-window::after {
-    bottom: 1px;
   }
 }
 

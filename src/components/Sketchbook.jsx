@@ -31,7 +31,8 @@ import './Sketchbook.css';
  * @property {number} w - width as % of page width (0-100)
  * @property {number} rotation - rotation in degrees
  * @property {boolean} [taped] - show black corner dots
- * @property {string[]} [images] - film strip frames (type: 'filmstrip')
+ * @property {string} [strip] - pre-composed scanned film strip image (type: 'filmstrip')
+ * @property {number} [frames] - frame count in the strip image (type: 'filmstrip')
  * @property {Object} [mobile] - geometry overrides merged on phones only
  * (x, y, w, h; h: 0 removes a desktop bottom-align box)
  */
@@ -73,10 +74,17 @@ const REF_MOBILE_PAGE_H = 540;
 // previous frame, the right half the next.
 function FilmStrip({ strip, frames = 7, style }) {
   const [idx, setIdx] = useState(0);
+  // Natural aspect of the scan, measured on load — scans of the same strip
+  // come at different crops and resolutions, so the slot geometry is derived
+  // per image instead of hardcoded.
+  const [aspect, setAspect] = useState(0);
   const pull = (dir) => setIdx((i) => Math.max(0, Math.min(frames - 1, i + dir)));
-  // Slot width as a fraction of the window width — tuned so the window
-  // height matches the old simulated film (desktop stays as tuned)
-  const SLOT = 0.857;
+  // The window height is the invariant: every scan is scaled to the same
+  // film height (a fraction of the window width — sized so the full-width
+  // diagram film above plus the texts below fit the page). The slot
+  // (frame + gap) then covers TARGET_H * aspect / frames window widths.
+  const TARGET_H = 0.458;
+  const SLOT = aspect ? (TARGET_H * aspect) / frames : 0.857;
   const IMG = SLOT * frames;
   // Left edge of the strip image in window widths, centered on frame idx,
   // clamped so the strip never leaves the window at the ends
@@ -84,7 +92,13 @@ function FilmStrip({ strip, frames = 7, style }) {
   return (
     <div className="sketch-item sketch-filmstrip-window" style={style}>
       <div className="sketch-filmstrip-track" style={{ width: `${IMG * 100}%`, transform: `translateX(${(left / IMG) * 100}%)` }}>
-        <img src={strip} alt="" className="sketch-filmstrip-strip" draggable={false} />
+        <img
+          src={strip}
+          alt=""
+          className="sketch-filmstrip-strip"
+          draggable={false}
+          onLoad={(e) => setAspect(e.currentTarget.naturalWidth / e.currentTarget.naturalHeight)}
+        />
       </div>
       <div className={`sketch-filmstrip-pull sketch-filmstrip-pull-left${idx === 0 ? ' sketch-filmstrip-pull-end' : ''}`} onClick={() => pull(-1)} aria-hidden="true" />
       <div className={`sketch-filmstrip-pull sketch-filmstrip-pull-right${idx === frames - 1 ? ' sketch-filmstrip-pull-end' : ''}`} onClick={() => pull(1)} aria-hidden="true" />
@@ -371,7 +385,7 @@ export default function Sketchbook({
     };
 
     if (item.type === 'filmstrip') {
-      return <FilmStrip key={key} images={item.images} style={style} />;
+      return <FilmStrip key={key} strip={item.strip} frames={item.frames} style={style} />;
     }
 
     if (item.type === 'image') {
