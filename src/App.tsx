@@ -24,11 +24,12 @@ const projectItems = [
   { id: '10', img: 'https://picsum.photos/id/1035/600/850?grayscale', url: 'https://example.com/ten', height: 550 },
 ]
 
-// Sketchbook pages — 13 spreads (26 pages).
+// Sketchbook pages — 16 spreads (31 pages).
 // Spread 0: Introduction & CV (no corner text)
-// Spread 1: Master Thesis — "Artificial Intelligence in Architectural Design"
-// Spread 2: Master Thesis continued (video + MORE)
-// Spreads 3-13: Placeholder for future projects
+// Spread 1: Master Thesis — "Artificial Intelligence in Architectural Design" (intro, Example & polaroids)
+// Spread 2: Master Thesis continued (history, concept & website interface)
+// Spread 3: Master Thesis continued (comics, video + MORE)
+// Spreads 4-14: Placeholder for future projects
 // Corner text (spread number, year, place, title) is auto-injected by Sketchbook
 // for all spreads except spread 0, using the `meta` field on the left page.
 
@@ -108,38 +109,78 @@ const bookPages = [
     texture: 'left_page-black',
     meta: { year: '2024', place: 'Hannover', title: 'Artificial Intelligence in Architectural Design', work: 1 },
     items: [
-      // Upper text block — right of the starter image, justified
-      { type: 'text', title: 'MASTER THESIS: Artificial Intelligence in Architectural Design', text: 'The current development in the field of artificial intelligence promises unprecedented potentials for creative fields such as architecture. Instead of mere automation of simple processes and efficiency improvement through enhanced tools, it could herald the beginning of a true symbiosis between humans and machines, a vision pursued in the 20th century by researchers like John McCarthy and later Nicolas Negroponte.', x: 60, y: 7, w: 34, rotation: 0, font: "'tosh-b', sans-serif", fontSize: BODY_TEXT_SIZE, fontSizeMobile: BODY_TEXT_SIZE_MOBILE, align: 'justify', mobile: { x: 8, y: 44, w: 84 } },
-      // thesis-starter — top of the page, left of the text
-      { type: 'image', img: `${THESIS_IMG}/thesis-starter.jpeg`, x: 8, y: 7, w: 48, rotation: 0, taped: true, noBg: true, tackers: [1, 3, 2, 4], mobile: { x: 8, y: 6, w: 34 } },
-      // Second text block — top aligns with the timeline's top edge
-      { type: 'text', text: 'However, the concept of artificial intelligence has undergone significant changes since its inception in the 1950s by John McCarthy. While he viewed AI as the understanding and reproduction of human intelligence, the term has now become vastly expansive, encompassing various categories of programs, from personal assistants to deep learning algorithms.', x: 8, y: 60.15, w: 34, rotation: 0, align: 'justify', font: "'tosh-b', sans-serif", fontSize: BODY_TEXT_SIZE, fontSizeMobile: BODY_TEXT_SIZE_MOBILE, mobile: { x: 8, y: 81, w: 84, h: 0 } },
-      // Timeline — lower right corner
-      { type: 'image', img: `${THESIS_IMG}/Timeline.png`, x: 51.2, y: 60.15, w: 44, rotation: 0, taped: true, noBg: true, frame: true, frameLift: 1.5, overlay: true, tackers: [1, 3, 2, 4], mobile: { x: 54, y: 6, w: 38.1 } },
+      // thesis-starter full page — same proportions as the page, fits edge to edge
+      { type: 'image', img: `${THESIS_IMG}/thesis-starter-full-page.png`, x: -5.6, y: -5.75, w: 111.1, rotation: 0, taped: true, noBg: true, tackers: [1, 3, 2, 4], behind: true, holeInset: '1.5cqw' },
+      // Header — statement style (t26-carbon caps, spread-0 sizing) at the top of the building
+      { type: 'statement', text: 'MASTER\nTHESIS:\nARTIFICIAL\nINTELLIGENCE\nIN\nARCHITECTURAL\nDESIGN', x: 14.8, y: 13, w: 84, h: 37.8, rotation: 0, aligns: { 0: 'left', 4: 'left' }, blend: true },
+      // Solid header at 50% on top of the blended one — keeps the text
+      // predominantly light while the blend shows through underneath
+      { type: 'statement', text: 'MASTER\nTHESIS:\nARTIFICIAL\nINTELLIGENCE\nIN\nARCHITECTURAL\nDESIGN', x: 14.8, y: 13, w: 84, h: 37.8, rotation: 0, aligns: { 0: 'left', 4: 'left' }, opacity: 0.75, hoverFull: true },
+      // Soft dark backdrop behind the text, fading out at its edges
+      { type: 'scrim', x: -5.6, y: 85.7, w: 110, h: 17, rotation: 0, band: true, mobile: { y: 78, h: 22 } },
+      // Upper text block — bottom-aligned over the image, justified
+      { type: 'text', text: 'The current development in the field of artificial intelligence promises unprecedented potentials for creative fields such as architecture. Instead of mere automation of simple processes and efficiency improvement through enhanced tools, it could herald the beginning of a true symbiosis between humans and machines, a vision pursued in the 20th century by researchers like John McCarthy and later Nicolas Negroponte.', x: -0.6, y: 85.7, w: 100, h: 17, rotation: 0, vCenter: true, font: "'tosh-b', sans-serif", fontSize: BODY_TEXT_SIZE, fontSizeMobile: BODY_TEXT_SIZE_MOBILE, align: 'justify', mobile: { x: -0.6, y: 78, w: 100, h: 22 } },
     ],
   },
-  // Right page — black paper
+  // Right page — black paper: Example start screen and Cityhotel polaroids
+  {
+    texture: 'right_page-black',
+    meta: { year: '2024', place: 'Hannover', title: 'Artificial Intelligence in Architectural Design', work: 1 },
+    items: [
+      { type: 'image', img: `${THESIS_IMG}/Example_start.png`, x: 25, y: 5, w: 50, rotation: 0, taped: true, noBg: true, tackers: [1, 3, 2, 4] },
+      // Subtitle — grey caption at the image's lower right corner
+      { type: 'text', text: 'Original Photograph', x: 25, y: 41, w: 50, rotation: 0, font: "'automate', sans-serif", fontSize: 0.55, fontSizeMobile: 0.4, weight: 300, opacity: 0.65, align: 'right' },
+      // Interactivity hint — Hitobito footnote at the very bottom
+      { type: 'text', text: '*SOME ELEMENTS OF THE PORTFOLIO ARE INTERACTABLE.', x: 8, y: 102, w: 84, rotation: 0, font: "'Hitobito', sans-serif", fontSize: 0.7, fontSizeMobile: 0.45, align: 'center', hoverLight: true },
+      // Cityhotel Polaroids — scanned frames, big knocked-around pile
+      { type: 'image', img: `${THESIS_IMG}/polaroid-composed-sketch.png`, x: 21, y: 49, w: 34, rotation: -6, noBg: true, pileMember: true, bringToFront: true, overlay: true, overlaySet: POLAROID_SET, overlayImg: `${THESIS_IMG}/Cityhotel_Sketch.jpg` },
+      { type: 'image', img: `${THESIS_IMG}/polaroid-composed-concrete.png`, x: 14, y: 64, w: 34, rotation: -8, noBg: true, pileMember: true, bringToFront: true, overlay: true, overlaySet: POLAROID_SET, overlayImg: `${THESIS_IMG}/Cityhotel_Concrete.jpg` },
+      { type: 'image', img: `${THESIS_IMG}/polaroid-composed-scandi.png`, x: 38, y: 52, w: 34, rotation: 14, noBg: true, pileMember: true, bringToFront: true, overlay: true, overlaySet: POLAROID_SET, overlayImg: `${THESIS_IMG}/Cityhotel_Scandi.jpg` },
+      { type: 'image', img: `${THESIS_IMG}/polaroid-composed-bladerunner.png`, x: 52, y: 67, w: 34, rotation: 10, noBg: true, pileMember: true, bringToFront: true, overlay: true, overlaySet: POLAROID_SET, overlayImg: `${THESIS_IMG}/Cityhotel_Blade-Runner.jpg` },
+      // One continuous border tracing the polaroid pile's outline — shown on hover
+      { type: 'pileoutline', x: 0, y: 0, w: 100, h: 100, rotation: 0, gap: 1.2, line: 0.14, aspect: 0.826, rects: [
+        { x: 21, y: 49, w: 34, r: -6 },
+        { x: 14, y: 64, w: 34, r: -8 },
+        { x: 38, y: 52, w: 34, r: 14 },
+        { x: 52, y: 67, w: 34, r: 10 },
+      ] },
+    ],
+  },
+
+  // ===== SPREAD 2: WORK01 continued — history, concept & website interface =====
+  // Left page — black paper: timeline over bottom text
+  {
+    texture: 'left_page-black',
+    meta: { year: '2024', place: 'Hannover', title: 'Artificial Intelligence in Architectural Design', work: 1 },
+    items: [
+      // History text — full width, bottom of the page
+      { type: 'text', text: 'However, the concept of artificial intelligence has undergone significant changes since its inception in the 1950s by John McCarthy. While he viewed AI as the understanding and reproduction of human intelligence, the term has now become vastly expansive, encompassing various categories of programs, from personal assistants to deep learning algorithms.', x: 8, y: 89, w: 84, h: 8, rotation: 0, align: 'justify', font: "'tosh-b', sans-serif", fontSize: BODY_TEXT_SIZE, fontSizeMobile: BODY_TEXT_SIZE_MOBILE, mobile: { x: 8, y: 84, w: 84, h: 13 } },
+      // Timeline — centered, from the page's top edge, as large as the
+      // gap to the text below allows
+      { type: 'image', img: `${THESIS_IMG}/Timeline.png`, x: 8.65, y: 5, w: 82.7, rotation: 0, taped: true, noBg: true, frame: true, frameLift: 1.5, overlay: true, tackers: [1, 3, 2, 4], mobile: { x: 11, y: 5, w: 78 } },
+    ],
+  },
   {
     texture: 'right_page-black',
     meta: { year: '2024', place: 'Hannover', title: 'Artificial Intelligence in Architectural Design', work: 1 },
     items: [
       // Web sections — scanned negative strip; click left/right to pull the film
-      { type: 'filmstrip', x: 8, y: 53.6, w: 84, rotation: 0, opacity: 0.85, mobile: { x: 8, y: 52.4, w: 74 }, strip: `${THESIS_IMG}/Sections/filmstrip1.png`, frames: 7 },
+      { type: 'filmstrip', x: 8, y: 53.6, w: 84, rotation: 0, opacity: 0.85, mobile: { x: 13, y: 52.4, w: 74 }, strip: `${THESIS_IMG}/Sections/filmstrip1-small.png`, frames: 7 },
       // Alternative Realities diagram — film scan, full width; the caption,
       // text and film strip below reflow around its taller box
-      { type: 'image', img: `${THESIS_IMG}/Alternative Realities Diagramm film.png`, x: 8, y: 5, w: 84, rotation: 0, opacity: 0.85, noBg: true, overlay: true, mobile: { x: 8, y: 5, w: 72 } },
+      { type: 'image', img: `${THESIS_IMG}/Alternative Realities Diagramm film-preview.png`, x: 8, y: 5, w: 84, rotation: 0, opacity: 0.85, noBg: true, overlay: true, overlaySet: [`${THESIS_IMG}/Alternative Realities Diagramm film.png`], overlayImg: `${THESIS_IMG}/Alternative Realities Diagramm film.png`, mobile: { x: 14, y: 5, w: 72 } },
       // Subtitle — grey caption like the CV descriptions
-      { type: 'text', text: 'Conceptual Diagram', x: 8, y: 34.9, w: 84, rotation: 0, font: "'automate', sans-serif", fontSize: 0.55, fontSizeMobile: 0.4, weight: 300, opacity: 0.65, mobile: { y: 30.7 } },
+      { type: 'text', text: 'Conceptual Diagram', x: 8, y: 34.9, w: 84, rotation: 0, align: 'right', font: "'automate', sans-serif", fontSize: 0.55, fontSizeMobile: 0.4, weight: 300, opacity: 0.65, mobile: { x: 14, y: 30.7, w: 72 } },
       // Third text block — swapped with the fourth, justified
       { type: 'text', text: 'When someone speaks of AI today, it generally refers to a deep learning algorithm attempting to simulate cognitive functions based on vast amounts of data. However, truly autonomous thinking programs, as envisaged in the 1950s, have not been realized yet, as current computers lack the necessary level of perception or self-reflection to develop actual intelligence.', x: 8, y: 38.9, w: 84, rotation: 0, font: "'tosh-b', sans-serif", fontSize: BODY_TEXT_SIZE, fontSizeMobile: BODY_TEXT_SIZE_MOBILE, align: 'justify', mobile: { x: 8, y: 33.7, w: 84 } },
       // Subtitle — grey caption like the CV descriptions
-      { type: 'text', text: 'Website Interface', x: 8, y: 81.25, w: 84, rotation: 0, font: "'automate', sans-serif", fontSize: 0.55, fontSizeMobile: 0.4, weight: 300, opacity: 0.65, mobile: { y: 76.6 } },
+      { type: 'text', text: 'Website Interface', x: 8, y: 81.25, w: 84, rotation: 0, align: 'right', font: "'automate', sans-serif", fontSize: 0.55, fontSizeMobile: 0.4, weight: 300, opacity: 0.65, mobile: { x: 13, y: 76.6, w: 74 } },
       // Fourth text block — below the images, justified
       { type: 'text', text: 'The rapid development in this renaissance of artificial intelligence has ignited in me a desire to delve into this topic through a master\'s thesis. The goal of this work is to examine the connections between past and current developments, describe the theoretical ideas and aspirations of these developments and their instigators, and develop a simple tool that showcases current possibilities of generative deep learning artificial intelligence in a user-friendly and helpful manner.', x: 8, y: 85.25, w: 84, rotation: 0, font: "'tosh-b', sans-serif", fontSize: BODY_TEXT_SIZE, fontSizeMobile: BODY_TEXT_SIZE_MOBILE, align: 'justify', mobile: { x: 8, y: 79.7, w: 84 } },
     ],
   },
 
-  // ===== SPREAD 2: WORK01 continued — images, video and MORE button =====
+  // ===== SPREAD 3: WORK01 continued — comics, video and MORE button =====
   {
     texture: 'left_page-black',
     meta: { year: '2024', place: 'Hannover', title: 'Artificial Intelligence in Architectural Design', work: 1 },
@@ -167,27 +208,18 @@ const bookPages = [
     texture: 'right_page-black',
     meta: { year: '2024', place: 'Hannover', title: 'Artificial Intelligence in Architectural Design', work: 1 },
     items: [
-      { type: 'image', img: `${THESIS_IMG}/Example_start.png`, x: 8, y: 5, w: 35, rotation: 0, taped: true, noBg: true, tackers: [1, 3, 2, 4] },
-      // Cityhotel Polaroid stack — slightly overlapping like stickers
-      { type: 'image', img: `${THESIS_IMG}/Cityhotel_Sketch.jpg`, x: 8, y: 31.5, w: 22, rotation: -3, polaroid: true, bringToFront: true, overlay: true, overlaySet: POLAROID_SET },
-      { type: 'image', img: `${THESIS_IMG}/Cityhotel_Concrete.jpg`, x: 20, y: 36.5, w: 22, rotation: 2, polaroid: true, bringToFront: true, overlay: true, overlaySet: POLAROID_SET },
-      { type: 'image', img: `${THESIS_IMG}/Cityhotel_Scandi.jpg`, x: 12, y: 45.5, w: 22, rotation: -1, polaroid: true, bringToFront: true, overlay: true, overlaySet: POLAROID_SET },
-      { type: 'image', img: `${THESIS_IMG}/Cityhotel_Blade-Runner.jpg`, x: 24, y: 50.5, w: 22, rotation: 4, polaroid: true, bringToFront: true, overlay: true, overlaySet: POLAROID_SET },
-      // In Context — the thesis in its historical context
-      { type: 'text', title: 'In Context', text: 'This master thesis was written in 2023, at a time when the field of AI image generation was still young and largely inaccessible to creative professionals. Commercial solutions such as Midjourney and DALL·E existed, but they remained niche tools that offered little to no utility for architectural visualization. Meanwhile, Stable Diffusion — the most promising technology for this use case — was primarily accessible through its API, and the few existing interfaces required a level of technical proficiency far beyond what could be expected of a non-technical audience.\n\nAt that point, no commercialized solution addressed the specific needs of architects. This thesis therefore set out to close that gap: its goal was to build an AI interface for generating architectural renderings and images, with a deliberate focus on ease of use, making this powerful technology genuinely accessible to architectural professionals.', x: 52, y: 5, w: 40, rotation: 0, font: "'tosh-b', sans-serif", fontSize: BODY_TEXT_SIZE, fontSizeMobile: 0.45, align: 'justify', bodyLineHeight: 1.4 },
-      // Video poster — opens the thesis film in the video overlay
-      { type: 'image', img: `${THESIS_IMG}/website.png`, x: 8, y: 72, w: 72, rotation: 0, taped: true, noBg: true, video: `${THESIS_IMG}/FinalVideo.mp4`, tackers: [4, 2, 3, 1] },
+      // In Context — the thesis in its historical context, full width like the comics text
+      { type: 'text', title: 'In Context', text: 'This master thesis was written in 2023, at a time when the field of AI image generation was still young and largely inaccessible to non-technologist creatives. Commercial solutions such as Midjourney and DALL·E existed, but they remained niche tools that offered little to no utility for architectural visualization or conceptualization. Meanwhile, Stable Diffusion — the most promising technology for this use case — was primarily accessible through its API, and the few existing interfaces required a level of technical proficiency far beyond what could be expected of a non-technical audience.\n\nAt that point, no commercialized solution addressed the specific needs of architects. This thesis therefore set out to close that gap: its goal was to build an AI interface for generating architectural concepts and renderings, with a deliberate focus on ease of use, making this powerful technology genuinely accessible to students and professionals in the field of architecture.', x: 8, y: 5, w: 84, rotation: 0, font: "'tosh-b', sans-serif", fontSize: BODY_TEXT_SIZE, fontSizeMobile: 0.45, align: 'justify', bodyLineHeight: 1.4 },
+      // Video poster — opens the thesis film in the video overlay, full width like the CV image
+      { type: 'image', img: `${THESIS_IMG}/website.png`, x: 8, y: 47, w: 84, rotation: 0, taped: true, noBg: true, video: `${THESIS_IMG}/FinalVideo.mp4`, tackers: [4, 2, 3, 1] },
       // Subtitle — grey caption under the video poster
-      { type: 'text', text: 'Interface Showcase', x: 8, y: 100.3, w: 72, rotation: 0, font: "'automate', sans-serif", fontSize: 0.55, fontSizeMobile: 0.4, weight: 300, opacity: 0.65 },
-      // MORE — square button right of the video poster
-      { type: 'button', label: 'MORE', x: 84, y: 91.25, w: 12, rotation: 0 },
+      { type: 'text', text: 'Interface Showcase', x: 20, y: 80, w: 72, rotation: 0, align: 'right', font: "'automate', sans-serif", fontSize: 0.55, fontSizeMobile: 0.4, weight: 300, opacity: 0.65 },
+      // MORE — square button, unchanged
+      { type: 'button', label: 'MORE', x: 80, y: 91.25, w: 12, rotation: 0 },
     ],
   },
 
-  // ===== SPREADS 2-12: Placeholder pages for future projects =====
-  // Spread 3
-  { meta: { year: '', place: '', title: '' }, items: [] },
-  { meta: { year: '', place: '', title: '' }, items: [] },
+  // ===== SPREADS 4-14: Placeholder pages for future projects =====
   // Spread 4
   { meta: { year: '', place: '', title: '' }, items: [] },
   { meta: { year: '', place: '', title: '' }, items: [] },
@@ -218,8 +250,11 @@ const bookPages = [
   // Spread 13
   { meta: { year: '', place: '', title: '' }, items: [] },
   { meta: { year: '', place: '', title: '' }, items: [] },
+  // Spread 14
+  { meta: { year: '', place: '', title: '' }, items: [] },
+  { meta: { year: '', place: '', title: '' }, items: [] },
 
-  // ===== SPREAD 14: IMPRESSUM — last page, black left, no right page =====
+  // ===== SPREAD 15: IMPRESSUM — last page, black left, no right page =====
   {
     meta: { year: '2026', place: '', title: '' },
     impressum: true,

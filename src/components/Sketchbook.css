@@ -497,10 +497,10 @@
   pointer-events: none;
 }
 
-.sketch-hole-tl { top: 3.5cqw; left: 3.5cqw; }
-.sketch-hole-tr { top: 3.5cqw; right: 3.5cqw; }
-.sketch-hole-bl { bottom: 3.5cqw; left: 3.5cqw; }
-.sketch-hole-br { bottom: 3.5cqw; right: 3.5cqw; }
+.sketch-hole-tl { top: var(--hole-inset, 3.5cqw); left: var(--hole-inset, 3.5cqw); }
+.sketch-hole-tr { top: var(--hole-inset, 3.5cqw); right: var(--hole-inset, 3.5cqw); }
+.sketch-hole-bl { bottom: var(--hole-inset, 3.5cqw); left: var(--hole-inset, 3.5cqw); }
+.sketch-hole-br { bottom: var(--hole-inset, 3.5cqw); right: var(--hole-inset, 3.5cqw); }
 
 /* Standalone hole marks (e.g. mirrored from the facing page) */
 .sketch-holes {
@@ -644,3 +644,35 @@
   pointer-events: none !important;
 }
 
+
+/* Hover-full statement overlay — fully opaque while hovered */
+.sketch-item-statement.sketch-statement-hover {
+  pointer-events: auto !important;
+}
+
+.sketch-item-statement.sketch-statement-hover:hover {
+  opacity: 1 !important;
+}
+
+
+
+
+/* Footnote hover light-up */
+.sketch-item-text.sketch-text-hoverlight {
+  pointer-events: auto !important;
+}
+
+.sketch-text-hoverlight:hover {
+  color: #fff;
+}
+
+/* Pile frame — one border around a group of items, shown while the
+   footnote is hovered (it sits before the framebox in the page) */
+.sketch-pile-frame {
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.sketch-text-hoverlight:hover ~ .sketch-pile-frame {
+  opacity: 1;
+}

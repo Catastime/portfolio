@@ -101,6 +101,7 @@ function FilmStrip({ strip, frames = 7, style }) {
     <div className="sketch-item sketch-filmstrip-window" style={style}>
       <div className="sketch-filmstrip-track" style={{ width: `${IMG * 100}%`, transform: `translateX(${(left / IMG) * 100}%)` }}>
         <img
+          key={strip}
           src={strip}
           alt=""
           className="sketch-filmstrip-strip"
@@ -159,6 +160,7 @@ function FlipCard({ front, back, backVideo, backText, flipBox, w, taped, holeCol
       )}
       <div className="sketch-flip-inner">
         <img
+          key={front}
           src={front}
           alt=""
           className="sketch-flip-face"
@@ -177,6 +179,7 @@ function FlipCard({ front, back, backVideo, backText, flipBox, w, taped, holeCol
             />
           ) : (
             <img
+              key={back}
               src={back}
               alt=""
               draggable={false}
@@ -481,7 +484,13 @@ export default function Sketchbook({
       if (item.bringToFront) classes.push('sketch-item-bring-to-front');
       if (item.video || item.overlay) classes.push('sketch-item-clickable');
       if (item.frame) classes.push('sketch-item-framed');
+      if (item.pileMember) classes.push('sketch-pile-member');
       const imageStyle = { ...style };
+      // behind: drop to the text layer (z-index 0) — first in DOM order,
+      // so the text items paint above it
+      if (item.behind) imageStyle.zIndex = 0;
+      // holeInset moves the tape dots outward (CSS default: 3.5cqw)
+      if (item.holeInset) imageStyle['--hole-inset'] = item.holeInset;
       if (item.shadow) imageStyle.boxShadow = item.shadow;
       // Flip card — front image turns around to reveal the back image/video
       if (item.flipImg || item.flipVideo) {
@@ -507,7 +516,10 @@ export default function Sketchbook({
           style={imageStyle}
           onClick={item.video ? () => onVideoOpen?.(item.video) : item.overlay ? () => {
             const set = item.overlaySet || [item.img];
-            onImageOpen?.(set, Math.max(0, set.indexOf(item.img)));
+            // overlayImg: the gallery image this item represents when its own
+            // img is not part of the set (e.g. a composited polaroid frame)
+            const key = item.overlayImg || item.img;
+            onImageOpen?.(set, Math.max(0, set.indexOf(key)));
           } : undefined}
         >
           {item.taped && (() => {
@@ -528,7 +540,7 @@ export default function Sketchbook({
           {item.video && (
             <div className="sketch-play-btn"><div className="sketch-play-triangle" /></div>
           )}
-          <img src={isMobile && item.imgMobile ? item.imgMobile : item.img} alt="" className="sketch-image" />
+          <img key={isMobile && item.imgMobile ? item.imgMobile : item.img} src={isMobile && item.imgMobile ? item.imgMobile : item.img} alt="" className="sketch-image" />
         </div>
       );
     }
@@ -593,12 +605,13 @@ export default function Sketchbook({
       if (item.align) textStyle.textAlign = item.align;
       if (item.weight) textStyle.fontWeight = item.weight;
       if (item.opacity != null) textStyle.opacity = item.opacity;
-      // An h box bottom-aligns the text: its lower edge sits at y + h
+      // An h box bottom-aligns the text: its lower edge sits at y + h.
+      // vCenter centers it in the box instead.
       if (item.h) {
         textStyle.height = `${item.h}%`;
         textStyle.display = 'flex';
         textStyle.flexDirection = 'column';
-        textStyle.justifyContent = 'flex-end';
+        textStyle.justifyContent = item.vCenter ? 'center' : 'flex-end';
       }
       // The body needs its own inline size — .sketch-text-body's class
       // font-size overrides the inherited container size on desktop
@@ -607,14 +620,29 @@ export default function Sketchbook({
       if (item.bodySize) bodyStyle.fontSize = `calc(${item.bodySize}rem * var(--page-scale, 1))`;
       if (item.bodyLineHeight) bodyStyle.lineHeight = item.bodyLineHeight;
       const floatImg = item.floatImage;
+      // hoverLight: pointer events on; the CSS lights the text on hover
+      const textClasses = ['sketch-item', 'sketch-item-text'];
+      if (item.hoverLight) textClasses.push('sketch-text-hoverlight');
       return (
-        <div key={key} className="sketch-item sketch-item-text" style={textStyle}>
+        <div key={key} className={textClasses.join(' ')} style={textStyle}>
           {item.title && (() => {
             // The label before the first colon renders heavier (e.g. "MASTER THESIS:")
+            // and the title breaks after it
             const ci = item.title.indexOf(':');
+            // titleJustify stretches the second title line across the full box
+            // width — it renders as its own block so the first line keeps its
+            // natural alignment (text-align-last would also hit the <br> line)
+            if (item.titleJustify && ci >= 0) {
+              return (
+                <div className="sketch-text-title">
+                  <div><span className="sketch-text-title-strong">{item.title.slice(0, ci + 1)}</span></div>
+                  <div style={{ textAlignLast: 'justify' }}>{item.title.slice(ci + 1)}</div>
+                </div>
+              );
+            }
             const titleContent = ci < 0
               ? item.title
-              : <><span className="sketch-text-title-strong">{item.title.slice(0, ci + 1)}</span>{item.title.slice(ci + 1)}</>;
+              : <><span className="sketch-text-title-strong">{item.title.slice(0, ci + 1)}</span><br />{item.title.slice(ci + 1)}</>;
             return <div className="sketch-text-title">{titleContent}</div>;
           })()}
           {floatImg && (
@@ -714,8 +742,17 @@ export default function Sketchbook({
       // Font scales with the page so the statement fills its block
       const blockH = pageH * 0.9 * ((item.h || 100) / 100);
       statementStyle.fontSize = `${blockH * 0.16}px`;
+      // blend: white text in difference blend — inverts per pixel against
+      // whatever renders behind it (Minecraft-crosshair style)
+      if (item.blend) {
+        statementStyle.color = '#fff';
+        statementStyle.mixBlendMode = 'difference';
+      }
+      // hoverFull: the statement becomes fully opaque while hovered
+      const statementClasses = ['sketch-item', 'sketch-item-statement'];
+      if (item.hoverFull) statementClasses.push('sketch-statement-hover');
       return (
-        <div key={key} className="sketch-item sketch-item-statement" style={statementStyle}>
+        <div key={key} className={statementClasses.join(' ')} style={statementStyle}>
           {item.text.split('\n').map((line, i, all) => {
             const align = item.aligns?.[i];
             const lineStyle = align === 'left'
@@ -733,6 +770,67 @@ export default function Sketchbook({
           })}
         </div>
       );
+    }
+
+    if (item.type === 'pileoutline') {
+      // One continuous border tracing the outline of a pile of rotated
+      // rectangles, offset by a gap. A full-page SVG: the mask is the union
+      // of the gap-expanded rects (white) minus the union of the
+      // (gap - line)-expanded rects (black), so the fill shows only along
+      // the pile's outer silhouette — one long line, gap included.
+      const gapX = item.gap ?? 1.2;
+      const gapY = gapX * PAGE_ASPECT;
+      const lineX = item.line ?? 0.14;
+      const lineY = lineX * PAGE_ASPECT;
+      const outlineStyle = { ...style };
+      if (item.h) outlineStyle.height = `${item.h}%`;
+      outlineStyle.pointerEvents = 'none';
+      const maskRects = item.rects.map((r, i) => {
+        const h = (r.w * PAGE_ASPECT) / (item.aspect || 1);
+        const cx = r.x + r.w / 2;
+        const cy = r.y + h / 2;
+        const rectAt = (dx, dy, fill) => (
+          <rect
+            key={`${i}-${fill}`}
+            x={cx - r.w / 2 - dx}
+            y={cy - h / 2 - dy}
+            width={r.w + 2 * dx}
+            height={h + 2 * dy}
+            fill={fill}
+            transform={`rotate(${r.r} ${cx} ${cy})`}
+          />
+        );
+        return {
+          outer: rectAt(gapX, gapY, '#fff'),
+          inner: rectAt(Math.max(0, gapX - lineX), Math.max(0, gapY - lineY), '#000'),
+        };
+      });
+      return (
+        <div key={key} className="sketch-item sketch-pile-frame" style={outlineStyle}>
+          <svg viewBox="0 0 100 100" preserveAspectRatio="none" width="100%" height="100%">
+            <defs>
+              <mask id="sketch-pile-outline">
+                {maskRects.map((r) => r.outer)}
+                {maskRects.map((r) => r.inner)}
+              </mask>
+            </defs>
+            <rect x="0" y="0" width="100" height="100" fill="#cfcfcf" mask="url(#sketch-pile-outline)" />
+          </svg>
+        </div>
+      );
+    }
+
+    if (item.type === 'scrim') {
+      // Soft dark backdrop for text over photos. Default: radial, fading out
+      // at all edges. band: a solid strip as wide as the item, no fade
+      const scrimStyle = { ...style };
+      if (item.h) scrimStyle.height = `${item.h}%`;
+      scrimStyle.background = item.band
+        ? 'rgba(0, 0, 0, 0.45)'
+        : 'radial-gradient(ellipse 50% 50% at 50% 50%, rgba(0, 0, 0, 0.45) 0%, rgba(0, 0, 0, 0.22) 55%, rgba(0, 0, 0, 0) 100%)';
+      scrimStyle.pointerEvents = 'none';
+      scrimStyle.zIndex = 0;
+      return <div key={key} className="sketch-item" style={scrimStyle} />;
     }
 
     if (item.type === 'corner-text') {
