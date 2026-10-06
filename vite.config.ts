@@ -7,6 +7,16 @@ import path from 'path'
 export default defineConfig({
   plugins: [react(), tailwindcss()],
   base: '/',
+  optimizeDeps: {
+    // Pre-bundle the 3D stack at startup — discovered late, these trigger
+    // mid-session re-optimization and full-page reloads in dev
+    include: [
+      'three',
+      'three/addons/loaders/GLTFLoader.js',
+      'three/addons/environments/RoomEnvironment.js',
+      '@react-three/fiber',
+    ],
+  },
   resolve: {
     alias: {
       '@': path.resolve(import.meta.dirname, './src'),

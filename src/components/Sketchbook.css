@@ -266,7 +266,7 @@
 .sketch-item-bring-to-front {
   cursor: pointer;
   pointer-events: auto !important;
-  z-index: 2;
+  z-index: var(--item-z, 2);
 }
 
 .sketch-item-bring-to-front:hover {
@@ -304,6 +304,11 @@
 
 /* Framed clickable images show no extra ::after border */
 .sketch-item-clickable.sketch-item-framed::after {
+  content: none;
+}
+
+/* The 3D model is not a photo — no hover frame around it */
+.sketch-item-clickable.sketch-model::after {
   content: none;
 }
 
@@ -690,3 +695,58 @@
 .sketch-text-hoverlight:hover ~ .sketch-pile-frame {
   opacity: 1;
 }
+
+/* 3D model — sits on the page; click lifts it into the rotate overlay */
+.sketch-model {
+  pointer-events: auto;
+  cursor: grab;
+  touch-action: none;
+  transition: transform 0.25s ease;
+}
+
+/* While held, the model paints above everything on the page — corner
+   text included — so it never slides underneath while moving */
+.sketch-model-held {
+  z-index: 5;
+}
+
+.sketch-model-canvas {
+  width: 100%;
+  height: 100%;
+}
+
+
+/* Gif-style video — the still analysis image fades in over the
+   playing video while hovered (same aspect, exact overlay) */
+.sketch-gif {
+  pointer-events: auto;
+}
+.sketch-gif-hover-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+  pointer-events: none;
+}
+
+.sketch-gif:hover .sketch-gif-hover-img {
+  opacity: 1;
+}
+
+/* Load failure — small grey note where the model should sit */
+.sketch-model-failed {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'automate', sans-serif;
+  font-size: 0.5rem;
+  letter-spacing: 0.1em;
+  color: #999;
+  opacity: 0.6;
+}
+

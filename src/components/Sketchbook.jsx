@@ -1,4 +1,9 @@
+/* eslint-disable react/no-unknown-property */
 import { useState, useEffect, useMemo, useRef } from 'react';
+import { Canvas, useFrame, useThree } from '@react-three/fiber';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+import * as THREE from 'three';
 import { BASE } from '@/paths'
 import './Sketchbook.css';
 
@@ -60,7 +65,7 @@ import './Sketchbook.css';
  * @property {number} [imgAspect] - natural aspect ratio of the zoom image (w/h)
  * @property {(src: string) => void} [onVideoOpen]
  * @property {(set: string[], index: number) => void} [onImageOpen]
- * @property {() => void} [onMoreOpen]
+ * @property {(set?: 'thesis' | 'bachelor') => void} [onMoreOpen] - which sheet set the MORE overlay shows
  * @property {(page: number) => void} [onNavigatePage]
  * @property {'forward' | 'back' | null} [turnHint] - desktop scroll hint: highlights the page side being scrolled toward
  */
@@ -189,6 +194,265 @@ function FlipCard({ front, back, backVideo, backText, flipBox, w, taped, holeCol
           {backText && <div className="sketch-flip-back-text">{backText}</div>}
         </div>
       </div>
+    </div>
+  );
+}
+
+// 3D model — a GLB sitting on the page, seen from above. Press and hold
+// to lift it: while held it rises off the page, grows and dragging turns
+// it; letting go settles it back into its resting pose. The page's light
+// comes from the left, so the key light does too and the cast shadow
+// falls to the right of the model. The GLB loads with a plain GLTFLoader
+// outside the render tree (no suspense), so load states are explicit:
+// nothing while loading, a small note when the file is broken.
+const MODEL_BASE_ROTATION = { x: 0.12, y: (170 * Math.PI) / 180 };
+const MODEL_CAMERA = [0, 4.6, 1.1];
+// While held, the item box grows by this factor (CSS scale) and the camera
+// pulls back by the same factor — the model keeps its size but gains frame
+// room, so lifting and turning never clip at the box edge
+const MODEL_HELD_GROW = 1.5;
+const MODEL_LIFT_SCALE = 1.25;
+function StudioEnv() {
+  const gl = useThree((state) => state.gl);
+  const scene = useThree((state) => state.scene);
+  const invalidate = useThree((state) => state.invalidate);
+  useEffect(() => {
+    // Dim image-based ambient — fills the shadow side without blowing out
+    const pmrem = new THREE.PMREMGenerator(gl);
+    const env = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
+    scene.environment = env;
+    scene.environmentIntensity = 0.2;
+    pmrem.dispose();
+    invalidate();
+    return () => {
+      scene.environment = null;
+      scene.environmentIntensity = 1;
+      env.dispose();
+    };
+  }, [gl, scene, invalidate]);
+  return null;
+}
+
+// Places a clone of the loaded scene — an Object3D can only live in one
+// scene graph — centered and fitted into a 2-unit box. The exported black
+// metal is overridden with a light, rough concrete look; the concrete
+// photo maps over the surface when provided. The spin group carries the
+// fit + rotation; the lift group inside scales and rises, so the model
+// grows off the page without sinking through its shadow. The camera
+// tracks the lift so the bigger model stays in frame.
+function FittedModel({ fitted, template, concreteMap, heldRef, rotRef }) {
+  const spin = useRef();
+  const lift = useRef();
+  const invalidate = useThree((state) => state.invalidate);
+  const camera = useThree((state) => state.camera);
+  const object = useMemo(() => {
+    const clone = template.clone(true);
+    // Light concrete instead of the exported black metal — the concrete
+    // photo maps over the surface when provided, else a plain light grey
+    clone.traverse((o) => {
+      if (!o.isMesh) return;
+      o.castShadow = true;
+      o.receiveShadow = false;
+      const mats = Array.isArray(o.material) ? o.material : [o.material];
+      const overridden = mats.map((m) => {
+        const c = m.clone();
+        c.metalness = 0;
+        c.roughness = 0.95;
+        if (concreteMap) {
+          c.map = concreteMap;
+          c.color.set('#ffffff');
+        } else {
+          c.color.set('#bfbfbf');
+        }
+        if ('transmission' in c) c.transmission = 0;
+        if ('clearcoat' in c) c.clearcoat = 0;
+        c.needsUpdate = true;
+        return c;
+      });
+      o.material = Array.isArray(o.material) ? overridden : overridden[0];
+    });
+    return clone;
+  }, [template, concreteMap]);
+  useEffect(() => { invalidate(); }, [object, invalidate]);
+  useFrame(() => {
+    const l = lift.current;
+    const g = spin.current;
+    if (!l || !g) return;
+    // Ease the lift toward held/resting: scale up and rise off the page
+    const target = heldRef.current ? MODEL_LIFT_SCALE : 1;
+    const cur = l.userData.s == null ? 1 : l.userData.s;
+    const next = cur + (target - cur) * 0.16;
+    l.userData.s = next;
+    l.scale.setScalar(next);
+    // Rise just enough that the growing model never sinks through its
+    // shadow plane — the base stays glued to the page
+    l.position.y = (next - 1) * -fitted.bottomY;
+    // Camera tracks the box growth so the model keeps its on-page size
+    const t = Math.max(0, Math.min(1, (next - 1) / (MODEL_LIFT_SCALE - 1)));
+    const grow = 1 + (MODEL_HELD_GROW - 1) * t;
+    camera.position.set(MODEL_CAMERA[0] * grow, MODEL_CAMERA[1] * grow, MODEL_CAMERA[2] * grow);
+    camera.lookAt(0, 0, 0);
+    // Ease toward the drag rotation (back to base when released)
+    g.rotation.x += (rotRef.current.x - g.rotation.x) * 0.22;
+    g.rotation.y += (rotRef.current.y - g.rotation.y) * 0.22;
+    const settled = Math.abs(next - target) < 0.002
+      && Math.abs(rotRef.current.x - g.rotation.x) < 0.002
+      && Math.abs(rotRef.current.y - g.rotation.y) < 0.002;
+    if (!settled) invalidate();
+  });
+  return (
+    <group ref={spin} scale={fitted.scale} rotation={[MODEL_BASE_ROTATION.x, MODEL_BASE_ROTATION.y, 0]}>
+      <group ref={lift}>
+        <group position={fitted.offset}>
+          <primitive object={object} />
+        </group>
+      </group>
+    </group>
+  );
+}
+
+function ModelItem({ src, texture, style }) {
+  const [template, setTemplate] = useState(null);
+  const [concreteMap, setConcreteMap] = useState(null);
+  const [failed, setFailed] = useState(false);
+  const [held, setHeld] = useState(false);
+  const heldRef = useRef(false);
+  const rotRef = useRef({ ...MODEL_BASE_ROTATION });
+  const dragRef = useRef(null);
+  const invalidateRef = useRef(null);
+
+  useEffect(() => {
+    let alive = true;
+    new GLTFLoader().load(
+      src,
+      (gltf) => { if (alive) setTemplate(gltf.scene); },
+      undefined,
+      () => { if (alive) setFailed(true); }
+    );
+    return () => { alive = false; };
+  }, [src]);
+
+  // Optional concrete photo mapped over the model surface
+  useEffect(() => {
+    if (!texture) return;
+    let alive = true;
+    new THREE.TextureLoader().load(texture, (t) => {
+      if (!alive) return;
+      t.colorSpace = THREE.SRGBColorSpace;
+      t.wrapS = t.wrapT = THREE.RepeatWrapping;
+      t.repeat.set(2, 2);
+      setConcreteMap(t);
+    });
+    return () => { alive = false; };
+  }, [texture]);
+
+  // Center the model and fit it into a 2-unit box once per load
+  const fitted = useMemo(() => {
+    if (!template) return null;
+    const box = new THREE.Box3().setFromObject(template);
+    const size = box.getSize(new THREE.Vector3());
+    const center = box.getCenter(new THREE.Vector3());
+    const maxDim = Math.max(size.x, size.y, size.z) || 1;
+    return {
+      scale: 2 / maxDim,
+      offset: center.clone().multiplyScalar(-1),
+      bottomY: -size.y / 2,
+    };
+  }, [template]);
+
+  // Hold to lift, drag to turn, release to settle back
+  const onPointerDown = (e) => {
+    heldRef.current = true;
+    setHeld(true);
+    dragRef.current = { x: e.clientX, y: e.clientY };
+    try { e.currentTarget.setPointerCapture(e.pointerId); } catch { /* older browsers */ }
+    invalidateRef.current?.();
+  };
+  const onPointerMove = (e) => {
+    const d = dragRef.current;
+    if (!d || !heldRef.current) return;
+    const dx = e.clientX - d.x;
+    const dy = e.clientY - d.y;
+    d.x = e.clientX;
+    d.y = e.clientY;
+    rotRef.current.y += dx * 0.011;
+    rotRef.current.x = Math.max(-1.2, Math.min(1.2, rotRef.current.x + dy * 0.008));
+    invalidateRef.current?.();
+  };
+  const release = () => {
+    if (!heldRef.current && !dragRef.current) return;
+    heldRef.current = false;
+    setHeld(false);
+    dragRef.current = null;
+    rotRef.current = { ...MODEL_BASE_ROTATION };
+    invalidateRef.current?.();
+  };
+
+  if (failed) {
+    return (
+      <div className="sketch-item sketch-model" style={style}>
+        <div className="sketch-model-failed">3D MODEL FAILED TO LOAD</div>
+      </div>
+    );
+  }
+  if (!template || !fitted) return null;
+
+  // The box grows around its center while held; the camera pulls back in
+  // sync, so the model itself stays the same size on the page
+  const itemStyle = held
+    ? { ...style, transform: `${style.transform || ''} scale(${MODEL_HELD_GROW})` }
+    : style;
+
+  return (
+    <div
+      className={'sketch-item sketch-item-clickable sketch-model' + (held ? ' sketch-model-held' : '')}
+      style={itemStyle}
+      onPointerDown={onPointerDown}
+      onPointerMove={onPointerMove}
+      onPointerUp={release}
+      onPointerCancel={release}
+      onLostPointerCapture={release}
+    >
+      <Canvas
+        className="sketch-model-canvas"
+        camera={{ position: MODEL_CAMERA, fov: 32 }}
+        frameloop="demand"
+        dpr={1}
+        shadows
+        gl={{ antialias: true, alpha: true, powerPreference: 'low-power' }}
+        onCreated={({ invalidate }) => { invalidateRef.current = invalidate }}
+      >
+        <ambientLight intensity={0.25} />
+        {/* Key light from the left — the page's light direction; the cast
+            shadow falls to the right, like the other objects on the page */}
+        <directionalLight
+          castShadow
+          position={[-4, 6, 2]}
+          intensity={0.85}
+          shadow-mapSize-width={1024}
+          shadow-mapSize-height={1024}
+          shadow-camera-left={-3.5}
+          shadow-camera-right={3.5}
+          shadow-camera-top={3.5}
+          shadow-camera-bottom={-3.5}
+          shadow-camera-near={0.5}
+          shadow-camera-far={20}
+          shadow-bias={-0.0005}
+        />
+        {/* Soft fill from the right so the shadow side keeps some detail */}
+        <directionalLight position={[3, 2, -2]} intensity={0.2} />
+        <StudioEnv />
+        {/* The page surface — invisible except where it catches the shadow */}
+        <mesh
+          receiveShadow
+          rotation={[-Math.PI / 2, 0, 0]}
+          position={[0, fitted.bottomY * fitted.scale - 0.002, 0]}
+        >
+          <planeGeometry args={[10, 10]} />
+          <shadowMaterial opacity={0.45} />
+        </mesh>
+        <FittedModel fitted={fitted} template={template} concreteMap={concreteMap} heldRef={heldRef} rotRef={rotRef} />
+      </Canvas>
     </div>
   );
 }
@@ -464,6 +728,34 @@ export default function Sketchbook({
       return <FilmStrip key={key} strip={item.strip} frames={item.frames} style={style} />;
     }
 
+    if (item.type === 'model') {
+      return <ModelItem key={key} src={item.src} texture={item.texture} style={{ ...style, aspectRatio: String(item.aspect || 1) }} />;
+    }
+
+    if (item.type === 'gif') {
+      // Gif-style video — autoplays muted on the page; hovering swaps in
+      // the still analysis image (same aspect, exact overlay)
+      const classes = ['sketch-item', 'sketch-item-image', 'sketch-gif'];
+      if (item.noBg) classes.push('sketch-item-image-nobg');
+      return (
+        <div key={key} className={classes.join(' ')} style={style}>
+          {item.taped && (() => {
+            const holeColor = item.holeColor || holeColorFor(pageIndex);
+            return (
+              <>
+                <div className="sketch-hole sketch-hole-tl" style={{ backgroundColor: holeColor }} />
+                <div className="sketch-hole sketch-hole-tr" style={{ backgroundColor: holeColor }} />
+                <div className="sketch-hole sketch-hole-bl" style={{ backgroundColor: holeColor }} />
+                <div className="sketch-hole sketch-hole-br" style={{ backgroundColor: holeColor }} />
+              </>
+            );
+          })()}
+          <video src={item.video} className="sketch-image" autoPlay muted loop playsInline preload="auto" />
+          {item.hoverImg && <img src={item.hoverImg} className="sketch-gif-hover-img" alt="" />}
+        </div>
+      );
+    }
+
     if (item.type === 'image') {
       const classes = ['sketch-item', 'sketch-item-image'];
       if (item.noBg) classes.push('sketch-item-image-nobg');
@@ -477,6 +769,8 @@ export default function Sketchbook({
       // behind: drop to the text layer (z-index 0) — first in DOM order,
       // so the text items paint above it
       if (item.behind) imageStyle.zIndex = 0;
+      // z: resting stack order for bring-to-front items (hover still jumps to 100)
+      if (item.z != null) imageStyle['--item-z'] = item.z;
       // holeInset moves the tape dots outward (CSS default: 3.5cqw)
       if (item.holeInset) imageStyle['--hole-inset'] = item.holeInset;
       if (item.shadow) imageStyle.boxShadow = item.shadow;
@@ -732,7 +1026,7 @@ export default function Sketchbook({
           key={key}
           className="sketch-item sketch-more-btn"
           style={{ ...style, cursor: 'pointer' }}
-          onClick={() => onMoreOpen?.()}
+          onClick={() => onMoreOpen?.(item.more)}
         >
           <span className="sketch-more-btn-label">{item.label}</span>
         </div>
