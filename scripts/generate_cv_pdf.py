@@ -126,17 +126,17 @@ c = canvas.Canvas(out, pagesize=A4)
 c.drawImage(ImageReader(prep_texture('left_page-black.png')), 0, 0, PW, PH)
 c.setFillColor(PAPER)
 r = 1754 * 0.0102 / 2 * PT  # hole radius = --hole-size (1.02% of page height) / 2
-for cx, cy in ((59.6, 287.8), (1180.5, 287.8), (59.6, 787.7), (1180.5, 787.7)):
+for cx, cy in ((59.6, 256.2), (1180.5, 256.2), (59.6, 756.1), (1180.5, 756.1)):
     c.circle(X(cx), PH - cy * PT, r, stroke=0, fill=1)
 # Frame around the hole marks — matches the website (1px, 15% opacity)
-# Box = holes item: x:-4, y:10, w:108, h:37 of the content area
+# Box = holes item: x:-4, y:8, w:108, h:37 of the content area
 c.setStrokeColor(PAPER)
 c.setStrokeAlpha(0.15)
 c.setLineWidth(PT)
-c.rect(X(17.4), PH - 829.7 * PT, 1205.3 * PT, (829.7 - 245.6) * PT, stroke=1, fill=0)
+c.rect(X(17.4), PH - 798.1 * PT, 1205.3 * PT, (798.1 - 214.0) * PT, stroke=1, fill=0)
 c.setStrokeAlpha(1)
 c.setFont('Carbon', 27 * PT)  # 1rem x page-scale, measured on the web
-c.drawCentredString(X(W // 2), PH - 537.7 * PT, 'introduction')
+c.drawCentredString(X(W // 2), PH - 506.1 * PT, 'introduction')
 # Statement — explicit line breaks, matching the website authored breaks
 STATEMENT = [
     ("I'M TIM MOEDEKER,", 'right'),
@@ -185,7 +185,7 @@ img = img.resize((1600, round(1600 / 2.0462)), Image.LANCZOS)
 buf = BytesIO()
 img.save(buf, 'JPEG', quality=88)
 buf.seek(0)
-ix, iy = 17.4, 245.6  # x -4%, y 10% of content
+ix, iy = 17.4, 214.0  # x -4%, y 8% of content
 c.drawImage(ImageReader(buf), X(ix), PH - (iy + ih_d) * PT, X(iw_d), X(ih_d))
 c.setFillColor((29 / 255, 29 / 255, 29 / 255))
 inset = 42.2  # 3.5cqw of the image box
@@ -195,7 +195,7 @@ for cx, cyy in ((ix + inset, iy + inset), (ix + iw_d - inset, iy + inset), (ix +
 # CV — every metric mirrors the web CV: font = 0.88rem x page-scale,
 # em = 23.94 design px (23.12 measured at 0.85rem, scaled to 0.88).
 EM = 23.94
-y = 839.4 + EM  # y 47.6% of content + 1em first-section margin
+y = 807.8 + EM  # y 45.6% of content + 1em first-section margin
 
 def section(name, gap=1.4 * EM):
     global y
@@ -251,6 +251,27 @@ for s in ('Design & BIM: Rhinoceros, Revit, Archicad',
     c.setFont('Automate-Light', EM * PT)
     c.drawString(X(17.4) + sw(label, EM, 'ToshB'), YB(y, EM, 'ToshB', 1.4 * EM), rest)
     y += 1.4 * EM + 0.15 * EM  # skills entries: margin-bottom 0.15em
+
+# References — the names are clickable mailto links, as on the website
+c.setFillColor(DARK)
+c.setFont('ToshB', EM * PT)
+label = 'References:'
+c.drawString(X(17.4), YB(y, EM, 'ToshB', 1.4 * EM), label)
+rx = 17.4 + sw(label, EM, 'ToshB') / PT
+c.setFillColor(LIGHT)
+c.setFont('Automate-Light', EM * PT)
+for text, target in (
+    (' ', None),
+    ('Prof. Mirco Becker', 'mailto:becker@iat.uni-hannover.de?subject=Inquiring%20about%20Tim%20Moedeker'),
+    (' (DMA), ', None),
+    ('Prof. Oliver Tessmann', 'mailto:oliver.tessmann@tu-darmstadt.de?subject=Inquiring%20about%20Tim%20Moedeker'),
+    (' (DDU)', None),
+):
+    c.drawString(X(rx), YB(y, EM, 'ToshB', 1.4 * EM), text)
+    if target:
+        c.linkURL(target, (X(rx), (H - y - 30) * PT, X(rx + sw(text, EM, 'Automate-Light') / PT), (H - y + 4) * PT))
+    rx += sw(text, EM, 'Automate-Light') / PT
+y += 1.4 * EM + 0.15 * EM
 
 print('CV ends at y =', y, 'of', H)
 c.showPage()

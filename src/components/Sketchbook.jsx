@@ -11,7 +11,7 @@ import './Sketchbook.css';
  * turn zones (page flipping). The right page only updates after a turn
  * completes, not when it starts.
  *
- * On mobile, one page is shown at a time with swipe/tap to turn.
+ * On mobile, one page is shown at a time with tap to turn.
  *
  * Props:
  * - visible: boolean
@@ -419,13 +419,7 @@ export default function Sketchbook({
     };
   }, [bookZoom, bookW, bookH, pageW, pageH, gap, viewport.w, viewport.h, imgAspect, isMobile, slideTranslateY]);
 
-  // Mobile: swipe/tap
-  const touchStartX = useRef(0);
-
-  const handleTouchStart = (e) => {
-    touchStartX.current = e.touches[0].clientX;
-  };
-
+  // Mobile: tap navigation
   const suppressClickRef = useRef(false);
 
   const navigateToPage = (page) => {
@@ -437,12 +431,6 @@ export default function Sketchbook({
     // All touch navigation happens here; suppress the synthetic click that follows
     suppressClickRef.current = true;
     setTimeout(() => { suppressClickRef.current = false; }, 400);
-    const diff = touchStartX.current - e.changedTouches[0].clientX;
-    // Swipes turn the page from anywhere
-    if (Math.abs(diff) >= 40) {
-      navigateToPage(mobilePage + (diff > 0 ? 1 : -1));
-      return;
-    }
     // Taps only turn the page when not on something interactable
     if (e.target.closest('.sketch-item-clickable, .sketch-more-btn, .sketch-filmstrip-window, a')) return;
     const rect = e.currentTarget.getBoundingClientRect();
@@ -691,10 +679,25 @@ export default function Sketchbook({
     if (item.type === 'cv') {
       const cvStyle = { ...style };
       // SKILLS heads are "Label: list" — the list behind the colon renders grey + light
-      const renderCvHead = (head) => {
+      const renderCvHead = (entry) => {
+        const head = entry.head;
         const ci = head.indexOf(':');
         if (ci < 0) return head;
-        return <>{head.slice(0, ci + 1)}<span className="cv-skill-list">{head.slice(ci + 1)}</span></>;
+        const list = head.slice(ci + 1);
+        // Reference names render as links inside the grey list
+        let parts = list;
+        if (entry.links) {
+          parts = [];
+          let rest = list;
+          entry.links.forEach((l, li) => {
+            const at = rest.indexOf(l.text);
+            if (at < 0) return;
+            parts.push(rest.slice(0, at), <a key={li} href={l.href}>{l.text}</a>);
+            rest = rest.slice(at + l.text.length);
+          });
+          parts.push(rest);
+        }
+        return <>{head.slice(0, ci + 1)}<span className="cv-skill-list">{parts}</span></>;
       };
       const cvFontSize = isMobile && item.fontSizeMobile != null ? item.fontSizeMobile : item.fontSize;
       if (cvFontSize) cvStyle.fontSize = `calc(${cvFontSize}rem * var(--page-scale, 1))`;
@@ -706,7 +709,7 @@ export default function Sketchbook({
               {sec.entries.map((e, i) => (
                 <div key={i} className="cv-entry">
                   <div className="cv-head">
-                    <span className="cv-role">{!e.date ? renderCvHead(e.head) : e.head}</span>
+                    <span className="cv-role">{!e.date ? renderCvHead(e) : e.head}</span>
                     {e.date && (
                       <>
                         <span className="cv-line" />
@@ -974,7 +977,6 @@ export default function Sketchbook({
             ...bookTransform,
           }}
           onClick={handleClick}
-          onTouchStart={handleTouchStart}
           onTouchEnd={handleTouchEnd}
         >
           <div

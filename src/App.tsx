@@ -65,21 +65,21 @@ const bookPages = [
       // Hole marks — mirrored from the Anthrazit image on the right page
       // (box matches the image box; h follows the image aspect 2.046)
       // frame: black outline around the dots, same size as the right image
-      { type: 'holes', x: -4, y: 10, w: 108, h: 37, rotation: 0, frame: true },
+      { type: 'holes', x: -4, y: 8, w: 108, h: 37, rotation: 0, frame: true },
       // Introduction — centered between the hole marks
-      { type: 'text', text: 'introduction', x: -4, y: 26.8, w: 108, rotation: 0, align: 'center', sizes: [1], font: "'t26-carbon', monospace", weight: 400 },
+      { type: 'text', text: 'introduction', x: -4, y: 24.8, w: 108, rotation: 0, align: 'center', sizes: [1], font: "'t26-carbon', monospace", weight: 400 },
     ],
   },
   // Right page — Anthrazit image + CV
   {
     items: [
       // Atelier Anthrazit — the image we zoom out from
-      { type: 'image', img: `${BASE}tim/Atelier Anthrazit-039-breit-bw.jpg`, imgMobile: `${BASE}tim/Atelier Anthrazit-039-breit-bw-mobile.jpg`, x: -4, y: 10, w: 108, rotation: 0, taped: true, noBg: true, shadow: '0 2px 8px rgba(0, 0, 0, 0.15)', tackers: [3, 1, 4, 2] },
+      { type: 'image', img: `${BASE}tim/Atelier Anthrazit-039-breit-bw.jpg`, imgMobile: `${BASE}tim/Atelier Anthrazit-039-breit-bw-mobile.jpg`, x: -4, y: 8, w: 108, rotation: 0, taped: true, noBg: true, shadow: '0 2px 8px rgba(0, 0, 0, 0.15)', tackers: [3, 1, 4, 2] },
       // Punched holes on the image — the book renders its own dots
-      { type: 'holes', x: -4, y: 10, w: 108, h: 37, rotation: 0 },
+      { type: 'holes', x: -4, y: 8, w: 108, h: 37, rotation: 0 },
       // CV — single column below the image: leader lines to right-aligned dates
       {
-        type: 'cv', x: -4, y: 47.6, w: 108, rotation: 0, fontSize: 0.88, fontSizeMobile: 0.46,
+        type: 'cv', x: -4, y: 45.6, w: 108, rotation: 0, fontSize: 0.88, fontSizeMobile: 0.46,
         sections: [
           { name: 'EDUCATION', entries: [
             { head: 'M. Sc. Architecture, Leibniz University Hannover', date: '10.2021 - 01.2024', desc: 'Thesis on AI in architectural design, focused on practicality and accessibility.' },
@@ -97,6 +97,10 @@ const bookPages = [
             { head: 'Visualization: V-Ray, D5, Unity, Photoshop, Illustrator, InDesign' },
             { head: 'Other: Python, QGIS, 3D printing, large-format plotting, web/server hosting' },
             { head: 'Languages: German (mother tongue), English (fluent)' },
+            { head: 'References: Prof. Mirco Becker (DMA), Prof. Oliver Tessmann (DDU)', links: [
+              { text: 'Prof. Mirco Becker', href: 'mailto:becker@iat.uni-hannover.de?subject=Inquiring%20about%20Tim%20Moedeker' },
+              { text: 'Prof. Oliver Tessmann', href: 'mailto:oliver.tessmann@tu-darmstadt.de?subject=Inquiring%20about%20Tim%20Moedeker' },
+            ] },
           ]},
         ],
       },
@@ -625,7 +629,7 @@ function App() {
     }
   }
 
-  // Mobile: single pages are scroll-driven, scroll to a page's slice center
+  // Mobile: single pages are tap-driven, scroll to a page's slice center
   const scrollToMobilePage = useCallback((page: number) => {
     const max = document.documentElement.scrollHeight - window.innerHeight
     const slice = bookRange / bookPages.length
@@ -715,6 +719,35 @@ function App() {
       if (snapTimer !== null) window.clearTimeout(snapTimer)
     }
   }, [isMobileViewport])
+
+  // Mobile: navigation is purely tap/click based — user scrolling is disabled
+  // outright. Only the programmatic scrolls behind the arrows and page taps
+  // move the sequence. Overlays that scroll internally (projects, MORE) keep
+  // their native touch scrolling.
+  useEffect(() => {
+    if (!isMobileViewport) return
+    const overlayOpen = () => showProjects || moreOverlay || videoOverlay !== null || imageOverlay !== null || contactOverlay || moreZoomed !== null
+    const onTouchMove = (e: TouchEvent) => {
+      if (overlayOpen()) return
+      e.preventDefault()
+    }
+    const onWheel = (e: WheelEvent) => {
+      if (overlayOpen()) return
+      e.preventDefault()
+    }
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (overlayOpen()) return
+      if (['ArrowDown', 'ArrowUp', 'PageDown', 'PageUp', 'Home', 'End', ' '].includes(e.key)) e.preventDefault()
+    }
+    document.addEventListener('touchmove', onTouchMove, { passive: false })
+    window.addEventListener('wheel', onWheel, { passive: false })
+    window.addEventListener('keydown', onKeyDown)
+    return () => {
+      document.removeEventListener('touchmove', onTouchMove)
+      window.removeEventListener('wheel', onWheel)
+      window.removeEventListener('keydown', onKeyDown)
+    }
+  }, [isMobileViewport, showProjects, moreOverlay, videoOverlay, imageOverlay, contactOverlay, moreZoomed])
 
   // Desktop: settle into the nearest spread's flat zone when scrolling comes
   // to rest, so wheel/trackpad scrolling lands on settled pages instead of
@@ -1031,7 +1064,12 @@ function App() {
         onVideoOpen={setVideoOverlay}
         onMoreOpen={() => setMoreOverlay(true)}
         onImageOpen={(set, idx) => { setImageOverlay(set); setImageOverlayIdx(idx) }}
-        onNavigatePage={scrollToMobilePage}
+        onNavigatePage={(page) => {
+          // Before the book begins (landing/intro), a tap enters the book
+          // exactly like the down arrow instead of jumping to a page
+          if (scrollProgress < bookStart) { autoPlay(); return }
+          scrollToMobilePage(page)
+        }}
         turnHint={turnHint}
       />
 
@@ -1064,7 +1102,7 @@ function App() {
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5 }}
         >
-          <span className="landing-hint">TO CONTINUE, PLEASE SCROLL OR USE THE ARROWS.</span>
+          <span className="landing-hint">{isMobileViewport ? 'TO CONTINUE, PLEASE TAP THE ARROW.' : 'TO CONTINUE, PLEASE SCROLL OR USE THE ARROWS.'}</span>
         </motion.div>
       )}
 
