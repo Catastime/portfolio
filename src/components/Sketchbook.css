@@ -767,3 +767,8 @@
   from { opacity: 0; }
   to { opacity: 1; }
 }
+
+/* Model frame — visibility is driven inline by the hint-text hover state */
+.sketch-model-frame {
+  pointer-events: none;
+}

@@ -352,7 +352,7 @@ function FittedModel({ fitted, template, concreteMap, heldRef, rotRef, tile }) {
   );
 }
 
-function ModelItem({ src, texture, tile, poster, style }) {
+function ModelItem({ src, texture, tile, poster, frameVisible, frameInset, style }) {
   const [template, setTemplate] = useState(null);
   const [concreteMap, setConcreteMap] = useState(null);
   const [failed, setFailed] = useState(false);
@@ -475,6 +475,12 @@ function ModelItem({ src, texture, tile, poster, style }) {
       onPointerCancel={release}
       onLostPointerCapture={release}
     >
+      {/* Frame — revealed while the model hint text is hovered; set in
+          40% from the box edges so it hugs the model */}
+      <div
+        className="sketch-model-frame"
+        style={{ position: 'absolute', inset: frameInset || 0, border: '1px solid #cfcfcf', opacity: frameVisible ? 1 : 0, transition: 'opacity 0.2s ease' }}
+      />
       {/* Poster — a lightweight, slightly darkened render of the model that
           shows instantly; the live canvas fades in over it when ready */}
       {poster && !posterGone && (
@@ -795,6 +801,9 @@ export default function Sketchbook({
   if (!visible) return null;
 
   // Render a single item on a page
+  // Hovering the model hint text reveals frames around the model boxes
+  const [modelFramesVisible, setModelFramesVisible] = useState(false);
+
   const renderItem = (item, key, pageIndex) => {
     const style = {
       position: 'absolute',
@@ -810,7 +819,7 @@ export default function Sketchbook({
     }
 
     if (item.type === 'model') {
-      return <ModelItem key={key} src={item.src} texture={item.texture} tile={item.tile} poster={item.poster} style={{ ...style, aspectRatio: String(item.aspect || 1) }} />;
+      return <ModelItem key={key} src={item.src} texture={item.texture} tile={item.tile} poster={item.poster} frameVisible={modelFramesVisible} frameInset={item.frameInset} style={{ ...style, aspectRatio: String(item.aspect || 1) }} />;
     }
 
     if (item.type === 'gif') {
@@ -987,7 +996,13 @@ export default function Sketchbook({
       const textClasses = ['sketch-item', 'sketch-item-text'];
       if (item.hoverLight) textClasses.push('sketch-text-hoverlight');
       return (
-        <div key={key} className={textClasses.join(' ')} style={textStyle}>
+        <div
+          key={key}
+          className={textClasses.join(' ')}
+          style={textStyle}
+          onMouseEnter={item.showModelFrames ? () => setModelFramesVisible(true) : undefined}
+          onMouseLeave={item.showModelFrames ? () => setModelFramesVisible(false) : undefined}
+        >
           {item.title && (() => {
             // The label before the first colon renders heavier (e.g. "MASTER THESIS:")
             // and the title breaks after it

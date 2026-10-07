@@ -342,6 +342,8 @@ const bookPages = [
       // same size, equal gaps
       // Subtitle for the material experiments block
       { type: 'text', text: 'Personal material experiments', x: 4.5, y: 93.3, w: 60, rotation: 0, align: 'left', font: "'automate', sans-serif", fontSize: 0.55, fontSizeMobile: 0.4, weight: 300, opacity: 0.65 },
+      // Interactivity hint — like the polaroid page's footnote
+      { type: 'text', text: '*CLICK, HOLD, AND MOVE TO LIFT AND ROTATE THE 3D-MODELS.', x: 8, y: 100, w: 84, rotation: 0, font: "'Hitobito', sans-serif", fontSize: 0.7, fontSizeMobile: 0.45, align: 'center', hoverLight: true, showModelFrames: true },
       { type: 'image', img: `${BACHELOR_IMG}/preview/M75_2809.jpg`, overlayImg: `${BACHELOR_IMG}/M75_2809.jpg`, x: 0, y: 54.5, w: 28, rotation: 89, taped: true, noBg: true, tackers: [3, 1, 4, 2], overlay: true, overlaySet: M75_GALLERY },
       { type: 'image', img: `${BACHELOR_IMG}/preview/M75_2815.jpg`, overlayImg: `${BACHELOR_IMG}/M75_2815.jpg`, x: 20, y: 54.5, w: 28, rotation: 91, taped: true, noBg: true, tackers: [2, 4, 1, 3], overlay: true, overlaySet: M75_GALLERY },
       { type: 'image', img: `${BACHELOR_IMG}/preview/M75_2822.jpg`, overlayImg: `${BACHELOR_IMG}/M75_2822.jpg`, x: 0, y: 75.3, w: 28, rotation: 88.5, taped: true, noBg: true, tackers: [1, 3, 2, 4], overlay: true, overlaySet: M75_GALLERY },
@@ -357,13 +359,11 @@ const bookPages = [
     items: [
       // 3D model — sits on the page, hold to lift and turn; concrete photo
       // mapped over the surface
-      { type: 'model', src: `${BACHELOR_IMG}/work2.glb`, texture: `${BACHELOR_IMG}/concrete.jpg`, tile: 100, poster: `${BACHELOR_IMG}/work2-poster.png`, x: -4, y: 4, w: 108, aspect: 1.66, rotation: 0 },
+      { type: 'model', src: `${BACHELOR_IMG}/work2.glb`, texture: `${BACHELOR_IMG}/concrete.jpg`, tile: 100, poster: `${BACHELOR_IMG}/work2-poster.png`, frameInset: '20%', x: -4, y: 4, w: 108, aspect: 1.66, rotation: 0 },
       // Unity video — poster render, same width as work.01's showcase
       { type: 'image', img: `${BACHELOR_IMG}/preview/unity-poster.jpg`, x: 8, y: 52, w: 84, rotation: 0, taped: true, noBg: true, video: `${BACHELOR_IMG}/Unity.mp4`, tackers: [4, 2, 3, 1] },
       // Subtitle — grey caption under the video
       { type: 'text', text: 'Scene & Architecture', x: 20, y: 86.5, w: 72, rotation: 0, align: 'right', font: "'automate', sans-serif", fontSize: 0.55, fontSizeMobile: 0.4, weight: 300, opacity: 0.65 },
-      // Interactivity hint — like the polaroid page's footnote
-      { type: 'text', text: '*CLICK, HOLD, AND MOVE TO LIFT AND ROTATE THE 3D-MODELS.', x: 8, y: 100, w: 84, rotation: 0, font: "'Hitobito', sans-serif", fontSize: 0.7, fontSizeMobile: 0.45, align: 'center', hoverLight: true },
       // MORE — square button, opens the bachelor sheets overlay
       { type: 'button', label: 'MORE', x: 80, y: 91.25, w: 12, rotation: 0, more: 'bachelor' },
     ],
