@@ -1,5 +1,5 @@
 /* eslint-disable react/no-unknown-property */
-import { useState, useEffect, useMemo, useRef } from 'react';
+import { useState, useEffect, useMemo, useRef, useLayoutEffect } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
@@ -567,6 +567,14 @@ export default function Sketchbook({
       g = pW * gapFraction;
       totalW = pW * 2 + g;
     }
+
+    // Whole-pixel page dimensions: fractional sizes make the composited 3D
+    // turning page and the flat stacks round subpixels differently — visible
+    // as a 1px shift on computed-position elements at the landing handoff.
+    pW = Math.round(pW);
+    pH = Math.round(pH);
+    g = Math.round(g);
+    totalW = pW * 2 + g;
 
     return { bookW: totalW, bookH: pH, pageW: pW, pageH: pH, gap: g };
   }, [viewport, isMobile]);
@@ -1316,7 +1324,8 @@ export default function Sketchbook({
   const nextLeftIndex = nextSpread * 2;
   const nextRightIndex = nextLeftIndex + 1;
 
-  const isTurning = turnProgress > 0 && turnProgress < 1 && scrollSpread < totalSpreads - 1;
+  const isTurning = scrollSpread < totalSpreads - 1
+    && ((turnProgress > 0 && turnProgress < 1) || turnProgress >= 1);
 
   // The left stack underneath switches to the next spread by the turn's
   // halfway point — once the turning page passes edge-on, the new spread
@@ -1329,6 +1338,48 @@ export default function Sketchbook({
   //   - Turning page front: current right page (being flipped away)
   //   - Turning page back: next left page (revealed as it lands on left)
   const displayRightUnderneath = isTurning ? nextRightIndex : rightIndex;
+
+
+
+
+  // The turning page's shadow is only cast while the page is lifted. Flat
+  // at mount/landing it must be zero, or it darkens the page underneath.
+  const turningShadow = (tp) => {
+    const k = Math.sin(Math.PI * tp);
+    return `0 20px 60px -10px rgba(0, 0, 0, ${(0.6 * k).toFixed(3)}), 0 8px 20px -4px rgba(0, 0, 0, ${(0.4 * k).toFixed(3)})`;
+  };
+
+  // Landing grace: when the turn ends, keep the turning page rendered,
+  // snapped perfectly flat, with no shadow, fading out over the identical
+  // stack content beneath. The stack swaps and repaints while covered, so
+  // the 3D layer is never torn down over visible content.
+  const lastTurnRef = useRef(null);
+  if (isTurning) lastTurnRef.current = { front: rightIndex, back: nextLeftIndex, tp: turnProgress };
+  const [landingTurn, setLandingTurn] = useState(false);
+  const [landingFade, setLandingFade] = useState(false);
+  const wasTurningRef = useRef(false);
+  useLayoutEffect(() => {
+    if (wasTurningRef.current && !isTurning && lastTurnRef.current) {
+      // Backward landings only: the right stack remounts its content there
+      // (a different page), and the flat turning page covers it while it
+      // paints. Forward landings reuse the crossfade layer — no remount, no
+      // grace needed. A forward grace lingered as a 3D-composited layer
+      // whose rasterization differs subtly from the flat stack — visible
+      // as a shadow pop as it faded.
+      if (lastTurnRef.current.tp <= 0.5) {
+        setLandingTurn(true);
+        setLandingFade(false);
+        const t1 = setTimeout(() => setLandingFade(true), 130);
+        const t2 = setTimeout(() => {
+          setLandingTurn(false);
+          setLandingFade(false);
+        }, 260);
+        wasTurningRef.current = isTurning;
+        return () => { clearTimeout(t1); clearTimeout(t2); };
+      }
+    }
+    wasTurningRef.current = isTurning;
+  }, [isTurning]);
 
   return (
     <div className="sketchbook-container" style={{ '--hole-size': `${pageH * 0.0102}px`, '--page-scale': pageH / (isMobile ? REF_MOBILE_PAGE_H : REF_PAGE_H) }}>
@@ -1345,19 +1396,25 @@ export default function Sketchbook({
           className="sketchbook-page-stack sketchbook-page-stack-left"
           style={{ width: `${pageW}px`, height: `${pageH}px`, backgroundImage: textureUrl(leftIndex), transform: turnHint === 'back' ? 'perspective(2000px) rotateY(3deg)' : undefined, transformOrigin: 'right center', transition: 'transform 0.25s ease-out' }}
         >
-          {isTurning ? (
-            <>
-              <div style={{ position: 'absolute', inset: 0, opacity: 1 - underT, backgroundImage: textureUrl(leftIndex), backgroundSize: '100% 100%' }}>
-                {renderPage(pages[leftIndex], 'left-current', fontForPage(leftIndex), leftIndex)}
+          <>
+            <div
+              key={`left-page-${leftIndex}`}
+              style={{ position: 'absolute', inset: 0, opacity: isTurning ? 1 - underT : 1, backgroundImage: textureUrl(leftIndex), backgroundSize: '100% 100%' }}
+            >
+              {renderPage(pages[leftIndex], `left-page-${leftIndex}`, fontForPage(leftIndex), leftIndex)}
+              {renderCorners(leftIndex)}
+            </div>
+            {isTurning && (
+              <div
+                key={`left-page-${nextLeftIndex}`}
+                className={underT > 0.5 ? undefined : 'sketch-layer-inactive'}
+                style={{ position: 'absolute', inset: 0, opacity: underT, backgroundImage: textureUrl(nextLeftIndex), backgroundSize: '100% 100%' }}
+              >
+                {renderPage(pages[nextLeftIndex], `left-page-${nextLeftIndex}`, fontForPage(nextLeftIndex), nextLeftIndex)}
+                {renderCorners(nextLeftIndex)}
               </div>
-              <div className={underT > 0.5 ? undefined : 'sketch-layer-inactive'} style={{ position: 'absolute', inset: 0, opacity: underT, backgroundImage: textureUrl(nextLeftIndex), backgroundSize: '100% 100%' }}>
-                {renderPage(pages[nextLeftIndex], 'left-next', fontForPage(nextLeftIndex), nextLeftIndex)}
-              </div>
-            </>
-          ) : (
-            renderPage(pages[leftIndex], 'left', fontForPage(leftIndex), leftIndex)
-          )}
-          {renderCorners(leftIndex)}
+            )}
+          </>
         </div>
 
         {/* Gap between stacks */}
@@ -1376,25 +1433,40 @@ export default function Sketchbook({
         </div>
         )}
 
-        {/* Turning page — positioned over the right stack, not clipped by it */}
-        {isTurning && (
-          <div
-            className="sketchbook-page-turning"
-            style={{
-              transform: `perspective(2000px) rotateY(${-turnProgress * 180}deg)`,
-              width: `${pageW}px`,
-              height: `${pageH}px`,
-              left: `${pageW + gap}px`,
-            }}
-          >
-            <div className="sketchbook-page-turning-front" style={{ backgroundImage: textureUrl(rightIndex), visibility: turnProgress < 0.5 ? 'visible' : 'hidden' }}>
-              {renderPage(pages[rightIndex], 'turn-front', fontForPage(rightIndex), rightIndex)}
+        {/* Turning page — positioned over the right stack, not clipped by
+            it. During the landing grace it stays rendered, snapped perfectly
+            flat (a tilted freeze renders its content larger through the
+            perspective — visible as a size twitch), shadowless, carrying
+            the page headers, and fades out over the identical stack
+            content instead of being torn down. */}
+        {(isTurning || landingTurn) && (() => {
+          const st = isTurning
+            ? { front: rightIndex, back: nextLeftIndex, tp: turnProgress }
+            : { ...lastTurnRef.current, tp: lastTurnRef.current.tp > 0.5 ? 1 : 0 };
+          if (!st) return null;
+          return (
+            <div
+              className="sketchbook-page-turning"
+              style={{
+                transform: `perspective(2000px) rotateY(${-st.tp * 180}deg)`,
+                width: `${pageW}px`,
+                height: `${pageH}px`,
+                left: `${pageW + gap}px`,
+                opacity: !isTurning && landingFade ? 0 : 1,
+                transition: !isTurning && landingTurn ? 'transform 100ms ease-out, opacity 120ms linear, box-shadow 100ms linear' : undefined,
+              }}
+            >
+              <div className="sketchbook-page-turning-front" style={{ backgroundImage: textureUrl(st.front), visibility: st.tp < 0.5 ? 'visible' : 'hidden', boxShadow: turningShadow(st.tp) }}>
+                {renderPage(pages[st.front], 'turn-front', fontForPage(st.front), st.front)}
+                {renderCorners(st.front)}
+              </div>
+              <div className="sketchbook-page-turning-back" style={{ backgroundImage: textureUrl(st.back), visibility: st.tp < 0.5 ? 'hidden' : 'visible', boxShadow: turningShadow(st.tp) }}>
+                {renderPage(pages[st.back], 'turn-back', fontForPage(st.back), st.back)}
+                {renderCorners(st.back)}
+              </div>
             </div>
-            <div className="sketchbook-page-turning-back" style={{ backgroundImage: textureUrl(nextLeftIndex), visibility: turnProgress < 0.5 ? 'hidden' : 'visible' }}>
-              {renderPage(pages[nextLeftIndex], 'turn-back', fontForPage(nextLeftIndex), nextLeftIndex)}
-            </div>
-          </div>
-        )}
+          );
+        })()}
       </div>
     </div>
   );

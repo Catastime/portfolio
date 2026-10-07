@@ -5,10 +5,10 @@ Add-Type -AssemblyName System.Drawing
 # window aspect and drawn underneath, the frame on top. Alpha is preserved.
 
 $pairs = @(
-  @{ frame = 'polaroid-frame-sketch_.png';      photo = 'Cityhotel_Sketch.jpg';      out = 'polaroid-composed-sketch.png' },
-  @{ frame = 'polaroid-frame-concrete.png';     photo = 'Cityhotel_Concrete.jpg';    out = 'polaroid-composed-concrete.png' },
-  @{ frame = 'polaroid-frame-scandi.png';       photo = 'Cityhotel_Scandi.jpg';      out = 'polaroid-composed-scandi.png' },
-  @{ frame = 'polaroid-frame-bladerunner.png';  photo = 'Cityhotel_Blade-Runner.jpg'; out = 'polaroid-composed-bladerunner.png' }
+  @{ frame = 'polaroid-frame-sketch2.png';      photo = 'Cityhotel_Sketch.jpg';      out = 'polaroid-composed-sketch.png' },
+  @{ frame = 'polaroid-frame-concrete2.png';     photo = 'Cityhotel_Concrete.jpg';    out = 'polaroid-composed-concrete.png' },
+  @{ frame = 'polaroid-frame-scandi2.png';       photo = 'Cityhotel_Scandi.jpg';      out = 'polaroid-composed-scandi.png' },
+  @{ frame = 'polaroid-frame-bladerunner2.png';  photo = 'Cityhotel_Blade-Runner.jpg'; out = 'polaroid-composed-bladerunner.png' }
 )
 $dir = 'C:\Users\timmo\portfolio\public\master-thesis'
 

@@ -307,19 +307,19 @@ const bookPages = [
       // Film references — two rows, all the same height, slightly
       // overlapping, clickable. Row 1: Blade Runner 2049 stills + Tsukumo
       // shop; row 2: Tokyo cityscapes
-      { type: 'image', img: `${BACHELOR_IMG}/Blade-Runner-2049.jpg`, x: 28, y: 40, w: 37.7, rotation: -2, taped: true, noBg: true, tackers: [1, 3, 2, 4], bringToFront: true, z: 2, overlay: true, overlaySet: PAGE2_GALLERY },
-      { type: 'image', img: `${BACHELOR_IMG}/blade-runner-2049-2.jpg`, x: 48, y: 50, w: 37.7, rotation: -1, taped: true, noBg: true, tackers: [2, 4, 1, 3], bringToFront: true, z: 3, overlay: true, overlaySet: PAGE2_GALLERY },
-      { type: 'image', img: `${BACHELOR_IMG}/blade-runner-2049-3.jpg`, x: 62.6, y: 40, w: 33.4, rotation: -1, taped: true, noBg: true, tackers: [4, 2, 3, 1], bringToFront: true, z: 2, overlay: true, overlaySet: PAGE2_GALLERY },
-      { type: 'image', img: `${BACHELOR_IMG}/Tsukumo+Shop+Abram.jpg`, x: 8, y: 50, w: 21.2, rotation: -1.5, taped: true, noBg: true, tackers: [3, 1, 4, 2], bringToFront: true, z: 3, overlay: true, overlaySet: PAGE2_GALLERY },
-      { type: 'image', img: `${BACHELOR_IMG}/tokyo-1.jpg`, x: 22.5, y: 50, w: 31.8, rotation: 2, taped: true, noBg: true, tackers: [2, 4, 1, 3], bringToFront: true, z: 1, overlay: true, overlaySet: PAGE2_GALLERY },
-      { type: 'image', img: `${BACHELOR_IMG}/tokyo-2.jpg`, x: 4, y: 40, w: 32.9, rotation: 1.5, taped: true, noBg: true, tackers: [1, 3, 2, 4], bringToFront: true, z: 2, overlay: true, overlaySet: PAGE2_GALLERY },
-      { type: 'image', img: `${BACHELOR_IMG}/tokyo-3.jpg`, x: 79, y: 50, w: 14.2, rotation: 1.5, taped: true, noBg: true, tackers: [4, 2, 3, 1], bringToFront: true, z: 1, overlay: true, overlaySet: PAGE2_GALLERY },
-      { type: 'image', img: `${BACHELOR_IMG}/tokyo-4.jpg`, x: 57, y: 40, w: 15, rotation: 2, taped: true, noBg: true, tackers: [3, 1, 4, 2], bringToFront: true, z: 2, overlay: true, overlaySet: PAGE2_GALLERY },
+      { type: 'image', img: `${BACHELOR_IMG}/preview/Blade-Runner-2049.jpg`, overlayImg: `${BACHELOR_IMG}/Blade-Runner-2049.jpg`, x: 28, y: 40, w: 37.7, rotation: -2, taped: true, noBg: true, tackers: [1, 3, 2, 4], bringToFront: true, z: 2, overlay: true, overlaySet: PAGE2_GALLERY },
+      { type: 'image', img: `${BACHELOR_IMG}/preview/blade-runner-2049-2.jpg`, overlayImg: `${BACHELOR_IMG}/blade-runner-2049-2.jpg`, x: 48, y: 50, w: 37.7, rotation: -1, taped: true, noBg: true, tackers: [2, 4, 1, 3], bringToFront: true, z: 3, overlay: true, overlaySet: PAGE2_GALLERY },
+      { type: 'image', img: `${BACHELOR_IMG}/preview/blade-runner-2049-3.jpg`, overlayImg: `${BACHELOR_IMG}/blade-runner-2049-3.jpg`, x: 62.6, y: 40, w: 33.4, rotation: -1, taped: true, noBg: true, tackers: [4, 2, 3, 1], bringToFront: true, z: 2, overlay: true, overlaySet: PAGE2_GALLERY },
+      { type: 'image', img: `${BACHELOR_IMG}/preview/Tsukumo+Shop+Abram.jpg`, overlayImg: `${BACHELOR_IMG}/Tsukumo+Shop+Abram.jpg`, x: 8, y: 50, w: 21.2, rotation: -1.5, taped: true, noBg: true, tackers: [3, 1, 4, 2], bringToFront: true, z: 3, overlay: true, overlaySet: PAGE2_GALLERY },
+      { type: 'image', img: `${BACHELOR_IMG}/preview/tokyo-1.jpg`, overlayImg: `${BACHELOR_IMG}/tokyo-1.jpg`, x: 22.5, y: 50, w: 31.8, rotation: 2, taped: true, noBg: true, tackers: [2, 4, 1, 3], bringToFront: true, z: 1, overlay: true, overlaySet: PAGE2_GALLERY },
+      { type: 'image', img: `${BACHELOR_IMG}/preview/tokyo-2.jpg`, overlayImg: `${BACHELOR_IMG}/tokyo-2.jpg`, x: 4, y: 40, w: 32.9, rotation: 1.5, taped: true, noBg: true, tackers: [1, 3, 2, 4], bringToFront: true, z: 2, overlay: true, overlaySet: PAGE2_GALLERY },
+      { type: 'image', img: `${BACHELOR_IMG}/preview/tokyo-3.jpg`, overlayImg: `${BACHELOR_IMG}/tokyo-3.jpg`, x: 79, y: 50, w: 14.2, rotation: 1.5, taped: true, noBg: true, tackers: [4, 2, 3, 1], bringToFront: true, z: 1, overlay: true, overlaySet: PAGE2_GALLERY },
+      { type: 'image', img: `${BACHELOR_IMG}/preview/tokyo-4.jpg`, overlayImg: `${BACHELOR_IMG}/tokyo-4.jpg`, x: 57, y: 40, w: 15, rotation: 2, taped: true, noBg: true, tackers: [3, 1, 4, 2], bringToFront: true, z: 2, overlay: true, overlaySet: PAGE2_GALLERY },
       // Collage caption
       { type: 'text', text: 'Inspiration', x: 20, y: 66.5, w: 72, rotation: 0, align: 'right', font: "'automate', sans-serif", fontSize: 0.55, fontSizeMobile: 0.4, weight: 300, opacity: 0.65 },
       // Color spectrum analysis — plays as a gif; hovering swaps in the
       // still spectrum image
-      { type: 'gif', video: `${BACHELOR_IMG}/BRF_1.mp4`, hoverImg: `${BACHELOR_IMG}/spectrum.png`, x: 8, y: 73.5, w: 84, rotation: 0, taped: true, noBg: true, tackers: [4, 2, 3, 1] },
+      { type: 'gif', video: `${BACHELOR_IMG}/BRF_1.mp4`, poster: `${BACHELOR_IMG}/BRF_1-poster.jpg`, hoverImg: `${BACHELOR_IMG}/spectrum.png`, x: 8, y: 73.5, w: 84, rotation: 0, taped: true, noBg: true, tackers: [4, 2, 3, 1] },
       // Subtitle — grey caption under the video
       { type: 'text', text: 'Colorspectrum analysis Blade Runner 2049', x: 20, y: 97.6, w: 72, rotation: 0, align: 'right', font: "'automate', sans-serif", fontSize: 0.55, fontSizeMobile: 0.4, weight: 300, opacity: 0.65 },
     ],
@@ -341,7 +341,7 @@ const bookPages = [
       // Bottom left — the four M75 plates as an even 2x2 grid, all the
       // same size, equal gaps
       // Subtitle for the material experiments block
-      { type: 'text', text: 'Personal material experiments', x: 3, y: 96.3, w: 60, rotation: 0, align: 'left', font: "'automate', sans-serif", fontSize: 0.55, fontSizeMobile: 0.4, weight: 300, opacity: 0.65 },
+      { type: 'text', text: 'Personal material experiments', x: 4.5, y: 93.3, w: 60, rotation: 0, align: 'left', font: "'automate', sans-serif", fontSize: 0.55, fontSizeMobile: 0.4, weight: 300, opacity: 0.65 },
       { type: 'image', img: `${BACHELOR_IMG}/M75_2809.jpg`, x: 0, y: 54.5, w: 28, rotation: 89, taped: true, noBg: true, tackers: [3, 1, 4, 2], overlay: true, overlaySet: M75_GALLERY },
       { type: 'image', img: `${BACHELOR_IMG}/M75_2815.jpg`, x: 20, y: 54.5, w: 28, rotation: 91, taped: true, noBg: true, tackers: [2, 4, 1, 3], overlay: true, overlaySet: M75_GALLERY },
       { type: 'image', img: `${BACHELOR_IMG}/M75_2822.jpg`, x: 0, y: 75.3, w: 28, rotation: 88.5, taped: true, noBg: true, tackers: [1, 3, 2, 4], overlay: true, overlaySet: M75_GALLERY },
@@ -361,7 +361,7 @@ const bookPages = [
       // Unity video — poster render, same width as work.01's showcase
       { type: 'image', img: `${BACHELOR_IMG}/unity-poster.jpg`, x: 8, y: 52, w: 84, rotation: 0, taped: true, noBg: true, video: `${BACHELOR_IMG}/Unity.mp4`, tackers: [4, 2, 3, 1] },
       // Subtitle — grey caption under the video
-      { type: 'text', text: 'Walking through', x: 20, y: 86.5, w: 72, rotation: 0, align: 'right', font: "'automate', sans-serif", fontSize: 0.55, fontSizeMobile: 0.4, weight: 300, opacity: 0.65 },
+      { type: 'text', text: 'Scene & Architecture', x: 20, y: 86.5, w: 72, rotation: 0, align: 'right', font: "'automate', sans-serif", fontSize: 0.55, fontSizeMobile: 0.4, weight: 300, opacity: 0.65 },
       // MORE — square button, opens the bachelor sheets overlay
       { type: 'button', label: 'MORE', x: 80, y: 91.25, w: 12, rotation: 0, more: 'bachelor' },
     ],
