@@ -7,6 +7,25 @@ import * as THREE from 'three';
 import { BASE } from '@/paths'
 import './Sketchbook.css';
 
+// --- Model loading: prefetch cache + sequential parse queue ---
+// GLB files are prefetched while a spread is settled, so a page turn never
+// pays the network cost. Parses run one at a time through a queue — three
+// models mounting together would otherwise parse in a single burst and
+// stutter the landing.
+const modelFileCache = new Map();
+const prefetchModelFile = (src) => {
+  if (!modelFileCache.has(src)) {
+    modelFileCache.set(src, fetch(src).then((r) => r.arrayBuffer()));
+  }
+  return modelFileCache.get(src);
+};
+let modelParseChain = Promise.resolve();
+const queueModelParse = (task) => {
+  const run = modelParseChain.then(task);
+  modelParseChain = run.catch(() => {});
+  return run;
+};
+
 /**
  * Sketchbook — two stacks of A4 pages with a gap between them, laying on
  * the cutting mat. Content is glued/drawn onto pages: images at slight
@@ -221,7 +240,7 @@ function StudioEnv() {
     const pmrem = new THREE.PMREMGenerator(gl);
     const env = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
     scene.environment = env;
-    scene.environmentIntensity = 0.2;
+    scene.environmentIntensity = 0.1;
     pmrem.dispose();
     invalidate();
     return () => {
@@ -240,7 +259,7 @@ function StudioEnv() {
 // fit + rotation; the lift group inside scales and rises, so the model
 // grows off the page without sinking through its shadow. The camera
 // tracks the lift so the bigger model stays in frame.
-function FittedModel({ fitted, template, concreteMap, heldRef, rotRef }) {
+function FittedModel({ fitted, template, concreteMap, heldRef, rotRef, tile }) {
   const spin = useRef();
   const lift = useRef();
   const invalidate = useThree((state) => state.invalidate);
@@ -252,7 +271,29 @@ function FittedModel({ fitted, template, concreteMap, heldRef, rotRef }) {
     clone.traverse((o) => {
       if (!o.isMesh) return;
       o.castShadow = true;
-      o.receiveShadow = false;
+      o.receiveShadow = true;
+      // The exported meshes have no UVs — generate box-projected
+      // coordinates so the concrete photo can map over the surface
+      const pos = o.geometry.attributes.position;
+      if (pos && !o.geometry.attributes.uv) {
+        const nor = o.geometry.attributes.normal;
+        const g = o.geometry.clone();
+        const uv = new Float32Array(pos.count * 2);
+        for (let i = 0; i < pos.count; i++) {
+          const x = pos.getX(i), y = pos.getY(i), z = pos.getZ(i);
+          const nx = Math.abs(nor ? nor.getX(i) : 0);
+          const ny = Math.abs(nor ? nor.getY(i) : 0);
+          const nz = Math.abs(nor ? nor.getZ(i) : 0);
+          let u, v;
+          if (ny >= nx && ny >= nz) { u = x; v = z; }
+          else if (nx >= nz) { u = z; v = y; }
+          else { u = x; v = y; }
+          uv[i * 2] = u * tile + 0.5;
+          uv[i * 2 + 1] = v * tile + 0.5;
+        }
+        g.setAttribute('uv', new THREE.BufferAttribute(uv, 2));
+        o.geometry = g;
+      }
       const mats = Array.isArray(o.material) ? o.material : [o.material];
       const overridden = mats.map((m) => {
         const c = m.clone();
@@ -260,7 +301,7 @@ function FittedModel({ fitted, template, concreteMap, heldRef, rotRef }) {
         c.roughness = 0.95;
         if (concreteMap) {
           c.map = concreteMap;
-          c.color.set('#ffffff');
+          c.color.set('#e8e8e8');
         } else {
           c.color.set('#bfbfbf');
         }
@@ -272,7 +313,7 @@ function FittedModel({ fitted, template, concreteMap, heldRef, rotRef }) {
       o.material = Array.isArray(o.material) ? overridden : overridden[0];
     });
     return clone;
-  }, [template, concreteMap]);
+  }, [template, concreteMap, tile]);
   useEffect(() => { invalidate(); }, [object, invalidate]);
   useFrame(() => {
     const l = lift.current;
@@ -311,26 +352,48 @@ function FittedModel({ fitted, template, concreteMap, heldRef, rotRef }) {
   );
 }
 
-function ModelItem({ src, texture, style }) {
+function ModelItem({ src, texture, tile, poster, style }) {
   const [template, setTemplate] = useState(null);
   const [concreteMap, setConcreteMap] = useState(null);
   const [failed, setFailed] = useState(false);
   const [held, setHeld] = useState(false);
+  const [posterGone, setPosterGone] = useState(false);
   const heldRef = useRef(false);
   const rotRef = useRef({ ...MODEL_BASE_ROTATION });
   const dragRef = useRef(null);
   const invalidateRef = useRef(null);
 
+  // Deferred + queued load: the page mounts at the START of a turn, so
+  // waiting keeps the fetch/parse/WebGL setup off the turn animation. The
+  // file usually comes from the prefetch cache (paid during idle).
   useEffect(() => {
     let alive = true;
-    new GLTFLoader().load(
-      src,
-      (gltf) => { if (alive) setTemplate(gltf.scene); },
-      undefined,
-      () => { if (alive) setFailed(true); }
-    );
-    return () => { alive = false; };
+    const timer = setTimeout(() => {
+      queueModelParse(async () => {
+        try {
+          const buffer = await prefetchModelFile(src);
+          if (!alive) return;
+          new GLTFLoader().parse(
+            buffer,
+            src.substring(0, src.lastIndexOf('/') + 1),
+            (gltf) => { if (alive) setTemplate(gltf.scene); },
+            () => { if (alive) setFailed(true); }
+          );
+        } catch {
+          if (alive) setFailed(true);
+        }
+      });
+    }, 650);
+    return () => { alive = false; clearTimeout(timer); };
   }, [src]);
+
+  // Once the live model is in, the poster has served its purpose —
+  // remove it shortly after the canvas fade completes
+  useEffect(() => {
+    if (!template) return;
+    const t = setTimeout(() => setPosterGone(true), 600);
+    return () => clearTimeout(t);
+  }, [template]);
 
   // Optional concrete photo mapped over the model surface
   useEffect(() => {
@@ -395,7 +458,6 @@ function ModelItem({ src, texture, style }) {
       </div>
     );
   }
-  if (!template || !fitted) return null;
 
   // The box grows around its center while held; the camera pulls back in
   // sync, so the model itself stays the same size on the page
@@ -413,6 +475,16 @@ function ModelItem({ src, texture, style }) {
       onPointerCancel={release}
       onLostPointerCapture={release}
     >
+      {/* Poster — a lightweight, slightly darkened render of the model that
+          shows instantly; the live canvas fades in over it when ready */}
+      {poster && !posterGone && (
+        <img
+          src={poster}
+          alt=""
+          style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }}
+        />
+      )}
+      {template && fitted && (
       <Canvas
         className="sketch-model-canvas"
         camera={{ position: MODEL_CAMERA, fov: 32 }}
@@ -420,27 +492,27 @@ function ModelItem({ src, texture, style }) {
         dpr={1}
         shadows
         gl={{ antialias: true, alpha: true, powerPreference: 'low-power' }}
-        onCreated={({ invalidate }) => { invalidateRef.current = invalidate }}
+        onCreated={({ invalidate, gl }) => { invalidateRef.current = invalidate; gl.toneMappingExposure = 1.05 }}
       >
-        <ambientLight intensity={0.25} />
+        <ambientLight intensity={0.18} />
         {/* Key light from the left — the page's light direction; the cast
             shadow falls to the right, like the other objects on the page */}
         <directionalLight
           castShadow
           position={[-4, 6, 2]}
-          intensity={0.85}
+          intensity={2.75}
           shadow-mapSize-width={1024}
           shadow-mapSize-height={1024}
-          shadow-camera-left={-3.5}
-          shadow-camera-right={3.5}
-          shadow-camera-top={3.5}
-          shadow-camera-bottom={-3.5}
+          shadow-camera-left={-2.5}
+          shadow-camera-right={2.5}
+          shadow-camera-top={2.5}
+          shadow-camera-bottom={-2.5}
           shadow-camera-near={0.5}
           shadow-camera-far={20}
           shadow-bias={-0.0005}
         />
         {/* Soft fill from the right so the shadow side keeps some detail */}
-        <directionalLight position={[3, 2, -2]} intensity={0.2} />
+        <directionalLight position={[3, 2, -2]} intensity={0.1} />
         <StudioEnv />
         {/* The page surface — invisible except where it catches the shadow */}
         <mesh
@@ -449,10 +521,11 @@ function ModelItem({ src, texture, style }) {
           position={[0, fitted.bottomY * fitted.scale - 0.002, 0]}
         >
           <planeGeometry args={[10, 10]} />
-          <shadowMaterial opacity={0.45} />
+          <shadowMaterial opacity={0.6} />
         </mesh>
-        <FittedModel fitted={fitted} template={template} concreteMap={concreteMap} heldRef={heldRef} rotRef={rotRef} />
+        <FittedModel fitted={fitted} template={template} concreteMap={concreteMap} heldRef={heldRef} rotRef={rotRef} tile={tile} />
       </Canvas>
+      )}
     </div>
   );
 }
@@ -737,7 +810,7 @@ export default function Sketchbook({
     }
 
     if (item.type === 'model') {
-      return <ModelItem key={key} src={item.src} texture={item.texture} style={{ ...style, aspectRatio: String(item.aspect || 1) }} />;
+      return <ModelItem key={key} src={item.src} texture={item.texture} tile={item.tile} poster={item.poster} style={{ ...style, aspectRatio: String(item.aspect || 1) }} />;
     }
 
     if (item.type === 'gif') {
@@ -1381,7 +1454,54 @@ export default function Sketchbook({
     wasTurningRef.current = isTurning;
   }, [isTurning]);
 
-  return (
+  // Prefetch model files for the current and adjacent spreads while the
+  // book is settled — the network cost is paid during idle, so turning
+  // onto a model page never waits on fetches. Delayed so the settled
+  // page's own content (images, videos) finishes loading first — the
+  // model fetches are large and would otherwise starve them.
+  useEffect(() => {
+    if (isTurning || landingTurn) return;
+    const timer = setTimeout(() => {
+      const idxs = new Set();
+      if (isMobile) {
+        idxs.add(mobilePage);
+        if (mobilePage > 0) idxs.add(mobilePage - 1);
+        if (mobilePage < pages.length - 1) idxs.add(mobilePage + 1);
+      } else {
+        idxs.add(scrollSpread * 2);
+        idxs.add(scrollSpread * 2 + 1);
+        if (scrollSpread > 0) {
+          idxs.add(scrollSpread * 2 - 2);
+          idxs.add(scrollSpread * 2 - 1);
+        }
+        if (scrollSpread < totalSpreads - 1) {
+          idxs.add(scrollSpread * 2 + 2);
+          idxs.add(scrollSpread * 2 + 3);
+        }
+      }
+      // Posters first — the video preview images are tiny and must be
+      // ready the moment the page lands
+      idxs.forEach((i) => {
+        (pages[i]?.items || []).forEach((item) => {
+          if (item.poster) prefetchModelFile(item.poster);
+          if (item.type === 'model' && item.poster) prefetchModelFile(item.poster);
+        });
+      });
+      idxs.forEach((i) => {
+        (pages[i]?.items || []).forEach((item) => {
+          if (item.img) prefetchModelFile(item.img);
+          if (item.hoverImg) prefetchModelFile(item.hoverImg);
+          if (item.type === 'model') {
+            if (item.src) prefetchModelFile(item.src);
+            if (item.texture) prefetchModelFile(item.texture);
+          }
+        });
+      });
+    }, 1500);
+    return () => clearTimeout(timer);
+  }, [scrollSpread, mobilePage, isMobile, isTurning, landingTurn, pages, totalSpreads]);
+
+return (
     <div className="sketchbook-container" style={{ '--hole-size': `${pageH * 0.0102}px`, '--page-scale': pageH / (isMobile ? REF_MOBILE_PAGE_H : REF_PAGE_H) }}>
       <div
         className="sketchbook"
@@ -1415,6 +1535,21 @@ export default function Sketchbook({
               </div>
             )}
           </>
+          {/* Baked gutter shadow — the neighboring stack's spine-side shadow,
+              rendered as part of the page itself so it turns with the page and
+              can never pop at the landing handoff. The div sits beyond the spine;
+              the container's overflow clips it, leaving only the leftward bleed. */}
+          <div
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: '100%',
+              width: `${pageW}px`,
+              height: `${pageH}px`,
+              boxShadow: '0 20px 60px -10px rgba(0, 0, 0, 0.6), 0 8px 20px -4px rgba(0, 0, 0, 0.4)',
+              pointerEvents: 'none',
+            }}
+          />
         </div>
 
         {/* Gap between stacks */}
@@ -1463,6 +1598,21 @@ export default function Sketchbook({
               <div className="sketchbook-page-turning-back" style={{ backgroundImage: textureUrl(st.back), visibility: st.tp < 0.5 ? 'hidden' : 'visible', boxShadow: turningShadow(st.tp) }}>
                 {renderPage(pages[st.back], 'turn-back', fontForPage(st.back), st.back)}
                 {renderCorners(st.back)}
+                {/* Baked gutter shadow — the neighboring stack's spine-side shadow,
+                    rendered as part of the page itself so it turns with the page and
+                    can never pop at the landing handoff. The div sits beyond the spine;
+                    the container's overflow clips it, leaving only the leftward bleed. */}
+                <div
+                  style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: '100%',
+                    width: `${pageW}px`,
+                    height: `${pageH}px`,
+                    boxShadow: '0 20px 60px -10px rgba(0, 0, 0, 0.6), 0 8px 20px -4px rgba(0, 0, 0, 0.4)',
+                    pointerEvents: 'none',
+                  }}
+                />
               </div>
             </div>
           );

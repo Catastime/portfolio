@@ -330,25 +330,25 @@ const bookPages = [
     meta: { year: '2020/21', place: 'Hannover', title: 'Day and Night Kitchen', work: 2 },
     items: [
       // Top row — SP1 and SP5
-      { type: 'image', img: `${BACHELOR_IMG}/SP1.png`, x: 5, y: 4, w: 46, rotation: -1.5, taped: true, noBg: true, tackers: [1, 3, 2, 4], overlay: true, overlaySet: PAGE3_GALLERY },
-      { type: 'image', img: `${BACHELOR_IMG}/sp5.png`, x: 55, y: 5, w: 40, rotation: 1.5, taped: true, noBg: true, tackers: [2, 4, 1, 3], overlay: true, overlaySet: PAGE3_GALLERY },
+      { type: 'image', img: `${BACHELOR_IMG}/preview/SP1.jpg`, overlayImg: `${BACHELOR_IMG}/SP1.png`, x: 5, y: 4, w: 46, rotation: -1.5, taped: true, noBg: true, tackers: [1, 3, 2, 4], overlay: true, overlaySet: PAGE3_GALLERY },
+      { type: 'image', img: `${BACHELOR_IMG}/preview/sp5.jpg`, overlayImg: `${BACHELOR_IMG}/sp5.png`, x: 55, y: 5, w: 40, rotation: 1.5, taped: true, noBg: true, tackers: [2, 4, 1, 3], overlay: true, overlaySet: PAGE3_GALLERY },
       // Middle row — swiss pavilion exterior and interior, Analyse
-      { type: 'image', img: `${BACHELOR_IMG}/swiss-pavilion-außen.jpg`, x: 5, y: 26, w: 31, rotation: 1.5, taped: true, noBg: true, tackers: [2, 4, 1, 3], overlay: true, overlaySet: PAGE3_GALLERY },
-      { type: 'image', img: `${BACHELOR_IMG}/swiss-pavilion-innen1.jpg`, x: 40, y: 27, w: 30, rotation: -1.5, taped: true, noBg: true, tackers: [1, 3, 2, 4], overlay: true, overlaySet: PAGE3_GALLERY },
-      { type: 'image', img: `${BACHELOR_IMG}/Analyse.jpg`, x: 73, y: 24, w: 23, rotation: -2, taped: true, noBg: true, tackers: [4, 2, 3, 1], overlay: true, overlaySet: PAGE3_GALLERY },
+      { type: 'image', img: `${BACHELOR_IMG}/preview/swiss-pavilion-außen.jpg`, overlayImg: `${BACHELOR_IMG}/swiss-pavilion-außen.jpg`, x: 5, y: 26, w: 31, rotation: 1.5, taped: true, noBg: true, tackers: [2, 4, 1, 3], overlay: true, overlaySet: PAGE3_GALLERY },
+      { type: 'image', img: `${BACHELOR_IMG}/preview/swiss-pavilion-innen1.jpg`, overlayImg: `${BACHELOR_IMG}/swiss-pavilion-innen1.jpg`, x: 40, y: 27, w: 30, rotation: -1.5, taped: true, noBg: true, tackers: [1, 3, 2, 4], overlay: true, overlaySet: PAGE3_GALLERY },
+      { type: 'image', img: `${BACHELOR_IMG}/preview/Analyse.jpg`, overlayImg: `${BACHELOR_IMG}/Analyse.jpg`, x: 73, y: 24, w: 23, rotation: -2, taped: true, noBg: true, tackers: [4, 2, 3, 1], overlay: true, overlaySet: PAGE3_GALLERY },
       // Subtitle — starts below the lower left image of the upper block
       { type: 'text', text: 'Architectural Reference: Swiss Pavillion - Kerez 2016', x: 5, y: 43, w: 60, rotation: 0, align: 'left', font: "'automate', sans-serif", fontSize: 0.55, fontSizeMobile: 0.4, weight: 300, opacity: 0.65 },
       // Bottom left — the four M75 plates as an even 2x2 grid, all the
       // same size, equal gaps
       // Subtitle for the material experiments block
       { type: 'text', text: 'Personal material experiments', x: 4.5, y: 93.3, w: 60, rotation: 0, align: 'left', font: "'automate', sans-serif", fontSize: 0.55, fontSizeMobile: 0.4, weight: 300, opacity: 0.65 },
-      { type: 'image', img: `${BACHELOR_IMG}/M75_2809.jpg`, x: 0, y: 54.5, w: 28, rotation: 89, taped: true, noBg: true, tackers: [3, 1, 4, 2], overlay: true, overlaySet: M75_GALLERY },
-      { type: 'image', img: `${BACHELOR_IMG}/M75_2815.jpg`, x: 20, y: 54.5, w: 28, rotation: 91, taped: true, noBg: true, tackers: [2, 4, 1, 3], overlay: true, overlaySet: M75_GALLERY },
-      { type: 'image', img: `${BACHELOR_IMG}/M75_2822.jpg`, x: 0, y: 75.3, w: 28, rotation: 88.5, taped: true, noBg: true, tackers: [1, 3, 2, 4], overlay: true, overlaySet: M75_GALLERY },
-      { type: 'image', img: `${BACHELOR_IMG}/M75_2824.jpg`, x: 20, y: 75.3, w: 28, rotation: 91.5, taped: true, noBg: true, tackers: [4, 2, 3, 1], overlay: true, overlaySet: M75_GALLERY },
+      { type: 'image', img: `${BACHELOR_IMG}/preview/M75_2809.jpg`, overlayImg: `${BACHELOR_IMG}/M75_2809.jpg`, x: 0, y: 54.5, w: 28, rotation: 89, taped: true, noBg: true, tackers: [3, 1, 4, 2], overlay: true, overlaySet: M75_GALLERY },
+      { type: 'image', img: `${BACHELOR_IMG}/preview/M75_2815.jpg`, overlayImg: `${BACHELOR_IMG}/M75_2815.jpg`, x: 20, y: 54.5, w: 28, rotation: 91, taped: true, noBg: true, tackers: [2, 4, 1, 3], overlay: true, overlaySet: M75_GALLERY },
+      { type: 'image', img: `${BACHELOR_IMG}/preview/M75_2822.jpg`, overlayImg: `${BACHELOR_IMG}/M75_2822.jpg`, x: 0, y: 75.3, w: 28, rotation: 88.5, taped: true, noBg: true, tackers: [1, 3, 2, 4], overlay: true, overlaySet: M75_GALLERY },
+      { type: 'image', img: `${BACHELOR_IMG}/preview/M75_2824.jpg`, overlayImg: `${BACHELOR_IMG}/M75_2824.jpg`, x: 20, y: 75.3, w: 28, rotation: 91.5, taped: true, noBg: true, tackers: [4, 2, 3, 1], overlay: true, overlaySet: M75_GALLERY },
       // Bottom right — the two Kugel models, a bit smaller
-      { type: 'model', src: `${BACHELOR_IMG}/Kugel1.glb`, texture: `${BACHELOR_IMG}/concrete.jpg`, x: 58, y: 51, w: 30, rotation: 0 },
-      { type: 'model', src: `${BACHELOR_IMG}/Kugel2.glb`, texture: `${BACHELOR_IMG}/concrete.jpg`, x: 58, y: 74, w: 30, rotation: 0 },
+      { type: 'model', src: `${BACHELOR_IMG}/Kugel1.glb`, texture: `${BACHELOR_IMG}/concrete.jpg`, tile: 10, poster: `${BACHELOR_IMG}/Kugel1-poster.png`, x: 58, y: 51, w: 30, rotation: 0 },
+      { type: 'model', src: `${BACHELOR_IMG}/Kugel2.glb`, texture: `${BACHELOR_IMG}/concrete.jpg`, tile: 10, poster: `${BACHELOR_IMG}/Kugel2-poster.png`, x: 58, y: 74, w: 30, rotation: 0 },
     ],
   },
   {
@@ -357,11 +357,13 @@ const bookPages = [
     items: [
       // 3D model — sits on the page, hold to lift and turn; concrete photo
       // mapped over the surface
-      { type: 'model', src: `${BACHELOR_IMG}/work2.glb`, texture: `${BACHELOR_IMG}/concrete.jpg`, x: -4, y: 4, w: 108, aspect: 1.66, rotation: 0 },
+      { type: 'model', src: `${BACHELOR_IMG}/work2.glb`, texture: `${BACHELOR_IMG}/concrete.jpg`, tile: 100, poster: `${BACHELOR_IMG}/work2-poster.png`, x: -4, y: 4, w: 108, aspect: 1.66, rotation: 0 },
       // Unity video — poster render, same width as work.01's showcase
-      { type: 'image', img: `${BACHELOR_IMG}/unity-poster.jpg`, x: 8, y: 52, w: 84, rotation: 0, taped: true, noBg: true, video: `${BACHELOR_IMG}/Unity.mp4`, tackers: [4, 2, 3, 1] },
+      { type: 'image', img: `${BACHELOR_IMG}/preview/unity-poster.jpg`, x: 8, y: 52, w: 84, rotation: 0, taped: true, noBg: true, video: `${BACHELOR_IMG}/Unity.mp4`, tackers: [4, 2, 3, 1] },
       // Subtitle — grey caption under the video
       { type: 'text', text: 'Scene & Architecture', x: 20, y: 86.5, w: 72, rotation: 0, align: 'right', font: "'automate', sans-serif", fontSize: 0.55, fontSizeMobile: 0.4, weight: 300, opacity: 0.65 },
+      // Interactivity hint — like the polaroid page's footnote
+      { type: 'text', text: '*CLICK, HOLD, AND MOVE TO LIFT AND ROTATE THE 3D-MODELS.', x: 8, y: 100, w: 84, rotation: 0, font: "'Hitobito', sans-serif", fontSize: 0.7, fontSizeMobile: 0.45, align: 'center', hoverLight: true },
       // MORE — square button, opens the bachelor sheets overlay
       { type: 'button', label: 'MORE', x: 80, y: 91.25, w: 12, rotation: 0, more: 'bachelor' },
     ],

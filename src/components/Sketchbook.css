@@ -36,6 +36,9 @@
   background-size: 100% 100%;
   background-position: center;
   background-repeat: no-repeat;
+  /* keep the outer/bottom shadow, cut the spine-side bleed — the left
+     page's baked gutter shadow replaces it */
+  clip-path: inset(0 -20px -40px 0);
 }
 
 /* Pages — content layer on top of the paper texture, inset 5% for paper border */
@@ -410,7 +413,7 @@
   top: 0;
   transform-origin: left center;
   transform-style: preserve-3d;
-  z-index: 10;
+  z-index: 200;
   pointer-events: none;
 }
 
@@ -753,3 +756,14 @@
   opacity: 0.6;
 }
 
+
+/* Model canvas fades in — it mounts after the page turn settles (deferred
+   load), so its arrival should be soft rather than a pop */
+.sketch-model canvas {
+  animation: sketch-model-fade 0.4s ease;
+}
+
+@keyframes sketch-model-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}

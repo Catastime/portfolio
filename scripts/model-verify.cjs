@@ -1,5 +1,5 @@
-/* DOM-level verification: corners travel with the turning page; shadow is
- * zero when flat and strong mid-turn. */
+/* Model page verification: settle on spread 5 (three models), confirm the
+ * canvases appear after the deferred load and the page stays responsive. */
 const http = require('http');
 const fs = require('fs');
 const path = require('path');
@@ -19,9 +19,9 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 const BOOK_START = 0.60, RANGE = 0.40, TOTAL_SPREADS = 16, FLAT = 0.35;
 const progFor = (spread, frac) => BOOK_START + RANGE * ((spread + frac) / TOTAL_SPREADS);
 
-setTimeout(() => { console.log('HARD TIMEOUT'); process.exit(2); }, 150000).unref();
+setTimeout(() => { console.log('HARD TIMEOUT'); process.exit(2); }, 170000).unref();
 
-server.listen(8768, async () => {
+server.listen(8775, async () => {
   try {
     const browser = await puppeteer.launch({
       executablePath: 'C:/Program Files/Google/Chrome/Application/chrome.exe',
@@ -31,46 +31,41 @@ server.listen(8768, async () => {
     });
     const page = await browser.newPage();
     page.on('pageerror', (e) => console.log('PAGE ERROR:', e.message.slice(0, 150)));
-    await page.goto('http://127.0.0.1:8768/', { waitUntil: 'networkidle2', timeout: 60000 });
+    await page.goto('http://127.0.0.1:8775/', { waitUntil: 'networkidle2', timeout: 60000 });
     await page.evaluate(async () => { await document.fonts.ready; });
     await sleep(1500);
     const max = await page.evaluate(() => document.documentElement.scrollHeight - window.innerHeight);
     const scrollTo = (p) => page.evaluate((y) => window.scrollTo({ top: y, behavior: 'instant' }), p * max);
 
-    const probe = () => page.evaluate(() => {
-      const tp = document.querySelector('.sketchbook-page-turning');
-      const front = document.querySelector('.sketchbook-page-turning-front');
-      const back = document.querySelector('.sketchbook-page-turning-back');
-      const leftStack = document.querySelector('.sketchbook-page-stack-left');
-      return {
-        turningExists: !!tp,
-        frontCorners: front ? front.querySelectorAll('.sketchbook-corners').length : -1,
-        backCorners: back ? back.querySelectorAll('.sketchbook-corners').length : -1,
-        frontShadow: front ? front.style.boxShadow.slice(0, 60) : 'n/a',
-        backShadow: back ? back.style.boxShadow.slice(0, 60) : 'n/a',
-        leftChildren: leftStack.children.length,
-        leftCornersInside: leftStack.querySelectorAll('.sketchbook-corners').length,
-      };
-    });
-
-    await scrollTo(progFor(3, 0.1));
+    // Settle on spread 4, then turn to spread 5 (the model spread)
+    await scrollTo(progFor(4, 0.1));
+    await sleep(2500);
+    const steps = 30;
+    for (let i = 1; i <= steps; i++) {
+      await scrollTo(progFor(4, FLAT + (i / steps) * (1 - FLAT)));
+      await sleep(20);
+    }
+    // Sample: model canvases should appear over time (deferred + queued)
+    for (let i = 0; i < 12; i++) {
+      const st = await page.evaluate(() => ({
+        canvases: document.querySelectorAll('.sketch-model canvas').length,
+        failed: document.querySelectorAll('.sketch-model-failed').length,
+      }));
+      console.log(`t=${i * 300}ms:`, JSON.stringify(st));
+      if (st.canvases >= 3) break;
+      await sleep(300);
+    }
     await sleep(2000);
-    console.log('settled s3:', JSON.stringify(await probe()));
-
-    // Mid-turn
-    await scrollTo(progFor(3, 0.7));
-    await sleep(400);
-    console.log('mid-turn:', JSON.stringify(await probe()));
-
-    // Nearly landed
-    await scrollTo(progFor(3, 0.99));
-    await sleep(400);
-    console.log('near-landed:', JSON.stringify(await probe()));
-
-    // Let the settle snap land it
-    await sleep(1500);
-    console.log('landed:', JSON.stringify(await probe()));
-
+    const final = await page.evaluate(() => {
+      const out = [];
+      document.querySelectorAll('.sketch-model canvas').forEach((c) => {
+        let p = c.parentElement, chain = [];
+        for (let i = 0; i < 7 && p; i++) { chain.push(p.className ? String(p.className).split(' ')[0] : p.tagName); p = p.parentElement; }
+        out.push(chain.join(' > '));
+      });
+      return out;
+    });
+    console.log('final:', JSON.stringify(final));
     console.log('done');
     process.exit(0);
   } finally {
