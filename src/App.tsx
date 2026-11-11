@@ -466,7 +466,7 @@ const bookPages = [
       // Subtitle
       { type: 'text', text: 'experimental', x: 20, y: 92, w: 72, rotation: 0, align: 'right', font: "'automate', sans-serif", fontSize: 0.65, fontSizeMobile: 0.45, weight: 300, opacity: 0.7 },
       // Static outline around all experimental photos
-      { type: 'pileoutline', x: 2, y: 4, w: 100, h: 90, rotation: 0, gap: 1.2, line: 0.14, aspect: 1.14, rects: [
+      { type: 'pileoutline', x: 0, y: 0, w: 100, h: 100, rotation: 0, gap: 1.2, line: 0.14, aspect: 0.826, rects: [
         { x: 5, y: 8, w: 46, r: -1 },
         { x: 55, y: 8, w: 40, r: 1 },
         { x: 5, y: 65, w: 70, r: 0 },
