@@ -465,7 +465,7 @@ const bookPages = [
       { type: 'image', img: `${PHOTOGRAPHY_IMG}/experimental (3).jpg`, overlayImg: `${PHOTOGRAPHY_IMG}/experimental (3).jpg`, x: 65, y: 55, w: 30, rotation: -0.5, taped: true, noBg: true, tackers: [1, 3, 2, 4], overlay: true, overlaySet: WORK03_EXPERIMENTAL, z: 3 },
       { type: 'image', img: `${PHOTOGRAPHY_IMG}/experimental (4).jpg`, overlayImg: `${PHOTOGRAPHY_IMG}/experimental (4).jpg`, x: 5, y: 65, w: 70, rotation: 0, taped: true, noBg: true, tackers: [1, 3, 2, 4], overlay: true, overlaySet: WORK03_EXPERIMENTAL, z: 1 },
       // Subtitle
-      { type: 'text', text: 'experimental', x: 15, y: 92, w: 72, rotation: 0, align: 'right', font: "'automate', sans-serif", fontSize: 0.65, fontSizeMobile: 0.45, weight: 300, opacity: 0.7 },
+      { type: 'text', text: 'experimental', x: 20, y: 92, w: 72, rotation: 0, align: 'right', font: "'automate', sans-serif", fontSize: 0.65, fontSizeMobile: 0.45, weight: 300, opacity: 0.7 },
       // Static outline around all experimental photos
       { type: 'pileoutline', x: 2, y: 4, w: 100, h: 90, rotation: 0, gap: 1.2, line: 0.14, aspect: 1.14, rects: [
         { x: 5, y: 8, w: 46, r: -1 },
