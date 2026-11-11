@@ -408,15 +408,20 @@ const bookPages = [
     texture: 'left_page-black',
     meta: { year: '2023-2025', place: 'Northern Europe', title: 'Film Photography', work: 3 },
     items: [
+      // Title
+      { type: 'statement', text: '35mm FILM', x: 4, y: 7.5, w: 84, h: 37.8, rotation: -1, align: 'center', blend: true },
+      { type: 'statement', text: '35mm FILM', x: 4, y: 7.5, w: 84, h: 37.8, rotation: -1, align: 'center', opacity: 0.75, hoverFull: true },
       // Copenhagen photos — varied sizes, photobook style
       // Priority: Copenhagen (2) and (1) are largest
-      { type: 'image', img: `${PHOTOGRAPHY_IMG}/CopenhagenBl (2).jpg`, overlayImg: `${PHOTOGRAPHY_IMG}/CopenhagenBl (2).jpg`, x: 4, y: 10, w: 42, rotation: -1, taped: true, noBg: true, tackers: [1, 3, 2, 4], overlay: true, overlaySet: WORK03_COPENHAGEN, z: 2, bringToFront: true },
-      { type: 'image', img: `${PHOTOGRAPHY_IMG}/CopenhagenBl (1).jpg`, overlayImg: `${PHOTOGRAPHY_IMG}/CopenhagenBl (1).jpg`, x: 50, y: 5, w: 44, rotation: 1, taped: true, noBg: true, tackers: [2, 4, 1, 3], overlay: true, overlaySet: WORK03_COPENHAGEN, z: 3, bringToFront: true },
-      { type: 'image', img: `${PHOTOGRAPHY_IMG}/CopenhagenBl (3).jpg`, overlayImg: `${PHOTOGRAPHY_IMG}/CopenhagenBl (3).jpg`, x: 45, y: 56, w: 35, rotation: 0.5, taped: true, noBg: true, tackers: [1, 3, 2, 4], overlay: true, overlaySet: WORK03_COPENHAGEN, z: 5, bringToFront: true },
-      { type: 'image', img: `${PHOTOGRAPHY_IMG}/CopenhagenBl (4).jpg`, overlayImg: `${PHOTOGRAPHY_IMG}/CopenhagenBl (4).jpg`, x: 6, y: 58, w: 35, rotation: -0.5, taped: true, noBg: true, tackers: [2, 4, 1, 3], overlay: true, overlaySet: WORK03_COPENHAGEN, z: 1, bringToFront: true },
-      { type: 'image', img: `${PHOTOGRAPHY_IMG}/CopenhagenBl (5).jpg`, overlayImg: `${PHOTOGRAPHY_IMG}/CopenhagenBl (5).jpg`, x: 65, y: 45, w: 33.6, rotation: -1, taped: true, noBg: true, tackers: [3, 1, 4, 2], overlay: true, overlaySet: WORK03_COPENHAGEN, z: 4, bringToFront: true },
+      { type: 'statement', text: 'EXPOSURES', x: 50, y: 3, w: 84, h: 37.8, rotation: 1, align: 'center', blend: true },
+      { type: 'statement', text: 'EXPOSURES', x: 50, y: 3, w: 84, h: 37.8, rotation: 1, align: 'center', opacity: 0.75, hoverFull: true },
+      { type: 'image', img: `${PHOTOGRAPHY_IMG}/CopenhagenBl (2).jpg`, overlayImg: `${PHOTOGRAPHY_IMG}/CopenhagenBl (2).jpg`, x: 4, y: 13, w: 42, rotation: -1, taped: true, noBg: true, tackers: [1, 3, 2, 4], overlay: true, overlaySet: WORK03_COPENHAGEN, z: 2, bringToFront: true },
+      { type: 'image', img: `${PHOTOGRAPHY_IMG}/CopenhagenBl (1).jpg`, overlayImg: `${PHOTOGRAPHY_IMG}/CopenhagenBl (1).jpg`, x: 50, y: 8, w: 44, rotation: 1, taped: true, noBg: true, tackers: [2, 4, 1, 3], overlay: true, overlaySet: WORK03_COPENHAGEN, z: 3, bringToFront: true },
+      { type: 'image', img: `${PHOTOGRAPHY_IMG}/CopenhagenBl (3).jpg`, overlayImg: `${PHOTOGRAPHY_IMG}/CopenhagenBl (3).jpg`, x: 45, y: 59, w: 35, rotation: 0.5, taped: true, noBg: true, tackers: [1, 3, 2, 4], overlay: true, overlaySet: WORK03_COPENHAGEN, z: 5, bringToFront: true },
+      { type: 'image', img: `${PHOTOGRAPHY_IMG}/CopenhagenBl (4).jpg`, overlayImg: `${PHOTOGRAPHY_IMG}/CopenhagenBl (4).jpg`, x: 6, y: 61, w: 35, rotation: -0.5, taped: true, noBg: true, tackers: [2, 4, 1, 3], overlay: true, overlaySet: WORK03_COPENHAGEN, z: 1, bringToFront: true },
+      { type: 'image', img: `${PHOTOGRAPHY_IMG}/CopenhagenBl (5).jpg`, overlayImg: `${PHOTOGRAPHY_IMG}/CopenhagenBl (5).jpg`, x: 65, y: 48, w: 33.6, rotation: -1, taped: true, noBg: true, tackers: [3, 1, 4, 2], overlay: true, overlaySet: WORK03_COPENHAGEN, z: 4, bringToFront: true },
       // Subtitle
-      { type: 'text', text: 'Copenhagen', x: 22, y: 84, w: 72, rotation: 0, align: 'right', font: "'automate', sans-serif", fontSize: 0.65, fontSizeMobile: 0.45, weight: 300, opacity: 0.7 },
+      { type: 'text', text: 'Copenhagen', x: 22, y: 92, w: 72, rotation: 0, align: 'right', font: "'automate', sans-serif", fontSize: 0.65, fontSizeMobile: 0.45, weight: 300, opacity: 0.7 },
     ],
   },
   // Right page — experimental (5 photos)
@@ -431,7 +436,7 @@ const bookPages = [
       { type: 'image', img: `${PHOTOGRAPHY_IMG}/experimental (4).jpg`, overlayImg: `${PHOTOGRAPHY_IMG}/experimental (4).jpg`, x: 5, y: 65, w: 70, rotation: 0, taped: true, noBg: true, tackers: [1, 3, 2, 4], overlay: true, overlaySet: WORK03_EXPERIMENTAL, z: 1, bringToFront: true },
       { type: 'image', img: `${PHOTOGRAPHY_IMG}/experimental (3).jpg`, overlayImg: `${PHOTOGRAPHY_IMG}/experimental (3).jpg`, x: 65, y: 55, w: 30, rotation: -0.5, taped: true, noBg: true, tackers: [1, 3, 2, 4], overlay: true, overlaySet: WORK03_EXPERIMENTAL, z: 3, bringToFront: true },
       // Subtitle
-      { type: 'text', text: 'experimental', x: 20, y: 92, w: 72, rotation: 0, align: 'right', font: "'automate', sans-serif", fontSize: 0.65, fontSizeMobile: 0.45, weight: 300, opacity: 0.7 },
+      { type: 'text', text: 'Experimental', x: 20, y: 92, w: 72, rotation: 0, align: 'right', font: "'automate', sans-serif", fontSize: 0.65, fontSizeMobile: 0.45, weight: 300, opacity: 0.7 },
     ],
   },
   // Spread 7: Hannover & BW
@@ -464,7 +469,7 @@ const bookPages = [
       { type: 'image', img: `${PHOTOGRAPHY_IMG}/BW (3).jpg`, overlayImg: `${PHOTOGRAPHY_IMG}/BW (3).jpg`, x: 72, y: 57, w: 30, rotation: 1, taped: true, noBg: true, tackers: [1, 3, 2, 4], overlay: true, overlaySet: WORK03_BW, z: 2, bringToFront: true },
       { type: 'image', img: `${PHOTOGRAPHY_IMG}/BW (5).jpg`, overlayImg: `${PHOTOGRAPHY_IMG}/BW (5).jpg`, x: 38.5, y: 51, w: 30, rotation: -1.5, taped: true, noBg: true, tackers: [4, 2, 3, 1], overlay: true, overlaySet: WORK03_BW, z: 2, bringToFront: true },
       // Subtitle
-      { type: 'text', text: 'monochrome', x: 25, y: 91, w: 72, rotation: 0, align: 'right', font: "'automate', sans-serif", fontSize: 0.65, fontSizeMobile: 0.45, weight: 300, opacity: 0.7 },
+      { type: 'text', text: 'Monochrome', x: 25, y: 91, w: 72, rotation: 0, align: 'right', font: "'automate', sans-serif", fontSize: 0.65, fontSizeMobile: 0.45, weight: 300, opacity: 0.7 },
     ],
   },
   // ===== SPREADS 8-14: Placeholder pages for future projects =====
