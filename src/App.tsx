@@ -51,8 +51,9 @@ const projectItems = [
   { id: 'work04', img: `${PROJECTS_PREVIEW}/work04.jpg`, aspect: 600 / 840, title: 'Apartment in VR', spread: 8, page: 16, col: 0 },
   // Work 05 — H-Block exhibition booth, title page hero (render)
   { id: 'work05', img: `${PROJECTS_PREVIEW}/work05.jpg`, aspect: 600 / 362, title: 'H-Block Exhibition Booth', spread: 9, page: 18 },
+  // Work 06 — Tanz-Gallery Lee-Keun Reimagined, title page image
+  { id: 'work06', img: `${PROJECTS_PREVIEW}/work06.jpg`, aspect: 600 / 747, title: 'Tanz-Gallery Lee-Keun Reimagined', spread: 10, page: 20 },
   // Future works — empty slots, replaced when a work is added
-  { id: 'work06', placeholder: true, height: 450 },
   { id: 'work07', placeholder: true, height: 500 },
   { id: 'work08', placeholder: true, height: 300 },
   { id: 'work09', placeholder: true, height: 400 },
@@ -175,6 +176,18 @@ const WORK05_PLANS = [
   `${MESSESTAND_IMG}/plan4.jpg`,
 ]
 const WORK05_DRAWINGS = [WORK05_RENDER, ...WORK05_PLANS]
+
+// Work.06 — Tanz-Gallery Lee-Keun Reimagined (2020, Hannover)
+const TANZGALLERY_IMG = `${BASE}tanzgallery`
+// Page-sized versions (-full) shown on the pages; the originals open on click
+const WORK06_TANZ_FULL = `${TANZGALLERY_IMG}/Tanz-Gallery Lee-Keun Reimagined-full.png`
+const WORK06_DETAIL_FULL = `${TANZGALLERY_IMG}/Detail-full.png`
+const WORK06_TANZ = `${TANZGALLERY_IMG}/Tanz-Gallery Lee-Keun Reimagined.jpg`
+const WORK06_DETAIL = `${TANZGALLERY_IMG}/Detail.png`
+const WORK06_IMAGES = [
+  WORK06_TANZ,
+  WORK06_DETAIL,
+]
 
 const thesisPageCount = 140
 const thesisPages = Array.from({ length: thesisPageCount }, (_, i) => ({
@@ -631,9 +644,33 @@ const bookPages = [
     ],
   },
   // ===== SPREADS 10-14: Placeholder pages for future projects =====
-  // Spread 10
-  { meta: { year: '', place: '', title: '' }, items: [] },
-  { meta: { year: '', place: '', title: '' }, items: [] },
+  // ===== SPREAD 10: WORK06 — Tanz-Gallery Lee-Keun Reimagined (2020, Hannover) =====
+  // Left page — light paper, image with the title on top, like work.05's title page
+  {
+    meta: { year: '2020', place: 'Hannover', title: 'Tanz-Gallery Lee-Keun Reimagined', work: 6 },
+    items: [
+      // Image — page-sized -full version, edge to edge like the title-page
+      // covers; behind drops it to the text layer so the title sits on top.
+      // Clicking opens the original uncropped image
+      { type: 'image', img: WORK06_TANZ_FULL, overlayImg: WORK06_TANZ, x: -5.6, y: -5.75, w: 111.1, rotation: 0, taped: true, noBg: true, tackers: [1, 3, 2, 4], behind: true, overlay: true, overlaySet: WORK06_IMAGES },
+      // Title — same statement treatment as work.05, on top of the image
+      // Title — statement block in the bottom left corner; the text flows
+      // from the top of its box, so the box starts just high enough for the
+      // three lines to land at the bottom
+      { type: 'statement', text: 'TANZ-GALLERY\nLEE-KEUN\nREIMAGINED', x: -5, y: 86.5, w: 84, h: 37.8, rotation: 0, aligns: { 0: 'left' }, blend: true },
+      { type: 'statement', text: 'TANZ-GALLERY\nLEE-KEUN\nREIMAGINED', x: -5, y: 86.5, w: 84, h: 37.8, rotation: 0, aligns: { 0: 'left' }, opacity: 0.75, hoverFull: true },
+    ],
+  },
+  // Right page — light paper, detail image
+  {
+    meta: { year: '2020', place: 'Hannover', title: 'Tanz-Gallery Lee-Keun Reimagined', work: 6 },
+    items: [
+      // Detail — page-sized -full version, same height as the left page's
+      // image, edge to edge, 10% transparent. Clicking opens the original.
+      // No bringToFront: the image must not jump over the header on hover
+      { type: 'image', img: WORK06_DETAIL_FULL, overlayImg: WORK06_DETAIL, x: -5.9, y: -5.75, w: 111.8, rotation: 0, opacity: 0.9, taped: true, noBg: true, tackers: [2, 4, 1, 3], overlay: true, overlaySet: WORK06_IMAGES },
+    ],
+  },
   // Spread 11
   { meta: { year: '', place: '', title: '' }, items: [] },
   { meta: { year: '', place: '', title: '' }, items: [] },
