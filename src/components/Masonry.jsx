@@ -53,7 +53,7 @@ const preloadImages = async urls => {
 
 /**
  * @param {Object} props
- * @param {Array<{ id: string, img?: string, url?: string, height?: number, aspect?: number, full?: string, placeholder?: boolean, title?: string, spread?: number, page?: number }>} props.items
+ * @param {Array<{ id: string, img?: string, url?: string, height?: number, aspect?: number, full?: string, placeholder?: boolean, title?: string, spread?: number, page?: number, col?: number }>} props.items
  * @param {string} [props.ease]
  * @param {number} [props.duration]
  * @param {number} [props.stagger]
@@ -134,7 +134,11 @@ const Masonry = ({
     const columnWidth = width / columns;
 
     return items.map(child => {
-      const col = colHeights.indexOf(Math.min(...colHeights));
+      // col: pin an item to a column (clamped to the grid); otherwise the
+      // item goes to the currently shortest column
+      const col = child.col != null
+        ? Math.min(child.col, columns - 1)
+        : colHeights.indexOf(Math.min(...colHeights));
       const x = columnWidth * col;
       const height = child.aspect ? columnWidth / child.aspect : child.height / 2;
       const y = colHeights[col];

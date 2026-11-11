@@ -43,8 +43,9 @@ const projectItems = [
   { id: 'work02', img: `${PROJECTS_PREVIEW}/work02.jpg`, aspect: 600 / 859, title: 'Bachelor Thesis: Day and Night Kitchen', spread: 4, page: 8 },
   // Work 03 — film photography, no title page, chosen image
   { id: 'work03', img: `${PROJECTS_PREVIEW}/work03.jpg`, aspect: 600 / 900, title: 'Film Photography', spread: 6, page: 12 },
-  // Work 04 — Apartment in VR, title page image (starter)
-  { id: 'work04', img: `${PROJECTS_PREVIEW}/work04.jpg`, aspect: 600 / 859, title: 'Apartment in VR', spread: 8, page: 16 },
+  // Work 04 — Apartment in VR, title page image (starter); col 0 pins it
+  // to the leftmost column, so it reads as the next project after work 03
+  { id: 'work04', img: `${PROJECTS_PREVIEW}/work04.jpg`, aspect: 600 / 859, title: 'Apartment in VR', spread: 8, page: 16, col: 0 },
   // Future works — empty slots, replaced when a work is added
   { id: 'work05', placeholder: true, height: 350 },
   { id: 'work06', placeholder: true, height: 450 },
