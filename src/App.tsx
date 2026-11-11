@@ -81,31 +81,30 @@ const M75_GALLERY = [
 
 // Work.03 — Film Photography (2023-2025, Northern Europe)
 const WORK03_COPENHAGEN = [
-  `${PHOTOGRAPHY_IMG}/CopenhagenBl (1).jpg`,
   `${PHOTOGRAPHY_IMG}/CopenhagenBl (2).jpg`,
-  `${PHOTOGRAPHY_IMG}/CopenhagenBl (3).jpg`,
+  `${PHOTOGRAPHY_IMG}/CopenhagenBl (1).jpg`,
   `${PHOTOGRAPHY_IMG}/CopenhagenBl (4).jpg`,
+  `${PHOTOGRAPHY_IMG}/CopenhagenBl (3).jpg`,
   `${PHOTOGRAPHY_IMG}/CopenhagenBl (5).jpg`,
 ]
 const WORK03_HANNOVER = [
+  `${PHOTOGRAPHY_IMG}/Hannover (3).jpg`,
+  `${PHOTOGRAPHY_IMG}/Hannover (5).jpg`,
   `${PHOTOGRAPHY_IMG}/Hannover (1).jpg`,
   `${PHOTOGRAPHY_IMG}/Hannover (2).jpg`,
-  `${PHOTOGRAPHY_IMG}/Hannover (3).jpg`,
   `${PHOTOGRAPHY_IMG}/Hannover (4).jpg`,
-  `${PHOTOGRAPHY_IMG}/Hannover (5).jpg`,
 ]
 const WORK03_EXPERIMENTAL = [
   `${PHOTOGRAPHY_IMG}/experimental (1).jpg`,
   `${PHOTOGRAPHY_IMG}/experimental (2).jpg`,
-  `${PHOTOGRAPHY_IMG}/experimental (3).jpg`,
   `${PHOTOGRAPHY_IMG}/experimental (4).jpg`,
-  `${PHOTOGRAPHY_IMG}/experimental (5).jpg`,
+  `${PHOTOGRAPHY_IMG}/experimental (3).jpg`,
 ]
 const WORK03_BW = [
   `${PHOTOGRAPHY_IMG}/BW (1).jpg`,
+  `${PHOTOGRAPHY_IMG}/BW (4).jpg`,
   `${PHOTOGRAPHY_IMG}/BW (2).jpg`,
   `${PHOTOGRAPHY_IMG}/BW (3).jpg`,
-  `${PHOTOGRAPHY_IMG}/BW (4).jpg`,
   `${PHOTOGRAPHY_IMG}/BW (5).jpg`,
 ]
 
