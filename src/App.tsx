@@ -49,8 +49,9 @@ const projectItems = [
   // to crop the scan edge); col 0 pins it to the leftmost column, so it
   // reads as the next project after work 03
   { id: 'work04', img: `${PROJECTS_PREVIEW}/work04.jpg`, aspect: 600 / 840, title: 'Apartment in VR', spread: 8, page: 16, col: 0 },
+  // Work 05 — H-Block exhibition booth, title page hero (render)
+  { id: 'work05', img: `${PROJECTS_PREVIEW}/work05.jpg`, aspect: 600 / 362, title: 'H-Block Exhibition Booth', spread: 9, page: 18 },
   // Future works — empty slots, replaced when a work is added
-  { id: 'work05', placeholder: true, height: 350 },
   { id: 'work06', placeholder: true, height: 450 },
   { id: 'work07', placeholder: true, height: 500 },
   { id: 'work08', placeholder: true, height: 300 },
@@ -154,6 +155,26 @@ const WORK04_INSPO = [
   WORK04_T1MEOUT,
   WORK04_INSPO5,
 ]
+
+// Work.05 — H-Block exhibition booth (2023, Hannover)
+const MESSESTAND_IMG = `${BASE}messestand`
+const WORK05_RENDER = `${MESSESTAND_IMG}/render1.jpeg`
+// Photo file extensions are mixed-case (JPG/jpg); the exact names matter
+// for the case-sensitive Linux deploy
+const WORK05_PHOTO_NAMES = [
+  'photo1.JPG', 'photo2.JPG', 'photo3.JPG', 'photo4.JPG', 'photo5.JPG',
+  'photo6.JPG', 'photo7.JPG', 'photo8.JPG', 'photo9.jpg', 'photo10.jpg',
+  'photo11.jpg', 'photo12.jpg', 'photo13.jpg', 'photo14.jpg', 'photo15.JPG',
+  'photo16.jpg', 'photo17.jpg', 'photo18.jpg',
+]
+const WORK05_PHOTOS = WORK05_PHOTO_NAMES.map(name => `${MESSESTAND_IMG}/${name}`)
+const WORK05_PLANS = [
+  `${MESSESTAND_IMG}/plan1.jpg`,
+  `${MESSESTAND_IMG}/plan2.jpg`,
+  `${MESSESTAND_IMG}/plan3.jpg`,
+  `${MESSESTAND_IMG}/plan4.jpg`,
+]
+const WORK05_DRAWINGS = [WORK05_RENDER, ...WORK05_PLANS]
 
 const thesisPageCount = 140
 const thesisPages = Array.from({ length: thesisPageCount }, (_, i) => ({
@@ -563,10 +584,53 @@ const bookPages = [
       { type: 'text', text: 'Inspiration', x: 20, y: 34, w: 72, rotation: 0, align: 'right', font: "'automate', sans-serif", fontSize: 0.55, fontSizeMobile: 0.4, weight: 300, opacity: 0.65 },
     ],
   },
-  // ===== SPREADS 9-14: Placeholder pages for future projects =====
-  // Spread 9
-  { meta: { year: '', place: '', title: '' }, items: [] },
-  { meta: { year: '', place: '', title: '' }, items: [] },
+  // ===== SPREAD 9: WORK05 — H-Block exhibition booth (2023, Hannover) =====
+  // Left page — title over the render, plans in a full-width 2x2 block
+  {
+    texture: 'left_page-black',
+    meta: { year: '2023', place: 'Hannover', title: 'H-Block Exhibition Booth', work: 5 },
+    items: [
+      // Render — full page width, starts level with the right page's photo
+      // grid; behind drops it to the text layer so the title sits on top
+      { type: 'image', img: WORK05_RENDER, overlayImg: WORK05_RENDER, x: 0, y: 7, w: 100, rotation: 0, taped: true, noBg: true, tackers: [1, 3, 2, 4], behind: true, overlay: true, overlaySet: WORK05_DRAWINGS },
+      // Title — same statement treatment as the other title pages, on top of the render
+      { type: 'statement', text: 'H-BLOCK\nEXHIBITION\nBOOTH', x: 5, y: 9, w: 84, h: 37.8, rotation: 0, aligns: { 0: 'left' }, blend: true },
+      { type: 'statement', text: 'H-BLOCK\nEXHIBITION\nBOOTH', x: 5, y: 9, w: 84, h: 37.8, rotation: 0, aligns: { 0: 'left' }, opacity: 0.75, hoverFull: true },
+      // Plans — 2x2 block, same width as the render, small gaps
+      { type: 'image', img: WORK05_PLANS[0], overlayImg: WORK05_PLANS[0], x: 0, y: 50.5, w: 48.5, rotation: 0, taped: true, noBg: true, tackers: [2, 4, 1, 3], bringToFront: true, overlay: true, overlaySet: WORK05_DRAWINGS, z: 2 },
+      { type: 'image', img: WORK05_PLANS[1], overlayImg: WORK05_PLANS[1], x: 51.5, y: 50.5, w: 48.5, rotation: 0, taped: true, noBg: true, tackers: [1, 3, 2, 4], bringToFront: true, overlay: true, overlaySet: WORK05_DRAWINGS, z: 2 },
+      { type: 'image', img: WORK05_PLANS[2], overlayImg: WORK05_PLANS[2], x: 0, y: 75.5, w: 48.5, rotation: 0, taped: true, noBg: true, tackers: [4, 2, 3, 1], bringToFront: true, overlay: true, overlaySet: WORK05_DRAWINGS, z: 2 },
+      { type: 'image', img: WORK05_PLANS[3], overlayImg: WORK05_PLANS[3], x: 51.5, y: 75.5, w: 48.5, rotation: 0, taped: true, noBg: true, tackers: [3, 1, 4, 2], bringToFront: true, overlay: true, overlaySet: WORK05_DRAWINGS, z: 2 },
+    ],
+  },
+  // Right page — all photos in a 3x6 grid, uniform tile height, little gaps
+  {
+    texture: 'right_page-black',
+    meta: { year: '2023', place: 'Hannover', title: 'H-Block Exhibition Booth', work: 5 },
+    items: [
+      // Rows at y 7/22/37/52/67/82; landscape tiles w 31.7 at x 0.7/33.9/67.1;
+      // the three portrait photos (6-8) keep the row height at w 10
+      { type: 'image', img: WORK05_PHOTOS[0], overlayImg: WORK05_PHOTOS[0], x: 0.7, y: 7, w: 31.7, rotation: 0, taped: true, noBg: true, tackers: [1, 3, 2, 4], bringToFront: true, overlay: true, overlaySet: WORK05_PHOTOS, z: 2 },
+      { type: 'image', img: WORK05_PHOTOS[1], overlayImg: WORK05_PHOTOS[1], x: 33.9, y: 7, w: 31.7, rotation: 0, taped: true, noBg: true, tackers: [2, 4, 1, 3], bringToFront: true, overlay: true, overlaySet: WORK05_PHOTOS, z: 2 },
+      { type: 'image', img: WORK05_PHOTOS[2], overlayImg: WORK05_PHOTOS[2], x: 67.1, y: 7, w: 31.7, rotation: 0, taped: true, noBg: true, tackers: [1, 3, 2, 4], bringToFront: true, overlay: true, overlaySet: WORK05_PHOTOS, z: 2 },
+      { type: 'image', img: WORK05_PHOTOS[3], overlayImg: WORK05_PHOTOS[3], x: 0.7, y: 22, w: 31.7, rotation: 0, taped: true, noBg: true, tackers: [2, 4, 1, 3], bringToFront: true, overlay: true, overlaySet: WORK05_PHOTOS, z: 2 },
+      { type: 'image', img: WORK05_PHOTOS[4], overlayImg: WORK05_PHOTOS[4], x: 33.9, y: 22, w: 31.7, rotation: 0, taped: true, noBg: true, tackers: [4, 2, 3, 1], bringToFront: true, overlay: true, overlaySet: WORK05_PHOTOS, z: 2 },
+      { type: 'image', img: `${MESSESTAND_IMG}/preview/photo6.jpg`, overlayImg: WORK05_PHOTOS[5], x: 67.1, y: 22, w: 31.7, rotation: 0, taped: true, noBg: true, tackers: [1, 3, 2, 4], bringToFront: true, overlay: true, overlaySet: WORK05_PHOTOS, z: 2 },
+      { type: 'image', img: `${MESSESTAND_IMG}/preview/photo7.jpg`, overlayImg: WORK05_PHOTOS[6], x: 0.7, y: 37, w: 31.7, rotation: 0, taped: true, noBg: true, tackers: [2, 4, 1, 3], bringToFront: true, overlay: true, overlaySet: WORK05_PHOTOS, z: 2 },
+      { type: 'image', img: `${MESSESTAND_IMG}/preview/photo8.jpg`, overlayImg: WORK05_PHOTOS[7], x: 33.9, y: 37, w: 31.7, rotation: 0, taped: true, noBg: true, tackers: [1, 3, 2, 4], bringToFront: true, overlay: true, overlaySet: WORK05_PHOTOS, z: 2 },
+      { type: 'image', img: WORK05_PHOTOS[8], overlayImg: WORK05_PHOTOS[8], x: 67.1, y: 37, w: 31.7, rotation: 0, taped: true, noBg: true, tackers: [4, 2, 3, 1], bringToFront: true, overlay: true, overlaySet: WORK05_PHOTOS, z: 2 },
+      { type: 'image', img: WORK05_PHOTOS[9], overlayImg: WORK05_PHOTOS[9], x: 0.7, y: 52, w: 31.7, rotation: 0, taped: true, noBg: true, tackers: [1, 3, 2, 4], bringToFront: true, overlay: true, overlaySet: WORK05_PHOTOS, z: 2 },
+      { type: 'image', img: WORK05_PHOTOS[10], overlayImg: WORK05_PHOTOS[10], x: 33.9, y: 52, w: 31.7, rotation: 0, taped: true, noBg: true, tackers: [2, 4, 1, 3], bringToFront: true, overlay: true, overlaySet: WORK05_PHOTOS, z: 2 },
+      { type: 'image', img: WORK05_PHOTOS[11], overlayImg: WORK05_PHOTOS[11], x: 67.1, y: 52, w: 31.7, rotation: 0, taped: true, noBg: true, tackers: [1, 3, 2, 4], bringToFront: true, overlay: true, overlaySet: WORK05_PHOTOS, z: 2 },
+      { type: 'image', img: WORK05_PHOTOS[12], overlayImg: WORK05_PHOTOS[12], x: 0.7, y: 67, w: 31.7, rotation: 0, taped: true, noBg: true, tackers: [4, 2, 3, 1], bringToFront: true, overlay: true, overlaySet: WORK05_PHOTOS, z: 2 },
+      { type: 'image', img: WORK05_PHOTOS[13], overlayImg: WORK05_PHOTOS[13], x: 33.9, y: 67, w: 31.7, rotation: 0, taped: true, noBg: true, tackers: [2, 4, 1, 3], bringToFront: true, overlay: true, overlaySet: WORK05_PHOTOS, z: 2 },
+      { type: 'image', img: WORK05_PHOTOS[14], overlayImg: WORK05_PHOTOS[14], x: 67.1, y: 67, w: 31.7, rotation: 0, taped: true, noBg: true, tackers: [1, 3, 2, 4], bringToFront: true, overlay: true, overlaySet: WORK05_PHOTOS, z: 2 },
+      { type: 'image', img: WORK05_PHOTOS[15], overlayImg: WORK05_PHOTOS[15], x: 0.7, y: 82, w: 31.7, rotation: 0, taped: true, noBg: true, tackers: [2, 4, 1, 3], bringToFront: true, overlay: true, overlaySet: WORK05_PHOTOS, z: 2 },
+      { type: 'image', img: WORK05_PHOTOS[16], overlayImg: WORK05_PHOTOS[16], x: 33.9, y: 82, w: 31.7, rotation: 0, taped: true, noBg: true, tackers: [1, 3, 2, 4], bringToFront: true, overlay: true, overlaySet: WORK05_PHOTOS, z: 2 },
+      { type: 'image', img: WORK05_PHOTOS[17], overlayImg: WORK05_PHOTOS[17], x: 67.1, y: 82, w: 31.7, rotation: 0, taped: true, noBg: true, tackers: [4, 2, 3, 1], bringToFront: true, overlay: true, overlaySet: WORK05_PHOTOS, z: 2 },
+    ],
+  },
+  // ===== SPREADS 10-14: Placeholder pages for future projects =====
   // Spread 10
   { meta: { year: '', place: '', title: '' }, items: [] },
   { meta: { year: '', place: '', title: '' }, items: [] },

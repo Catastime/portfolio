@@ -33,6 +33,8 @@ SOURCES = {
     'work03.jpg': (os.path.join('photography', 'CopenhagenBl (2).jpg'), None),
     # Work 04 — Apartment in VR, title page image (starter)
     'work04.jpg': (os.path.join('vroxel-apartment', 'thesis-starter1.png'), (1, 5, 4, 0)),
+    # Work 05 — H-Block exhibition booth, title page hero (render)
+    'work05.jpg': (os.path.join('messestand', 'render1.jpeg'), None),
 }
 
 
