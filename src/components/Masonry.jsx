@@ -53,7 +53,7 @@ const preloadImages = async urls => {
 
 /**
  * @param {Object} props
- * @param {Array<{ id: string, img: string, url?: string, height?: number, aspect?: number, full?: string }>} props.items
+ * @param {Array<{ id: string, img?: string, url?: string, height?: number, aspect?: number, full?: string, placeholder?: boolean, title?: string }>} props.items
  * @param {string} [props.ease]
  * @param {number} [props.duration]
  * @param {number} [props.stagger]
@@ -62,6 +62,7 @@ const preloadImages = async urls => {
  * @param {number} [props.hoverScale]
  * @param {boolean} [props.blurToFocus]
  * @param {boolean} [props.colorShiftOnHover]
+ * @param {number[]} [props.columns] Column counts at the 1500/1000/600/400px breakpoints (default [5, 4, 3, 2])
  * @param {(item: { id: string, img: string, url?: string, height?: number, aspect?: number, full?: string }) => void} [props.onItemClick]
  * @param {boolean} [props.waitForImages]
  */
@@ -75,12 +76,13 @@ const Masonry = ({
   hoverScale = 0.95,
   blurToFocus = true,
   colorShiftOnHover = false,
+  columns: columnsByBreakpoint = [5, 4, 3, 2],
   onItemClick = null,
   waitForImages = true
 }) => {
   const columns = useMedia(
     ['(min-width:1500px)', '(min-width:1000px)', '(min-width:600px)', '(min-width:400px)'],
-    [5, 4, 3, 2],
+    columnsByBreakpoint,
     1
   );
 
@@ -122,7 +124,7 @@ const Masonry = ({
       setImagesReady(true);
       return;
     }
-    preloadImages(items.map(i => i.img)).then(() => setImagesReady(true));
+    preloadImages(items.filter(i => i.img).map(i => i.img)).then(() => setImagesReady(true));
   }, [items, waitForImages]);
 
   const grid = useMemo(() => {
@@ -244,11 +246,23 @@ const Masonry = ({
             key={item.id}
             data-key={item.id}
             className="item-wrapper"
-            onClick={() => (onItemClick ? onItemClick(item) : window.open(item.url, '_blank', 'noopener'))}
-            onMouseEnter={e => handleMouseEnter(e, item)}
-            onMouseLeave={e => handleMouseLeave(e, item)}
+            style={{ cursor: onItemClick || item.url ? 'pointer' : 'default' }}
+            onClick={() => {
+              if (onItemClick) return onItemClick(item);
+              if (item.url) window.open(item.url, '_blank', 'noopener');
+            }}
+            onMouseEnter={e => !item.placeholder && handleMouseEnter(e, item)}
+            onMouseLeave={e => !item.placeholder && handleMouseLeave(e, item)}
           >
-            <div className="item-img" style={{ backgroundImage: `url(${item.img})` }}>
+            <div
+              className="item-img"
+              style={item.placeholder ? { background: 'rgba(0, 0, 0, 0.45)' } : { backgroundImage: `url(${item.img})` }}
+            >
+              {item.title && (
+                <div className="item-title-overlay">
+                  <span className="item-title-text">{item.title}</span>
+                </div>
+              )}
               {colorShiftOnHover && (
                 <div
                   className="color-overlay"
