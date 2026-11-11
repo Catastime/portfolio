@@ -30,12 +30,14 @@ const projectItems = [
 // Spread 2: Master Thesis continued (history, concept & website interface)
 // Spread 3: Master Thesis continued (comics, video + MORE)
 // Spreads 4-5: Work 02 — "Day and Night Kitchen" (2020/21, Hannover)
-// Spreads 6-14: Placeholder for future projects
+// Spreads 6-7: Work 03 — "Film Photography" (2023-2025, Northern Europe)
+// Spreads 8-14: Placeholder for future projects
 // Corner text (spread number, year, place, title) is auto-injected by Sketchbook
 // for all spreads except spread 0, using the `meta` field on the left page.
 
 const THESIS_IMG = `${BASE}master-thesis`
 const BACHELOR_IMG = `${BASE}bachelor-thesis`
+const PHOTOGRAPHY_IMG = `${BASE}photography`
 // Body text blocks share one size across all spreads — text stays consistent
 const BODY_TEXT_SIZE = 0.85;
 const BODY_TEXT_SIZE_MOBILE = 0.55;
@@ -75,6 +77,36 @@ const M75_GALLERY = [
   `${BACHELOR_IMG}/M75_2815.jpg`,
   `${BACHELOR_IMG}/M75_2822.jpg`,
   `${BACHELOR_IMG}/M75_2824.jpg`,
+]
+
+// Work.03 — Film Photography (2023-2025, Northern Europe) — overlay galleries
+const WORK03_COPENHAGEN = [
+  `${PHOTOGRAPHY_IMG}/CopenhagenBl (1).jpg`,
+  `${PHOTOGRAPHY_IMG}/CopenhagenBl (2).jpg`,
+  `${PHOTOGRAPHY_IMG}/CopenhagenBl (3).jpg`,
+  `${PHOTOGRAPHY_IMG}/CopenhagenBl (4).jpg`,
+  `${PHOTOGRAPHY_IMG}/CopenhagenBl (5).jpg`,
+]
+const WORK03_HANNOVER = [
+  `${PHOTOGRAPHY_IMG}/Hannover (1).jpg`,
+  `${PHOTOGRAPHY_IMG}/Hannover (2).jpg`,
+  `${PHOTOGRAPHY_IMG}/Hannover (3).jpg`,
+  `${PHOTOGRAPHY_IMG}/Hannover (4).jpg`,
+  `${PHOTOGRAPHY_IMG}/Hannover (5).jpg`,
+]
+const WORK03_EXPERIMENTAL = [
+  `${PHOTOGRAPHY_IMG}/experimental (1).jpg`,
+  `${PHOTOGRAPHY_IMG}/experimental (5).jpg`,
+  `${PHOTOGRAPHY_IMG}/experimental (6).jpg`,
+  `${PHOTOGRAPHY_IMG}/experimental (7).jpg`,
+  `${PHOTOGRAPHY_IMG}/experimental (8).jpg`,
+]
+const WORK03_BW = [
+  `${PHOTOGRAPHY_IMG}/BW (1).jpg`,
+  `${PHOTOGRAPHY_IMG}/BW (2).jpg`,
+  `${PHOTOGRAPHY_IMG}/BW (3).jpg`,
+  `${PHOTOGRAPHY_IMG}/BW (4).jpg`,
+  `${PHOTOGRAPHY_IMG}/BW (5).jpg`,
 ]
 
 const thesisPageCount = 140
@@ -369,13 +401,74 @@ const bookPages = [
     ],
   },
 
-  // ===== SPREADS 6-14: Placeholder pages for future projects =====
-  // Spread 6
-  { meta: { year: '', place: '', title: '' }, items: [] },
-  { meta: { year: '', place: '', title: '' }, items: [] },
-  // Spread 7
-  { meta: { year: '', place: '', title: '' }, items: [] },
-  { meta: { year: '', place: '', title: '' }, items: [] },
+  // ===== SPREADS 6-7: WORK03 — Film Photography (2023-2025, Northern Europe) =====
+  // Spread 6: Copenhagen & Hannover
+  // Left page — Copenhagen (5 photos)
+  {
+    texture: 'left_page-black',
+    meta: { year: '2023-2025', place: 'Northern Europe', title: 'Film Photography', work: 3 },
+    items: [
+      // Copenhagen photos — top row: 3 images
+      { type: 'image', img: `${PHOTOGRAPHY_IMG}/CopenhagenBl (1).jpg`, overlayImg: `${PHOTOGRAPHY_IMG}/CopenhagenBl (1).jpg`, x: 10, y: 12, w: 30, rotation: 0, taped: true, noBg: true, tackers: [1, 3, 2, 4], overlay: true, overlaySet: WORK03_COPENHAGEN },
+      { type: 'image', img: `${PHOTOGRAPHY_IMG}/CopenhagenBl (2).jpg`, overlayImg: `${PHOTOGRAPHY_IMG}/CopenhagenBl (2).jpg`, x: 45, y: 12, w: 30, rotation: 0, taped: true, noBg: true, tackers: [2, 4, 1, 3], overlay: true, overlaySet: WORK03_COPENHAGEN },
+      { type: 'image', img: `${PHOTOGRAPHY_IMG}/CopenhagenBl (3).jpg`, overlayImg: `${PHOTOGRAPHY_IMG}/CopenhagenBl (3).jpg`, x: 80, y: 12, w: 30, rotation: 0, taped: true, noBg: true, tackers: [3, 1, 4, 2], overlay: true, overlaySet: WORK03_COPENHAGEN },
+      // Bottom row: 2 images (centered)
+      { type: 'image', img: `${PHOTOGRAPHY_IMG}/CopenhagenBl (4).jpg`, overlayImg: `${PHOTOGRAPHY_IMG}/CopenhagenBl (4).jpg`, x: 22.5, y: 50, w: 30, rotation: 0, taped: true, noBg: true, tackers: [1, 3, 2, 4], overlay: true, overlaySet: WORK03_COPENHAGEN },
+      { type: 'image', img: `${PHOTOGRAPHY_IMG}/CopenhagenBl (5).jpg`, overlayImg: `${PHOTOGRAPHY_IMG}/CopenhagenBl (5).jpg`, x: 57.5, y: 50, w: 30, rotation: 0, taped: true, noBg: true, tackers: [2, 4, 1, 3], overlay: true, overlaySet: WORK03_COPENHAGEN },
+      // Static outline frame around the Copenhagen photo block
+      { type: 'pileoutline', x: 8, y: 8, w: 94, h: 58, rotation: 0, gap: 1.8, line: 0.2, aspect: 1.14, rects: [{ x: 0, y: 0, w: 94, r: 0 }] },
+    ],
+  },
+  // Right page — Hannover (5 photos)
+  {
+    texture: 'right_page-black',
+    meta: { year: '2023-2025', place: 'Northern Europe', title: 'Film Photography', work: 3 },
+    items: [
+      // Hannover photos — top row: 3 images
+      { type: 'image', img: `${PHOTOGRAPHY_IMG}/Hannover (1).jpg`, overlayImg: `${PHOTOGRAPHY_IMG}/Hannover (1).jpg`, x: 10, y: 12, w: 30, rotation: 0, taped: true, noBg: true, tackers: [1, 3, 2, 4], overlay: true, overlaySet: WORK03_HANNOVER },
+      { type: 'image', img: `${PHOTOGRAPHY_IMG}/Hannover (2).jpg`, overlayImg: `${PHOTOGRAPHY_IMG}/Hannover (2).jpg`, x: 45, y: 12, w: 30, rotation: 0, taped: true, noBg: true, tackers: [2, 4, 1, 3], overlay: true, overlaySet: WORK03_HANNOVER },
+      { type: 'image', img: `${PHOTOGRAPHY_IMG}/Hannover (3).jpg`, overlayImg: `${PHOTOGRAPHY_IMG}/Hannover (3).jpg`, x: 80, y: 12, w: 30, rotation: 0, taped: true, noBg: true, tackers: [3, 1, 4, 2], overlay: true, overlaySet: WORK03_HANNOVER },
+      // Bottom row: 2 images
+      { type: 'image', img: `${PHOTOGRAPHY_IMG}/Hannover (4).jpg`, overlayImg: `${PHOTOGRAPHY_IMG}/Hannover (4).jpg`, x: 22.5, y: 50, w: 30, rotation: 0, taped: true, noBg: true, tackers: [1, 3, 2, 4], overlay: true, overlaySet: WORK03_HANNOVER },
+      { type: 'image', img: `${PHOTOGRAPHY_IMG}/Hannover (5).jpg`, overlayImg: `${PHOTOGRAPHY_IMG}/Hannover (5).jpg`, x: 57.5, y: 50, w: 30, rotation: 0, taped: true, noBg: true, tackers: [2, 4, 1, 3], overlay: true, overlaySet: WORK03_HANNOVER },
+      // Static outline frame around the Hannover photo block
+      { type: 'pileoutline', x: 8, y: 8, w: 94, h: 58, rotation: 0, gap: 1.8, line: 0.2, aspect: 1.14, rects: [{ x: 0, y: 0, w: 94, r: 0 }] },
+    ],
+  },
+  // Spread 7: experimental & BW
+  // Left page — experimental (5 photos)
+  {
+    texture: 'left_page-black',
+    meta: { year: '2023-2025', place: 'Northern Europe', title: 'Film Photography', work: 3 },
+    items: [
+      // experimental photos — top row: 3 images
+      { type: 'image', img: `${PHOTOGRAPHY_IMG}/experimental (1).jpg`, overlayImg: `${PHOTOGRAPHY_IMG}/experimental (1).jpg`, x: 10, y: 12, w: 30, rotation: 0, taped: true, noBg: true, tackers: [1, 3, 2, 4], overlay: true, overlaySet: WORK03_EXPERIMENTAL },
+      { type: 'image', img: `${PHOTOGRAPHY_IMG}/experimental (5).jpg`, overlayImg: `${PHOTOGRAPHY_IMG}/experimental (5).jpg`, x: 45, y: 12, w: 30, rotation: 0, taped: true, noBg: true, tackers: [2, 4, 1, 3], overlay: true, overlaySet: WORK03_EXPERIMENTAL },
+      { type: 'image', img: `${PHOTOGRAPHY_IMG}/experimental (6).jpg`, overlayImg: `${PHOTOGRAPHY_IMG}/experimental (6).jpg`, x: 80, y: 12, w: 30, rotation: 0, taped: true, noBg: true, tackers: [3, 1, 4, 2], overlay: true, overlaySet: WORK03_EXPERIMENTAL },
+      // Bottom row: 2 images
+      { type: 'image', img: `${PHOTOGRAPHY_IMG}/experimental (7).jpg`, overlayImg: `${PHOTOGRAPHY_IMG}/experimental (7).jpg`, x: 22.5, y: 50, w: 30, rotation: 0, taped: true, noBg: true, tackers: [1, 3, 2, 4], overlay: true, overlaySet: WORK03_EXPERIMENTAL },
+      { type: 'image', img: `${PHOTOGRAPHY_IMG}/experimental (8).jpg`, overlayImg: `${PHOTOGRAPHY_IMG}/experimental (8).jpg`, x: 57.5, y: 50, w: 30, rotation: 0, taped: true, noBg: true, tackers: [2, 4, 1, 3], overlay: true, overlaySet: WORK03_EXPERIMENTAL },
+      // Static outline frame around the experimental photo block
+      { type: 'pileoutline', x: 8, y: 8, w: 94, h: 58, rotation: 0, gap: 1.8, line: 0.2, aspect: 1.14, rects: [{ x: 0, y: 0, w: 94, r: 0 }] },
+    ],
+  },
+  // Right page — BW (5 photos)
+  {
+    texture: 'right_page-black',
+    meta: { year: '2023-2025', place: 'Northern Europe', title: 'Film Photography', work: 3 },
+    items: [
+      // BW photos — top row: 3 images
+      { type: 'image', img: `${PHOTOGRAPHY_IMG}/BW (1).jpg`, overlayImg: `${PHOTOGRAPHY_IMG}/BW (1).jpg`, x: 10, y: 12, w: 30, rotation: 0, taped: true, noBg: true, tackers: [1, 3, 2, 4], overlay: true, overlaySet: WORK03_BW },
+      { type: 'image', img: `${PHOTOGRAPHY_IMG}/BW (2).jpg`, overlayImg: `${PHOTOGRAPHY_IMG}/BW (2).jpg`, x: 45, y: 12, w: 30, rotation: 0, taped: true, noBg: true, tackers: [2, 4, 1, 3], overlay: true, overlaySet: WORK03_BW },
+      { type: 'image', img: `${PHOTOGRAPHY_IMG}/BW (3).jpg`, overlayImg: `${PHOTOGRAPHY_IMG}/BW (3).jpg`, x: 80, y: 12, w: 30, rotation: 0, taped: true, noBg: true, tackers: [3, 1, 4, 2], overlay: true, overlaySet: WORK03_BW },
+      // Bottom row: 2 images
+      { type: 'image', img: `${PHOTOGRAPHY_IMG}/BW (4).jpg`, overlayImg: `${PHOTOGRAPHY_IMG}/BW (4).jpg`, x: 22.5, y: 50, w: 30, rotation: 0, taped: true, noBg: true, tackers: [1, 3, 2, 4], overlay: true, overlaySet: WORK03_BW },
+      { type: 'image', img: `${PHOTOGRAPHY_IMG}/BW (5).jpg`, overlayImg: `${PHOTOGRAPHY_IMG}/BW (5).jpg`, x: 57.5, y: 50, w: 30, rotation: 0, taped: true, noBg: true, tackers: [2, 4, 1, 3], overlay: true, overlaySet: WORK03_BW },
+      // Static outline frame around the BW photo block
+      { type: 'pileoutline', x: 8, y: 8, w: 94, h: 58, rotation: 0, gap: 1.8, line: 0.2, aspect: 1.14, rects: [{ x: 0, y: 0, w: 94, r: 0 }] },
+    ],
+  },
+  // ===== SPREADS 8-14: Placeholder pages for future projects =====
   // Spread 8
   { meta: { year: '', place: '', title: '' }, items: [] },
   { meta: { year: '', place: '', title: '' }, items: [] },
