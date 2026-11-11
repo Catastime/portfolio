@@ -26,13 +26,13 @@ SOURCES = {
     # CV — no title page, chosen image
     'cv.jpg': (os.path.join('tim', 'Atelier Anthrazit-039-bw.jpg'), None),
     # Work 01 — master thesis title page
-    'work01.jpg': (os.path.join('master-thesis', 'thesis-starter-full-page.png'), (0, 5, 3, 0)),
+    'work01.jpg': (os.path.join('master-thesis', 'thesis-starter-full-page.png'), (1, 5, 4, 0)),
     # Work 02 — bachelor thesis title page
-    'work02.jpg': (os.path.join('bachelor-thesis', 'cover.png'), (0, 5, 3, 0)),
+    'work02.jpg': (os.path.join('bachelor-thesis', 'cover.png'), (1, 5, 4, 0)),
     # Work 03 — film photography, no title page, chosen image
     'work03.jpg': (os.path.join('photography', 'CopenhagenBl (2).jpg'), None),
     # Work 04 — Apartment in VR, title page image (starter)
-    'work04.jpg': (os.path.join('vroxel-apartment', 'thesis-starter1.png'), (0, 5, 3, 0)),
+    'work04.jpg': (os.path.join('vroxel-apartment', 'thesis-starter1.png'), (1, 5, 4, 0)),
 }
 
 
