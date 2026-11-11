@@ -37,15 +37,18 @@ const projectItems = [
   // CV — no title page, chosen image. spread/page: where a click navigates
   // (desktop spread, mobile single page)
   { id: 'cv', img: `${PROJECTS_PREVIEW}/cv.jpg`, aspect: 600 / 900, title: 'CV', spread: 0, page: 1 },
-  // Work 01 — master thesis title page
-  { id: 'work01', img: `${PROJECTS_PREVIEW}/work01.jpg`, aspect: 600 / 859, title: 'Master Thesis: Artificial Intelligence in Architectural Design', spread: 1, page: 2 },
-  // Work 02 — bachelor thesis title page
-  { id: 'work02', img: `${PROJECTS_PREVIEW}/work02.jpg`, aspect: 600 / 859, title: 'Bachelor Thesis: Day and Night Kitchen', spread: 4, page: 8 },
+  // Work 01 — master thesis title page. Tile aspect is slightly wider than
+  // the image (600/840 vs 600/859) so cover crops ~1% off the top and
+  // bottom, cutting the white scan edge
+  { id: 'work01', img: `${PROJECTS_PREVIEW}/work01.jpg`, aspect: 600 / 840, title: 'Master Thesis: Artificial Intelligence in Architectural Design', spread: 1, page: 2 },
+  // Work 02 — bachelor thesis title page (aspect widened to crop the scan edge)
+  { id: 'work02', img: `${PROJECTS_PREVIEW}/work02.jpg`, aspect: 600 / 840, title: 'Bachelor Thesis: Day and Night Kitchen', spread: 4, page: 8 },
   // Work 03 — film photography, no title page, chosen image
   { id: 'work03', img: `${PROJECTS_PREVIEW}/work03.jpg`, aspect: 600 / 900, title: 'Film Photography', spread: 6, page: 12 },
-  // Work 04 — Apartment in VR, title page image (starter); col 0 pins it
-  // to the leftmost column, so it reads as the next project after work 03
-  { id: 'work04', img: `${PROJECTS_PREVIEW}/work04.jpg`, aspect: 600 / 859, title: 'Apartment in VR', spread: 8, page: 16, col: 0 },
+  // Work 04 — Apartment in VR, title page image (starter; aspect widened
+  // to crop the scan edge); col 0 pins it to the leftmost column, so it
+  // reads as the next project after work 03
+  { id: 'work04', img: `${PROJECTS_PREVIEW}/work04.jpg`, aspect: 600 / 840, title: 'Apartment in VR', spread: 8, page: 16, col: 0 },
   // Future works — empty slots, replaced when a work is added
   { id: 'work05', placeholder: true, height: 350 },
   { id: 'work06', placeholder: true, height: 450 },
