@@ -32,14 +32,15 @@ const PHOTOGRAPHY_IMG = `${BASE}photography`
 // scripts/generate_projects_previews.py) with their true aspect ratio
 const PROJECTS_PREVIEW = `${BASE}projects-preview`
 const projectItems = [
-  // CV — no title page, chosen image
-  { id: 'cv', img: `${PROJECTS_PREVIEW}/cv.jpg`, aspect: 600 / 900, title: 'CV' },
+  // CV — no title page, chosen image. spread/page: where a click navigates
+  // (desktop spread, mobile single page)
+  { id: 'cv', img: `${PROJECTS_PREVIEW}/cv.jpg`, aspect: 600 / 900, title: 'CV', spread: 0, page: 1 },
   // Work 01 — master thesis title page
-  { id: 'work01', img: `${PROJECTS_PREVIEW}/work01.jpg`, aspect: 600 / 859, title: 'Master Thesis: Artificial Intelligence in Architectural Design' },
+  { id: 'work01', img: `${PROJECTS_PREVIEW}/work01.jpg`, aspect: 600 / 859, title: 'Master Thesis: Artificial Intelligence in Architectural Design', spread: 1, page: 2 },
   // Work 02 — bachelor thesis title page
-  { id: 'work02', img: `${PROJECTS_PREVIEW}/work02.jpg`, aspect: 600 / 859, title: 'Bachelor Thesis: Day and Night Kitchen' },
+  { id: 'work02', img: `${PROJECTS_PREVIEW}/work02.jpg`, aspect: 600 / 859, title: 'Bachelor Thesis: Day and Night Kitchen', spread: 4, page: 8 },
   // Work 03 — film photography, no title page, chosen image
-  { id: 'work03', img: `${PROJECTS_PREVIEW}/work03.jpg`, aspect: 600 / 900, title: 'Film Photography' },
+  { id: 'work03', img: `${PROJECTS_PREVIEW}/work03.jpg`, aspect: 600 / 900, title: 'Film Photography', spread: 6, page: 12 },
   // Future works — empty slots, replaced when a work is added
   { id: 'work04', placeholder: true, height: 300 },
   { id: 'work05', placeholder: true, height: 350 },
@@ -1474,6 +1475,12 @@ function App() {
               hoverScale={0.95}
               blurToFocus
               colorShiftOnHover={false}
+              onItemClick={(item) => {
+                if (item.spread === undefined) return
+                setShowProjects(false)
+                if (isMobileViewport) scrollToMobilePage(item.page ?? item.spread * 2)
+                else scrollToSpreadFlat(item.spread)
+              }}
             />
           </div>
         </div>

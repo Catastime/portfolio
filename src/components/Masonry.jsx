@@ -53,7 +53,7 @@ const preloadImages = async urls => {
 
 /**
  * @param {Object} props
- * @param {Array<{ id: string, img?: string, url?: string, height?: number, aspect?: number, full?: string, placeholder?: boolean, title?: string }>} props.items
+ * @param {Array<{ id: string, img?: string, url?: string, height?: number, aspect?: number, full?: string, placeholder?: boolean, title?: string, spread?: number, page?: number }>} props.items
  * @param {string} [props.ease]
  * @param {number} [props.duration]
  * @param {number} [props.stagger]
@@ -63,7 +63,7 @@ const preloadImages = async urls => {
  * @param {boolean} [props.blurToFocus]
  * @param {boolean} [props.colorShiftOnHover]
  * @param {number[]} [props.columns] Column counts at the 1500/1000/600/400px breakpoints (default [5, 4, 3, 2])
- * @param {(item: { id: string, img: string, url?: string, height?: number, aspect?: number, full?: string }) => void} [props.onItemClick]
+ * @param {(item: { id: string, img?: string, url?: string, height?: number, aspect?: number, full?: string, placeholder?: boolean, title?: string, spread?: number, page?: number }) => void} [props.onItemClick]
  * @param {boolean} [props.waitForImages]
  */
 const Masonry = ({
@@ -246,7 +246,7 @@ const Masonry = ({
             key={item.id}
             data-key={item.id}
             className="item-wrapper"
-            style={{ cursor: onItemClick || item.url ? 'pointer' : 'default' }}
+            style={{ cursor: item.url || (onItemClick && !item.placeholder) ? 'pointer' : 'default' }}
             onClick={() => {
               if (onItemClick) return onItemClick(item);
               if (item.url) window.open(item.url, '_blank', 'noopener');
