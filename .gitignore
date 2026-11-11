@@ -28,3 +28,6 @@ vite.config.d.ts
 *.sln
 *.sw?
 _cv_p2.png
+
+# Heavy original video — the compressed EG2_30-web.mp4 is the one served
+public/vroxel-apartment/EG2_30.mp4

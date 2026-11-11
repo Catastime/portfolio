@@ -29,6 +29,8 @@ SOURCES = {
     'work02.jpg': os.path.join('bachelor-thesis', 'cover.png'),
     # Work 03 — film photography, no title page, chosen image
     'work03.jpg': os.path.join('photography', 'CopenhagenBl (2).jpg'),
+    # Work 04 — Apartment in VR, title page image (starter)
+    'work04.jpg': os.path.join('vroxel-apartment', 'thesis-starter1.png'),
 }
 
 

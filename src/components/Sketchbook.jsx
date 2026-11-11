@@ -139,6 +139,39 @@ function FilmStrip({ strip, frames = 7, style }) {
   );
 }
 
+// Side-scrolling gallery — one full image at a time, no film elements and
+// no peeking neighbours: just the current picture with pull arrows. Each
+// pull slides the track to the previous/next image — the same sliding
+// motion as the filmstrip, without the film look. The track never runs
+// past its own ends.
+function Gallery({ images, aspect: aspectOverride, style }) {
+  const [idx, setIdx] = useState(0);
+  // Natural aspect of the first image, measured on load — the window keeps
+  // a stable aspect while the images load. An explicit aspect override
+  // crops the images instead (object-fit: cover).
+  const [naturalAspect, setNaturalAspect] = useState(0);
+  const aspect = aspectOverride || naturalAspect || '16 / 9';
+  const pull = (dir) => setIdx((i) => Math.max(0, Math.min(images.length - 1, i + dir)));
+  return (
+    <div className="sketch-item sketch-gallery-window" style={{ ...style, aspectRatio: aspect }}>
+      <div className="sketch-gallery-track" style={{ transform: `translateX(-${idx * 100}%)` }}>
+        {images.map((src, i) => (
+          <img
+            key={src}
+            src={src}
+            alt=""
+            className="sketch-gallery-img"
+            draggable={false}
+            onLoad={i === 0 ? (e) => setNaturalAspect(e.currentTarget.naturalWidth / e.currentTarget.naturalHeight) : undefined}
+          />
+        ))}
+      </div>
+      <div className={`sketch-gallery-pull sketch-gallery-pull-left${idx === 0 ? ' sketch-gallery-pull-end' : ''}`} onClick={() => pull(-1)} aria-hidden="true" />
+      <div className={`sketch-gallery-pull sketch-gallery-pull-right${idx === images.length - 1 ? ' sketch-gallery-pull-end' : ''}`} onClick={() => pull(1)} aria-hidden="true" />
+    </div>
+  );
+}
+
 // Flip card — the image turns around its vertical axis on click to reveal a
 // second image (or a looping video) on its back. The box keeps the front
 // image's size; with flipBox it expands to the given page geometry while
@@ -783,7 +816,7 @@ export default function Sketchbook({
     suppressClickRef.current = true;
     setTimeout(() => { suppressClickRef.current = false; }, 400);
     // Taps only turn the page when not on something interactable
-    if (e.target.closest('.sketch-item-clickable, .sketch-more-btn, .sketch-filmstrip-window, a')) return;
+    if (e.target.closest('.sketch-item-clickable, .sketch-more-btn, .sketch-filmstrip-window, .sketch-gallery-window, a')) return;
     const rect = e.currentTarget.getBoundingClientRect();
     const x = e.changedTouches[0].clientX - rect.left;
     navigateToPage(mobilePage + (x > rect.width / 2 ? 1 : -1));
@@ -792,7 +825,7 @@ export default function Sketchbook({
   const handleClick = (e) => {
     if (suppressClickRef.current) return;
     // Don't turn the page when tapping interactive items (video, MORE, links)
-    if (e.target.closest('.sketch-item-clickable, .sketch-more-btn, .sketch-filmstrip-window, a')) return;
+    if (e.target.closest('.sketch-item-clickable, .sketch-more-btn, .sketch-filmstrip-window, .sketch-gallery-window, a')) return;
     const rect = e.currentTarget.getBoundingClientRect();
     const x = e.clientX - rect.left;
     navigateToPage(mobilePage + (x > rect.width / 2 ? 1 : -1));
@@ -816,6 +849,10 @@ export default function Sketchbook({
 
     if (item.type === 'filmstrip') {
       return <FilmStrip key={key} strip={item.strip} frames={item.frames} style={style} />;
+    }
+
+    if (item.type === 'gallery') {
+      return <Gallery key={key} images={item.images} aspect={item.aspect} style={style} />;
     }
 
     if (item.type === 'model') {
