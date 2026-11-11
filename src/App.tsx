@@ -458,21 +458,21 @@ const bookPages = [
     meta: { year: '2023-2025', place: 'Northern Europe', title: 'Film Photography', work: 3 },
     items: [
       // experimental photos — photobook style
-      // Priority: experimental (1) and (4) - (4) is wide and below (1)
+      // Priority: experimental (1) and (4) - (4) is wide at bottom, nothing below it
       { type: 'image', img: `${PHOTOGRAPHY_IMG}/experimental (1).jpg`, overlayImg: `${PHOTOGRAPHY_IMG}/experimental (1).jpg`, x: 5, y: 8, w: 46, rotation: -1, taped: true, noBg: true, tackers: [1, 3, 2, 4], overlay: true, overlaySet: WORK03_EXPERIMENTAL, z: 2 },
       { type: 'image', img: `${PHOTOGRAPHY_IMG}/experimental (2).jpg`, overlayImg: `${PHOTOGRAPHY_IMG}/experimental (2).jpg`, x: 55, y: 8, w: 40, rotation: 1, taped: true, noBg: true, tackers: [2, 4, 1, 3], overlay: true, overlaySet: WORK03_EXPERIMENTAL, z: 2 },
-      { type: 'image', img: `${PHOTOGRAPHY_IMG}/experimental (4).jpg`, overlayImg: `${PHOTOGRAPHY_IMG}/experimental (4).jpg`, x: 10, y: 40, w: 80, rotation: 0, taped: true, noBg: true, tackers: [1, 3, 2, 4], overlay: true, overlaySet: WORK03_EXPERIMENTAL, z: 1 },
-      { type: 'image', img: `${PHOTOGRAPHY_IMG}/experimental (3).jpg`, overlayImg: `${PHOTOGRAPHY_IMG}/experimental (3).jpg`, x: 5, y: 85, w: 40, rotation: -0.5, taped: true, noBg: true, tackers: [1, 3, 2, 4], overlay: true, overlaySet: WORK03_EXPERIMENTAL, z: 2 },
-      { type: 'image', img: `${PHOTOGRAPHY_IMG}/experimental (5).jpg`, overlayImg: `${PHOTOGRAPHY_IMG}/experimental (5).jpg`, x: 60, y: 85, w: 35, rotation: 0.5, taped: true, noBg: true, tackers: [2, 4, 1, 3], overlay: true, overlaySet: WORK03_EXPERIMENTAL, z: 2 },
+      { type: 'image', img: `${PHOTOGRAPHY_IMG}/experimental (3).jpg`, overlayImg: `${PHOTOGRAPHY_IMG}/experimental (3).jpg`, x: 5, y: 40, w: 40, rotation: -0.5, taped: true, noBg: true, tackers: [1, 3, 2, 4], overlay: true, overlaySet: WORK03_EXPERIMENTAL, z: 1 },
+      { type: 'image', img: `${PHOTOGRAPHY_IMG}/experimental (5).jpg`, overlayImg: `${PHOTOGRAPHY_IMG}/experimental (5).jpg`, x: 60, y: 40, w: 35, rotation: 0.5, taped: true, noBg: true, tackers: [2, 4, 1, 3], overlay: true, overlaySet: WORK03_EXPERIMENTAL, z: 1 },
+      { type: 'image', img: `${PHOTOGRAPHY_IMG}/experimental (4).jpg`, overlayImg: `${PHOTOGRAPHY_IMG}/experimental (4).jpg`, x: 10, y: 70, w: 80, rotation: 0, taped: true, noBg: true, tackers: [1, 3, 2, 4], overlay: true, overlaySet: WORK03_EXPERIMENTAL, z: 1 },
       // Subtitle
       { type: 'text', text: 'experimental', x: 8, y: 92, w: 72, rotation: 0, align: 'right', font: "'automate', sans-serif", fontSize: 0.65, fontSizeMobile: 0.45, weight: 300, opacity: 0.7 },
       // Static outline around all experimental photos
       { type: 'pileoutline', x: 2, y: 4, w: 100, h: 90, rotation: 0, gap: 1.2, line: 0.14, aspect: 1.14, rects: [
         { x: 5, y: 8, w: 46, r: -1 },
         { x: 55, y: 8, w: 40, r: 1 },
-        { x: 10, y: 40, w: 80, r: 0 },
-        { x: 5, y: 85, w: 40, r: -0.5 },
-        { x: 60, y: 85, w: 35, r: 0.5 },
+        { x: 5, y: 40, w: 40, r: -0.5 },
+        { x: 60, y: 40, w: 35, r: 0.5 },
+        { x: 10, y: 70, w: 80, r: 0 },
       ] },
     ],
   },
