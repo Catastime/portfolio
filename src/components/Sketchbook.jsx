@@ -1264,7 +1264,10 @@ export default function Sketchbook({
 
   // Punched-hole color: reads as the page underneath in the stack —
   // black paper on white pages, paper color on black/dark pages
+  // work.03 (spreads 6-7, pages 12-15) uses dark dots on black pages
   const holeColorFor = (pageIndex) => {
+    const spread = Math.floor(pageIndex / 2);
+    if (spread >= 6 && spread <= 7) return '#1d1d1d';
     const tex = pageTexture(pageIndex);
     return tex.includes('black') || tex.includes('dark') ? '#cfcfcf' : '#1d1d1d';
   };
