@@ -166,7 +166,6 @@ const WORK05_PHOTO_NAMES = [
   'photo1.JPG', 'photo2.JPG', 'photo3.JPG', 'photo4.JPG', 'photo5.JPG',
   'photo6.JPG', 'photo7.JPG', 'photo8.JPG', 'photo9.jpg', 'photo10.jpg',
   'photo11.jpg', 'photo12.jpg', 'photo13.jpg', 'photo14.jpg', 'photo15.JPG',
-  'photo16.jpg', 'photo17.jpg', 'photo18.jpg',
 ]
 const WORK05_PHOTOS = WORK05_PHOTO_NAMES.map(name => `${MESSESTAND_IMG}/${name}`)
 const WORK05_PLANS = [
@@ -638,9 +637,8 @@ const bookPages = [
       { type: 'image', img: WORK05_PHOTOS[12], overlayImg: WORK05_PHOTOS[12], x: 0.7, y: 67, w: 31.7, rotation: 0, taped: true, noBg: true, tackers: [4, 2, 3, 1], bringToFront: true, overlay: true, overlaySet: WORK05_PHOTOS, z: 2 },
       { type: 'image', img: WORK05_PHOTOS[13], overlayImg: WORK05_PHOTOS[13], x: 33.9, y: 67, w: 31.7, rotation: 0, taped: true, noBg: true, tackers: [2, 4, 1, 3], bringToFront: true, overlay: true, overlaySet: WORK05_PHOTOS, z: 2 },
       { type: 'image', img: WORK05_PHOTOS[14], overlayImg: WORK05_PHOTOS[14], x: 67.1, y: 67, w: 31.7, rotation: 0, taped: true, noBg: true, tackers: [1, 3, 2, 4], bringToFront: true, overlay: true, overlaySet: WORK05_PHOTOS, z: 2 },
-      { type: 'image', img: WORK05_PHOTOS[15], overlayImg: WORK05_PHOTOS[15], x: 0.7, y: 82, w: 31.7, rotation: 0, taped: true, noBg: true, tackers: [2, 4, 1, 3], bringToFront: true, overlay: true, overlaySet: WORK05_PHOTOS, z: 2 },
-      { type: 'image', img: WORK05_PHOTOS[16], overlayImg: WORK05_PHOTOS[16], x: 33.9, y: 82, w: 31.7, rotation: 0, taped: true, noBg: true, tackers: [1, 3, 2, 4], bringToFront: true, overlay: true, overlaySet: WORK05_PHOTOS, z: 2 },
-      { type: 'image', img: WORK05_PHOTOS[17], overlayImg: WORK05_PHOTOS[17], x: 67.1, y: 82, w: 31.7, rotation: 0, taped: true, noBg: true, tackers: [4, 2, 3, 1], bringToFront: true, overlay: true, overlaySet: WORK05_PHOTOS, z: 2 },
+      // Project text — bottom-aligned below the photo grid
+      { type: 'text', text: 'In this design-build project, led by Prof. Mirco Becker and Prof. Tatjana Sabljo, we designed and build the joint exhibition stand of the professional associations for architecture, interior design, landscape architecture and urban planning. The design is based on the H-Block, a reusable timber lattice brick made of beech wood, developed by the Digital Methods department. The stand consists of 2,200 blocks and incorporates two concrete staircases that had been classified as construction waste. After the fair, the blocks were reused, first for installations in the former Galeria Kaufhof building at the Marktkirche in Hannover.', x: 0.7, y: 81, w: 98.1, h: 17.5, rotation: 0, font: "'tosh-b', sans-serif", fontSize: BODY_TEXT_SIZE, fontSizeMobile: BODY_TEXT_SIZE_MOBILE, align: 'justify', mobile: { x: 0.7, y: 80, w: 98.1, h: 18 } },
     ],
   },
   // ===== SPREADS 10-14: Placeholder pages for future projects =====
