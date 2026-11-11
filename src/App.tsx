@@ -410,11 +410,11 @@ const bookPages = [
     items: [
       // Copenhagen photos — varied sizes, photobook style
       // Priority: Copenhagen (2) and (1) are largest
-      { type: 'image', img: `${PHOTOGRAPHY_IMG}/CopenhagenBl (2).jpg`, overlayImg: `${PHOTOGRAPHY_IMG}/CopenhagenBl (2).jpg`, x: 4, y: 10, w: 42, rotation: -1, taped: true, noBg: true, tackers: [1, 3, 2, 4], overlay: true, overlaySet: WORK03_COPENHAGEN, z: 2 },
-      { type: 'image', img: `${PHOTOGRAPHY_IMG}/CopenhagenBl (1).jpg`, overlayImg: `${PHOTOGRAPHY_IMG}/CopenhagenBl (1).jpg`, x: 50, y: 5, w: 44, rotation: 1, taped: true, noBg: true, tackers: [2, 4, 1, 3], overlay: true, overlaySet: WORK03_COPENHAGEN, z: 3 },
-      { type: 'image', img: `${PHOTOGRAPHY_IMG}/CopenhagenBl (3).jpg`, overlayImg: `${PHOTOGRAPHY_IMG}/CopenhagenBl (3).jpg`, x: 6, y: 58, w: 35, rotation: -0.5, taped: true, noBg: true, tackers: [1, 3, 2, 4], overlay: true, overlaySet: WORK03_COPENHAGEN, z: 1 },
-      { type: 'image', img: `${PHOTOGRAPHY_IMG}/CopenhagenBl (4).jpg`, overlayImg: `${PHOTOGRAPHY_IMG}/CopenhagenBl (4).jpg`, x: 52, y: 55, w: 32, rotation: 0.5, taped: true, noBg: true, tackers: [2, 4, 1, 3], overlay: true, overlaySet: WORK03_COPENHAGEN, z: 2 },
-      { type: 'image', img: `${PHOTOGRAPHY_IMG}/CopenhagenBl (5).jpg`, overlayImg: `${PHOTOGRAPHY_IMG}/CopenhagenBl (5).jpg`, x: 75, y: 45, w: 28, rotation: -1, taped: true, noBg: true, tackers: [3, 1, 4, 2], overlay: true, overlaySet: WORK03_COPENHAGEN, z: 1 },
+      { type: 'image', img: `${PHOTOGRAPHY_IMG}/CopenhagenBl (2).jpg`, overlayImg: `${PHOTOGRAPHY_IMG}/CopenhagenBl (2).jpg`, x: 4, y: 10, w: 42, rotation: -1, taped: true, noBg: true, tackers: [1, 3, 2, 4], overlay: true, overlaySet: WORK03_COPENHAGEN, z: 2, bringToFront: true },
+      { type: 'image', img: `${PHOTOGRAPHY_IMG}/CopenhagenBl (1).jpg`, overlayImg: `${PHOTOGRAPHY_IMG}/CopenhagenBl (1).jpg`, x: 50, y: 5, w: 44, rotation: 1, taped: true, noBg: true, tackers: [2, 4, 1, 3], overlay: true, overlaySet: WORK03_COPENHAGEN, z: 3, bringToFront: true },
+      { type: 'image', img: `${PHOTOGRAPHY_IMG}/CopenhagenBl (3).jpg`, overlayImg: `${PHOTOGRAPHY_IMG}/CopenhagenBl (3).jpg`, x: 6, y: 58, w: 35, rotation: -0.5, taped: true, noBg: true, tackers: [1, 3, 2, 4], overlay: true, overlaySet: WORK03_COPENHAGEN, z: 1, bringToFront: true },
+      { type: 'image', img: `${PHOTOGRAPHY_IMG}/CopenhagenBl (4).jpg`, overlayImg: `${PHOTOGRAPHY_IMG}/CopenhagenBl (4).jpg`, x: 52, y: 55, w: 32, rotation: 0.5, taped: true, noBg: true, tackers: [2, 4, 1, 3], overlay: true, overlaySet: WORK03_COPENHAGEN, z: 2, bringToFront: true },
+      { type: 'image', img: `${PHOTOGRAPHY_IMG}/CopenhagenBl (5).jpg`, overlayImg: `${PHOTOGRAPHY_IMG}/CopenhagenBl (5).jpg`, x: 75, y: 45, w: 28, rotation: -1, taped: true, noBg: true, tackers: [3, 1, 4, 2], overlay: true, overlaySet: WORK03_COPENHAGEN, z: 1, bringToFront: true },
       // Subtitle
       { type: 'text', text: 'Copenhagen', x: 8, y: 92, w: 72, rotation: 0, align: 'right', font: "'automate', sans-serif", fontSize: 0.65, fontSizeMobile: 0.45, weight: 300, opacity: 0.7 },
       // Static outline around all Copenhagen photos
@@ -434,11 +434,11 @@ const bookPages = [
     items: [
       // Hannover photos — varied sizes
       // Priority: Hannover (3) and (5) are largest
-      { type: 'image', img: `${PHOTOGRAPHY_IMG}/Hannover (3).jpg`, overlayImg: `${PHOTOGRAPHY_IMG}/Hannover (3).jpg`, x: 10, y: 8, w: 46, rotation: 0.5, taped: true, noBg: true, tackers: [1, 3, 2, 4], overlay: true, overlaySet: WORK03_HANNOVER, z: 2 },
-      { type: 'image', img: `${PHOTOGRAPHY_IMG}/Hannover (5).jpg`, overlayImg: `${PHOTOGRAPHY_IMG}/Hannover (5).jpg`, x: 60, y: 5, w: 40, rotation: -1, taped: true, noBg: true, tackers: [2, 4, 1, 3], overlay: true, overlaySet: WORK03_HANNOVER, z: 3 },
-      { type: 'image', img: `${PHOTOGRAPHY_IMG}/Hannover (1).jpg`, overlayImg: `${PHOTOGRAPHY_IMG}/Hannover (1).jpg`, x: 5, y: 55, w: 31, rotation: 1.5, taped: true, noBg: true, tackers: [2, 4, 1, 3], overlay: true, overlaySet: WORK03_HANNOVER, z: 1 },
-      { type: 'image', img: `${PHOTOGRAPHY_IMG}/Hannover (2).jpg`, overlayImg: `${PHOTOGRAPHY_IMG}/Hannover (2).jpg`, x: 45, y: 50, w: 30, rotation: -1.5, taped: true, noBg: true, tackers: [1, 3, 2, 4], overlay: true, overlaySet: WORK03_HANNOVER, z: 2 },
-      { type: 'image', img: `${PHOTOGRAPHY_IMG}/Hannover (4).jpg`, overlayImg: `${PHOTOGRAPHY_IMG}/Hannover (4).jpg`, x: 75, y: 55, w: 25, rotation: 1, taped: true, noBg: true, tackers: [4, 2, 3, 1], overlay: true, overlaySet: WORK03_HANNOVER, z: 1 },
+      { type: 'image', img: `${PHOTOGRAPHY_IMG}/Hannover (3).jpg`, overlayImg: `${PHOTOGRAPHY_IMG}/Hannover (3).jpg`, x: 10, y: 8, w: 46, rotation: 0.5, taped: true, noBg: true, tackers: [1, 3, 2, 4], overlay: true, overlaySet: WORK03_HANNOVER, z: 2, bringToFront: true },
+      { type: 'image', img: `${PHOTOGRAPHY_IMG}/Hannover (5).jpg`, overlayImg: `${PHOTOGRAPHY_IMG}/Hannover (5).jpg`, x: 60, y: 5, w: 40, rotation: -1, taped: true, noBg: true, tackers: [2, 4, 1, 3], overlay: true, overlaySet: WORK03_HANNOVER, z: 3, bringToFront: true },
+      { type: 'image', img: `${PHOTOGRAPHY_IMG}/Hannover (1).jpg`, overlayImg: `${PHOTOGRAPHY_IMG}/Hannover (1).jpg`, x: 5, y: 55, w: 31, rotation: 1.5, taped: true, noBg: true, tackers: [2, 4, 1, 3], overlay: true, overlaySet: WORK03_HANNOVER, z: 1, bringToFront: true },
+      { type: 'image', img: `${PHOTOGRAPHY_IMG}/Hannover (2).jpg`, overlayImg: `${PHOTOGRAPHY_IMG}/Hannover (2).jpg`, x: 45, y: 50, w: 30, rotation: -1.5, taped: true, noBg: true, tackers: [1, 3, 2, 4], overlay: true, overlaySet: WORK03_HANNOVER, z: 2, bringToFront: true },
+      { type: 'image', img: `${PHOTOGRAPHY_IMG}/Hannover (4).jpg`, overlayImg: `${PHOTOGRAPHY_IMG}/Hannover (4).jpg`, x: 75, y: 55, w: 25, rotation: 1, taped: true, noBg: true, tackers: [4, 2, 3, 1], overlay: true, overlaySet: WORK03_HANNOVER, z: 1, bringToFront: true },
       // Subtitle
       { type: 'text', text: 'Hannover', x: 8, y: 92, w: 72, rotation: 0, align: 'right', font: "'automate', sans-serif", fontSize: 0.65, fontSizeMobile: 0.45, weight: 300, opacity: 0.7 },
       // Static outline around all Hannover photos
@@ -459,10 +459,10 @@ const bookPages = [
     items: [
       // experimental photos — photobook style
       // Priority: experimental (1) and (4) - (4) is wide at bottom, nothing below it
-      { type: 'image', img: `${PHOTOGRAPHY_IMG}/experimental (1).jpg`, overlayImg: `${PHOTOGRAPHY_IMG}/experimental (1).jpg`, x: 5, y: 8, w: 46, rotation: -1, taped: true, noBg: true, tackers: [1, 3, 2, 4], overlay: true, overlaySet: WORK03_EXPERIMENTAL, z: 2 },
-      { type: 'image', img: `${PHOTOGRAPHY_IMG}/experimental (2).jpg`, overlayImg: `${PHOTOGRAPHY_IMG}/experimental (2).jpg`, x: 55, y: 8, w: 40, rotation: 1, taped: true, noBg: true, tackers: [2, 4, 1, 3], overlay: true, overlaySet: WORK03_EXPERIMENTAL, z: 2 },
-      { type: 'image', img: `${PHOTOGRAPHY_IMG}/experimental (4).jpg`, overlayImg: `${PHOTOGRAPHY_IMG}/experimental (4).jpg`, x: 5, y: 65, w: 70, rotation: 0, taped: true, noBg: true, tackers: [1, 3, 2, 4], overlay: true, overlaySet: WORK03_EXPERIMENTAL, z: 3 },
-      { type: 'image', img: `${PHOTOGRAPHY_IMG}/experimental (3).jpg`, overlayImg: `${PHOTOGRAPHY_IMG}/experimental (3).jpg`, x: 65, y: 55, w: 30, rotation: -0.5, taped: true, noBg: true, tackers: [1, 3, 2, 4], overlay: true, overlaySet: WORK03_EXPERIMENTAL, z: 1 },
+      { type: 'image', img: `${PHOTOGRAPHY_IMG}/experimental (1).jpg`, overlayImg: `${PHOTOGRAPHY_IMG}/experimental (1).jpg`, x: 5, y: 8, w: 46, rotation: -1, taped: true, noBg: true, tackers: [1, 3, 2, 4], overlay: true, overlaySet: WORK03_EXPERIMENTAL, z: 2, bringToFront: true },
+      { type: 'image', img: `${PHOTOGRAPHY_IMG}/experimental (2).jpg`, overlayImg: `${PHOTOGRAPHY_IMG}/experimental (2).jpg`, x: 55, y: 8, w: 40, rotation: 1, taped: true, noBg: true, tackers: [2, 4, 1, 3], overlay: true, overlaySet: WORK03_EXPERIMENTAL, z: 2, bringToFront: true },
+      { type: 'image', img: `${PHOTOGRAPHY_IMG}/experimental (4).jpg`, overlayImg: `${PHOTOGRAPHY_IMG}/experimental (4).jpg`, x: 5, y: 65, w: 70, rotation: 0, taped: true, noBg: true, tackers: [1, 3, 2, 4], overlay: true, overlaySet: WORK03_EXPERIMENTAL, z: 3, bringToFront: true },
+      { type: 'image', img: `${PHOTOGRAPHY_IMG}/experimental (3).jpg`, overlayImg: `${PHOTOGRAPHY_IMG}/experimental (3).jpg`, x: 65, y: 55, w: 30, rotation: -0.5, taped: true, noBg: true, tackers: [1, 3, 2, 4], overlay: true, overlaySet: WORK03_EXPERIMENTAL, z: 1, bringToFront: true },
       // Subtitle
       { type: 'text', text: 'experimental', x: 20, y: 92, w: 72, rotation: 0, align: 'right', font: "'automate', sans-serif", fontSize: 0.65, fontSizeMobile: 0.45, weight: 300, opacity: 0.7 },
       // Static outline around all experimental photos
@@ -481,11 +481,11 @@ const bookPages = [
     items: [
       // BW photos — varied sizes
       // Priority: BW (1) and (4) are largest
-      { type: 'image', img: `${PHOTOGRAPHY_IMG}/BW (1).jpg`, overlayImg: `${PHOTOGRAPHY_IMG}/BW (1).jpg`, x: 10, y: 8, w: 46, rotation: 0.5, taped: true, noBg: true, tackers: [1, 3, 2, 4], overlay: true, overlaySet: WORK03_BW, z: 2 },
-      { type: 'image', img: `${PHOTOGRAPHY_IMG}/BW (4).jpg`, overlayImg: `${PHOTOGRAPHY_IMG}/BW (4).jpg`, x: 60, y: 5, w: 40, rotation: -1, taped: true, noBg: true, tackers: [2, 4, 1, 3], overlay: true, overlaySet: WORK03_BW, z: 3 },
-      { type: 'image', img: `${PHOTOGRAPHY_IMG}/BW (2).jpg`, overlayImg: `${PHOTOGRAPHY_IMG}/BW (2).jpg`, x: 5, y: 55, w: 31, rotation: 1.5, taped: true, noBg: true, tackers: [2, 4, 1, 3], overlay: true, overlaySet: WORK03_BW, z: 1 },
-      { type: 'image', img: `${PHOTOGRAPHY_IMG}/BW (3).jpg`, overlayImg: `${PHOTOGRAPHY_IMG}/BW (3).jpg`, x: 45, y: 50, w: 30, rotation: -1.5, taped: true, noBg: true, tackers: [1, 3, 2, 4], overlay: true, overlaySet: WORK03_BW, z: 2 },
-      { type: 'image', img: `${PHOTOGRAPHY_IMG}/BW (5).jpg`, overlayImg: `${PHOTOGRAPHY_IMG}/BW (5).jpg`, x: 75, y: 55, w: 25, rotation: 1, taped: true, noBg: true, tackers: [4, 2, 3, 1], overlay: true, overlaySet: WORK03_BW, z: 1 },
+      { type: 'image', img: `${PHOTOGRAPHY_IMG}/BW (1).jpg`, overlayImg: `${PHOTOGRAPHY_IMG}/BW (1).jpg`, x: 10, y: 8, w: 46, rotation: 0.5, taped: true, noBg: true, tackers: [1, 3, 2, 4], overlay: true, overlaySet: WORK03_BW, z: 2, bringToFront: true },
+      { type: 'image', img: `${PHOTOGRAPHY_IMG}/BW (4).jpg`, overlayImg: `${PHOTOGRAPHY_IMG}/BW (4).jpg`, x: 60, y: 5, w: 40, rotation: -1, taped: true, noBg: true, tackers: [2, 4, 1, 3], overlay: true, overlaySet: WORK03_BW, z: 3, bringToFront: true },
+      { type: 'image', img: `${PHOTOGRAPHY_IMG}/BW (2).jpg`, overlayImg: `${PHOTOGRAPHY_IMG}/BW (2).jpg`, x: 5, y: 55, w: 31, rotation: 1.5, taped: true, noBg: true, tackers: [2, 4, 1, 3], overlay: true, overlaySet: WORK03_BW, z: 1, bringToFront: true },
+      { type: 'image', img: `${PHOTOGRAPHY_IMG}/BW (3).jpg`, overlayImg: `${PHOTOGRAPHY_IMG}/BW (3).jpg`, x: 45, y: 50, w: 30, rotation: -1.5, taped: true, noBg: true, tackers: [1, 3, 2, 4], overlay: true, overlaySet: WORK03_BW, z: 2, bringToFront: true },
+      { type: 'image', img: `${PHOTOGRAPHY_IMG}/BW (5).jpg`, overlayImg: `${PHOTOGRAPHY_IMG}/BW (5).jpg`, x: 75, y: 55, w: 25, rotation: 1, taped: true, noBg: true, tackers: [4, 2, 3, 1], overlay: true, overlaySet: WORK03_BW, z: 1, bringToFront: true },
       // Subtitle
       { type: 'text', text: 'BW', x: 8, y: 92, w: 72, rotation: 0, align: 'right', font: "'automate', sans-serif", fontSize: 0.65, fontSizeMobile: 0.45, weight: 300, opacity: 0.7 },
       // Static outline around all BW photos
