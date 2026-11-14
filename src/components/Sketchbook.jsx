@@ -901,7 +901,9 @@ export default function Sketchbook({
       if (item.polaroid) classes.push('sketch-item-image-polaroid');
       if (item.print) classes.push('sketch-item-image-print');
       if (item.bringToFront) classes.push('sketch-item-bring-to-front');
-      if (item.video || item.overlay) classes.push('sketch-item-clickable');
+      // noMobileOverlay: the overlay gallery stays desktop-only for this item
+      const overlayActive = item.overlay && !(isMobile && item.noMobileOverlay);
+      if (item.video || overlayActive) classes.push('sketch-item-clickable');
       if (item.frame) classes.push('sketch-item-framed');
       if (item.pileMember) classes.push('sketch-pile-member');
       const imageStyle = { ...style };
@@ -954,7 +956,7 @@ export default function Sketchbook({
           className={classes.join(' ')}
           style={imageStyle}
           {...linkProps}
-          onClick={item.video ? () => onVideoOpen?.(item.video) : item.overlay ? () => {
+          onClick={item.video ? () => onVideoOpen?.(item.video) : overlayActive ? () => {
             const set = item.overlaySet || [item.img];
             // overlayImg: the gallery image this item represents when its own
             // img is not part of the set (e.g. a composited polaroid frame)

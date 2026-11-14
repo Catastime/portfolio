@@ -594,7 +594,7 @@ const bookPages = [
       { type: 'statement', text: 'APARTMENT\nIN VR', x: 5, y: 2.5, w: 84, h: 37.8, rotation: 0, aligns: { 0: 'left' }, blend: true },
       { type: 'statement', text: 'APARTMENT\nIN VR', x: 5, y: 2.5, w: 84, h: 37.8, rotation: 0, aligns: { 0: 'left' }, opacity: 0.75, hoverFull: true },
       // Intro text — same treatment as work.02's title page, moved down and narrowed
-      { type: 'text', text: 'Working with a point cloud scan in virtual reality, this experimental project combines a digital material, the GIK, to form a room experienced from a first-person perspective. The GIKs were placed using brushes whose forms derive from found objects, which were 3D scanned, and from the structural elements of the Takara Beautilion. Built up in this way, the work creates a conceptually cohesive space at human scale.', x: 5, y: 74, w: 90, h: 18, rotation: 0, vCenter: true, font: "'tosh-b', sans-serif", fontSize: BODY_TEXT_SIZE, fontSizeMobile: BODY_TEXT_SIZE_MOBILE, align: 'justify', mobile: { x: 5, y: 78, w: 90, h: 20 } },
+      { type: 'text', text: 'Working with a point cloud scan in virtual reality, this experimental project combines a digital material, the GIK, to form a room experienced from a first-person perspective. The GIKs were placed using brushes whose forms derive from found objects, which were 3D scanned, and from the structural elements of the Takara Beautilion. Built up in this way, the work creates a conceptually cohesive space at human scale.', x: 5, y: 74, w: 90, h: 18, rotation: 0, vCenter: true, font: "'tosh-b', sans-serif", fontSize: BODY_TEXT_SIZE, fontSizeMobile: BODY_TEXT_SIZE_MOBILE, align: 'justify', mobile: { x: 5, y: 74, w: 90, h: 20 } },
     ],
   },
   // Right page — walkthrough video and inspiration collage
@@ -660,7 +660,7 @@ const bookPages = [
     items: [
       // Exhibition text — the title is built into the first paragraph,
       // all caps at text size
-      { type: 'text', text: 'For my first solo exhibition **ARTIFICIAL ARTIFACTING**, I asked the members of our group for two descriptions: something they wished existed, and the feeling of a vivid memory, not the moment itself but how it made them feel. They did not know how their words would be used.', x: 0, y: 3, w: 100, rotation: 0, font: "'tosh-b', sans-serif", fontSize: BODY_TEXT_SIZE, fontSizeMobile: BODY_TEXT_SIZE_MOBILE, align: 'justify', mobile: { x: 0, y: 3, w: 100 } },
+      { type: 'text', text: 'For my first solo exhibition **ARTIFICIAL ARTIFACTING**, I asked the members of our group for two descriptions: something they wished existed, and the feeling of a vivid memory, not the moment itself but how it made them feel. They did not know how their words would be used.', x: 0, y: 3, w: 100, rotation: 0, font: "'tosh-b', sans-serif", fontSize: BODY_TEXT_SIZE, fontSizeMobile: 0.44, align: 'justify', mobile: { x: 0, y: 3, w: 100 } },
       // Exhibits — 5x3 grid below the first paragraph, in Done numbering
       // order (01-04, 06 / 07-11 / 12-16); tiles w 18.4 at x
       // 0/20.4/40.8/61.2/81.6, rows y 23/41.6/60.2
@@ -680,7 +680,7 @@ const bookPages = [
       { type: 'image', img: `${ATELIER_IMG}/preview/done-15.jpg`, overlayImg: WORK05_ARTIFACTING[13], x: 61.2, y: 50.2, w: 18.4, rotation: 0, noBg: true, bringToFront: true, overlay: true, overlaySet: WORK05_ARTIFACTING, z: 2 },
       { type: 'image', img: `${ATELIER_IMG}/preview/done-16.jpg`, overlayImg: WORK05_ARTIFACTING[14], x: 81.6, y: 50.2, w: 18.4, rotation: 0, noBg: true, bringToFront: true, overlay: true, overlaySet: WORK05_ARTIFACTING, z: 2 },
       // Exhibition text — second paragraph below the grid
-      { type: 'text', text: 'I turned these descriptions into images with AI image generation, then into 3D models, and finally into physical objects through 3D printing, taking them from imagination to something tangible.', x: 0, y: 69, w: 100, rotation: 0, font: "'tosh-b', sans-serif", fontSize: BODY_TEXT_SIZE, fontSizeMobile: BODY_TEXT_SIZE_MOBILE, align: 'justify', mobile: { x: 0, y: 69, w: 100 } },
+      { type: 'text', text: 'I turned these descriptions into images with AI image generation, then into 3D models, and finally into physical objects through 3D printing, taking them from imagination to something tangible.', x: 0, y: 69, w: 100, rotation: 0, font: "'tosh-b', sans-serif", fontSize: BODY_TEXT_SIZE, fontSizeMobile: 0.44, align: 'justify', mobile: { x: 0, y: 69, w: 100 } },
       // Exhibition photos — below the text, one shared height, the block
       // spanning the full width like the grid above
       { type: 'image', img: `${ATELIER_IMG}/preview/WA0015.jpg`, overlayImg: WORK05_EXHIBIT_PHOTOS[0], x: 0, y: 77, w: 25.4, rotation: 0, taped: true, noBg: true, tackers: [1, 3, 2, 4], bringToFront: true, overlay: true, overlaySet: WORK05_EXHIBIT_PHOTOS, z: 2 },
@@ -694,7 +694,7 @@ const bookPages = [
     meta: { year: 'Ongoing', place: 'Hannover', title: 'Atelier Anthrazit', work: 5 },
     items: [
       // Exhibition text — same field as the left page's paragraphs
-      { type: 'text', text: 'The following is my part of our exhibition for Ins Blaue, an initiative that opens Hannover\'s Art and Architecture spaces to the public and promotes the creative community.\n\nWe focused our effort on the theme of „**Intelligence. Natural. Artificial. Collective**“, following the architecture biennale in Venice. My work is using AI to create fossilized structures in an imagined world by Sina Neumann and Hannah Vette.', x: 0, y: 3, w: 100, rotation: 0, font: "'tosh-b', sans-serif", fontSize: BODY_TEXT_SIZE, fontSizeMobile: BODY_TEXT_SIZE_MOBILE, align: 'justify', mobile: { x: 0, y: 3, w: 100 } },
+      { type: 'text', text: 'The following is my part of our exhibition for Ins Blaue, an initiative that opens Hannover\'s Art and Architecture spaces to the public and promotes the creative community.\n\nWe focused our effort on the theme of „**Intelligence. Natural. Artificial. Collective**“, following the architecture biennale in Venice. My work is using AI to create fossilized structures in an imagined world by Sina Neumann and Hannah Vette.', x: 0, y: 3, w: 100, rotation: 0, font: "'tosh-b', sans-serif", fontSize: BODY_TEXT_SIZE, fontSizeMobile: 0.44, align: 'justify', mobile: { x: 0, y: 3, w: 100 } },
       // Fossil process — AI image, printed fossil, brain form; shared
       // gallery, the row spanning the full width like the photo below,
       // all at one height; the AI image has no tape dots
@@ -703,7 +703,7 @@ const bookPages = [
       { type: 'image', img: `${ATELIER_IMG}/preview/brain.jpg`, overlayImg: WORK05_INSBLAUE_BRAIN, x: 61.6, y: 19, w: 38.3, rotation: 0, taped: true, noBg: true, tackers: [3, 1, 4, 2], bringToFront: true, overlay: true, overlaySet: WORK05_INSBLAUE_IMAGES, z: 2 },
       // Last paragraph — between the image row and the photo, bottom edge
       // just above the photo
-      { type: 'text', text: 'Those fossils have then been created in 3D, embedded in a stone-esque structure in the approximate form of a cerebrum, brought to life with 3D-printing and reworking with gypsum, to create the illusion of a natural fossil, that, in reality, is just a figment of the imagination.', x: 0, y: 28, w: 100, h: 19, rotation: 0, font: "'tosh-b', sans-serif", fontSize: BODY_TEXT_SIZE, fontSizeMobile: BODY_TEXT_SIZE_MOBILE, align: 'justify', mobile: { x: 0, y: 28, w: 100, h: 19 } },
+      { type: 'text', text: 'Those fossils have then been created in 3D, embedded in a stone-esque structure in the approximate form of a cerebrum, brought to life with 3D-printing and reworking with gypsum, to create the illusion of a natural fossil, that, in reality, is just a figment of the imagination.', x: 0, y: 28, w: 100, h: 19, rotation: 0, font: "'tosh-b', sans-serif", fontSize: BODY_TEXT_SIZE, fontSizeMobile: 0.44, align: 'justify', mobile: { x: 0, y: 28, w: 100, h: 19 } },
       // Ins Blaue photo — full-width at the bottom of the page
       { type: 'image', img: WORK05_INSBLAUE_PHOTO, overlayImg: WORK05_INSBLAUE_PHOTO, x: 0, y: 49.2, w: 100, rotation: 0, taped: true, noBg: true, tackers: [1, 3, 2, 4], bringToFront: true, overlay: true, overlaySet: [WORK05_INSBLAUE_PHOTO], z: 2 },
     ],
@@ -725,7 +725,7 @@ const bookPages = [
       { type: 'statement', text: 'H-BLOCK\nEXHIBITION\nBOOTH', x: 51.5, y: 50.5, w: 48.5, h: 37.8, rotation: 0, aligns: { 0: 'left' }, blend: true },
       { type: 'statement', text: 'H-BLOCK\nEXHIBITION\nBOOTH', x: 51.5, y: 50.5, w: 48.5, h: 37.8, rotation: 0, aligns: { 0: 'left' }, opacity: 0.75, hoverFull: true },
       // Project text — below the title, bottom edge level with plan 4
-      { type: 'text', text: 'In this design-build project, led by Prof. Mirco Becker and Prof. Tatjana Sabljo, we designed and build the joint stand of the professional associations for architecture, interior design, landscape architecture and urban planning for the REA 2023. The design is based on the H-Block, a reusable timber lattice brick made of beech wood, developed by the Digital Methods department. The 2,200 blocks were handbuilt in a collaborative effort between the two institutes. The stand integrates two concrete staircases that had been classified as construction waste and are reused here. After the fair, the blocks will be reused for installations in the former Galeria Kaufhof building at the Marktkirche in Hannover.', x: 51.5, y: 50.5, w: 48.5, h: 49, rotation: 0, font: "'tosh-b', sans-serif", fontSize: BODY_TEXT_SIZE, fontSizeMobile: BODY_TEXT_SIZE_MOBILE, align: 'justify' },
+      { type: 'text', text: 'In this design-build project, led by Prof. Mirco Becker and Prof. Tatjana Sabljo, we designed and build the joint stand of the professional associations for architecture, interior design, landscape architecture and urban planning for the REA 2023. The design is based on the H-Block, a reusable timber lattice brick made of beech wood, developed by the Digital Methods department. The 2,200 blocks were handbuilt in a collaborative effort between the two institutes. The stand integrates two concrete staircases that had been classified as construction waste and are reused here. After the fair, the blocks will be reused for installations in the former Galeria Kaufhof building at the Marktkirche in Hannover.', x: 51.5, y: 50.5, w: 48.5, h: 49, rotation: 0, font: "'tosh-b', sans-serif", fontSize: BODY_TEXT_SIZE, fontSizeMobile: 0.44, align: 'justify' },
     ],
   },
   // Right page — photos scattered photobook-style like work.03's film pages:
@@ -763,7 +763,7 @@ const bookPages = [
       // Image — page-sized -full version, edge to edge like the title-page
       // covers; behind drops it to the text layer so the title sits on top.
       // Clicking opens the original uncropped image
-      { type: 'image', img: WORK07_TANZ_FULL, overlayImg: WORK07_TANZ, x: -5.6, y: -5.75, w: 111.1, rotation: 0, taped: true, noBg: true, tackers: [1, 3, 2, 4], behind: true, overlay: true, overlaySet: WORK07_IMAGES },
+      { type: 'image', img: WORK07_TANZ_FULL, overlayImg: WORK07_TANZ, x: -5.6, y: -5.75, w: 111.1, rotation: 0, taped: true, noBg: true, tackers: [1, 3, 2, 4], behind: true, overlay: true, overlaySet: WORK07_IMAGES, noMobileOverlay: true },
       // Title — same statement treatment as work.05, on top of the image
       // Title — statement block in the bottom left corner; the text flows
       // from the top of its box, so the box starts just high enough for the
@@ -779,7 +779,7 @@ const bookPages = [
       // Detail — page-sized -full version, same height as the left page's
       // image, edge to edge, 10% transparent. Clicking opens the original.
       // No bringToFront: the image must not jump over the header on hover
-      { type: 'image', img: WORK07_DETAIL_FULL, overlayImg: WORK07_DETAIL, x: -5.9, y: -5.75, w: 111.8, rotation: 0, opacity: 0.9, taped: true, noBg: true, tackers: [2, 4, 1, 3], overlay: true, overlaySet: WORK07_IMAGES },
+      { type: 'image', img: WORK07_DETAIL_FULL, overlayImg: WORK07_DETAIL, x: -5.9, y: -5.75, w: 111.8, rotation: 0, opacity: 0.9, taped: true, noBg: true, tackers: [2, 4, 1, 3], overlay: true, overlaySet: WORK07_IMAGES, noMobileOverlay: true },
     ],
   },
   // ===== SPREADS 13-14: Placeholder pages for future projects =====
