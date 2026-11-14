@@ -172,6 +172,17 @@ function Gallery({ images, aspect: aspectOverride, style }) {
   );
 }
 
+// Inline **bold** segments render heavier (e.g. an all-caps title inside
+// a flowing paragraph)
+const renderInlineBold = (text) => {
+  const parts = text.split(/(\*\*[^*]+\*\*)/);
+  return parts.map((p, i) =>
+    p.startsWith('**') && p.endsWith('**') && p.length > 4
+      ? <strong key={i} style={{ fontWeight: 700 }}>{p.slice(2, -2)}</strong>
+      : p
+  );
+};
+
 // Flip card — the image turns around its vertical axis on click to reveal a
 // second image (or a looping video) on its back. The box keeps the front
 // image's size; with flipBox it expands to the given page geometry while
@@ -864,8 +875,9 @@ export default function Sketchbook({
       // the still analysis image (same aspect, exact overlay)
       const classes = ['sketch-item', 'sketch-item-image', 'sketch-gif'];
       if (item.noBg) classes.push('sketch-item-image-nobg');
+      const gifStyle = item.shadow ? { ...style, boxShadow: item.shadow } : style;
       return (
-        <div key={key} className={classes.join(' ')} style={style}>
+        <div key={key} className={classes.join(' ')} style={gifStyle}>
           {item.taped && (() => {
             const holeColor = item.holeColor || holeColorFor(pageIndex);
             return (
@@ -893,6 +905,21 @@ export default function Sketchbook({
       if (item.frame) classes.push('sketch-item-framed');
       if (item.pileMember) classes.push('sketch-pile-member');
       const imageStyle = { ...style };
+      // Linked image — fades in on hover instead of the clickable border;
+      // the base opacity travels in a variable so the hover rule can win
+      if (item.href) {
+        classes.push('sketch-item-link');
+        if (item.opacity != null) {
+          delete imageStyle.opacity;
+          imageStyle['--link-opacity'] = item.opacity;
+        }
+      }
+      // zoom: content scales up inside the unchanged box — the box pins its
+      // height to the given aspect so the layout stays put, and the clip
+      // wrapper crops the overflow
+      if (item.zoom) {
+        imageStyle.aspectRatio = String(item.aspect || 1);
+      }
       // behind: drop to the text layer (z-index 0) — first in DOM order,
       // so the text items paint above it
       if (item.behind) imageStyle.zIndex = 0;
@@ -918,11 +945,15 @@ export default function Sketchbook({
           />
         );
       }
+      // href: the image links out (opens in a new tab) instead of a plain div
+      const Tag = item.href ? 'a' : 'div';
+      const linkProps = item.href ? { href: item.href, target: '_blank', rel: 'noopener noreferrer' } : {};
       return (
-        <div
+        <Tag
           key={key}
           className={classes.join(' ')}
           style={imageStyle}
+          {...linkProps}
           onClick={item.video ? () => onVideoOpen?.(item.video) : item.overlay ? () => {
             const set = item.overlaySet || [item.img];
             // overlayImg: the gallery image this item represents when its own
@@ -949,8 +980,14 @@ export default function Sketchbook({
           {item.video && (
             <div className="sketch-play-btn"><div className="sketch-play-triangle" /></div>
           )}
-          <img key={isMobile && item.imgMobile ? item.imgMobile : item.img} src={isMobile && item.imgMobile ? item.imgMobile : item.img} alt="" className="sketch-image" />
-        </div>
+          {item.zoom ? (
+            <div className="sketch-zoom-clip">
+              <img key={isMobile && item.imgMobile ? item.imgMobile : item.img} src={isMobile && item.imgMobile ? item.imgMobile : item.img} alt="" className="sketch-image" style={{ width: `${item.zoom * 100}%` }} />
+            </div>
+          ) : (
+            <img key={isMobile && item.imgMobile ? item.imgMobile : item.img} src={isMobile && item.imgMobile ? item.imgMobile : item.img} alt="" className="sketch-image" />
+          )}
+        </Tag>
       );
     }
 
@@ -1080,7 +1117,7 @@ export default function Sketchbook({
               </div>
             ))
           ) : (
-            <div className="sketch-text-body" style={Object.keys(bodyStyle).length ? bodyStyle : undefined}>{item.text}</div>
+            <div className="sketch-text-body" style={Object.keys(bodyStyle).length ? bodyStyle : undefined}>{renderInlineBold(item.text)}</div>
           )}
         </div>
       );
@@ -1301,10 +1338,12 @@ export default function Sketchbook({
 
   // Punched-hole color: reads as the page underneath in the stack —
   // black paper on white pages, paper color on black/dark pages
-  // work.03 (spreads 6-7, pages 12-15) uses dark dots on black pages
+  // work.03 (spreads 6-7) and work.05 (spreads 9-10) use dark dots on
+  // their black pages
   const holeColorFor = (pageIndex) => {
     const spread = Math.floor(pageIndex / 2);
     if (spread >= 6 && spread <= 7) return '#1d1d1d';
+    if (spread >= 9 && spread <= 10) return '#1d1d1d';
     const tex = pageTexture(pageIndex);
     return tex.includes('black') || tex.includes('dark') ? '#cfcfcf' : '#1d1d1d';
   };

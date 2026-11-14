@@ -356,6 +356,18 @@
   cursor: pointer;
   pointer-events: auto;
 }
+
+/* Linked image — rests at --link-opacity and fades to full on hover */
+.sketch-item-link {
+  cursor: pointer;
+  pointer-events: auto;
+  opacity: var(--link-opacity, 1);
+  transition: opacity 0.2s ease;
+}
+
+.sketch-item-link:hover {
+  opacity: 1;
+}
 .sketch-item-clickable::after {
   content: '';
   position: absolute;
@@ -394,6 +406,25 @@
   width: 100%;
   height: auto;
   display: block;
+}
+
+/* Zoomed image content — bigger inside the unchanged box, the clip wrapper
+   crops the overflow. The item itself must not clip: the clickable hover
+   border sits outside its edge and the tape dots are its direct children. */
+.sketch-zoom-clip {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.sketch-zoom-clip .sketch-image {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  /* Tailwind's preflight clamps img to max-width: 100% — without this the
+     zoomed width falls back to the tile size and the zoom does nothing */
+  max-width: none;
 }
 
 

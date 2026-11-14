@@ -49,16 +49,17 @@ const projectItems = [
   // to crop the scan edge); col 0 pins it to the leftmost column, so it
   // reads as the next project after work 03
   { id: 'work04', img: `${PROJECTS_PREVIEW}/work04.jpg`, aspect: 600 / 840, title: 'Apartment in VR', spread: 8, page: 16, col: 0 },
-  // Work 05 — H-Block exhibition booth, title page hero (render)
-  { id: 'work05', img: `${PROJECTS_PREVIEW}/work05.jpg`, aspect: 600 / 362, title: 'H-Block Exhibition Booth', spread: 9, page: 18 },
-  // Work 06 — Tanz-Gallery Lee-Keun Reimagined, title page image
-  { id: 'work06', img: `${PROJECTS_PREVIEW}/work06.jpg`, aspect: 600 / 747, title: 'Tanz-Gallery Lee-Keun Reimagined', spread: 10, page: 20 },
+  // Work 05 — Atelier Anthrazit, title page image (starter)
+  { id: 'work05', img: `${PROJECTS_PREVIEW}/work05.jpg`, aspect: 600 / 840, title: 'Atelier Anthrazit', spread: 9, page: 18 },
+  // Work 06 — H-Block exhibition booth, title page hero (render)
+  { id: 'work06', img: `${PROJECTS_PREVIEW}/work06.jpg`, aspect: 600 / 362, title: 'H-Block Exhibition Booth', spread: 11, page: 22 },
+  // Work 07 — Tanz-Gallery Lee-Keun Reimagined, title page image
+  { id: 'work07', img: `${PROJECTS_PREVIEW}/work07.jpg`, aspect: 600 / 747, title: 'Tanz-Gallery Lee-Keun Reimagined', spread: 12, page: 24 },
   // Future works — empty slots, replaced when a work is added
-  { id: 'work07', placeholder: true, height: 500 },
-  { id: 'work08', placeholder: true, height: 300 },
-  { id: 'work09', placeholder: true, height: 400 },
-  { id: 'work10', placeholder: true, height: 350 },
-  { id: 'work11', placeholder: true, height: 500 },
+  { id: 'work08', placeholder: true, height: 500 },
+  { id: 'work09', placeholder: true, height: 300 },
+  { id: 'work10', placeholder: true, height: 400 },
+  { id: 'work11', placeholder: true, height: 350 },
 ]
 
 // Body text blocks share one size across all spreads — text stays consistent
@@ -157,35 +158,64 @@ const WORK04_INSPO = [
   WORK04_INSPO5,
 ]
 
-// Work.05 — H-Block exhibition booth (2023, Hannover)
+// Work.06 — H-Block exhibition booth (2023, Hannover)
 const MESSESTAND_IMG = `${BASE}messestand`
-const WORK05_RENDER = `${MESSESTAND_IMG}/render1.jpeg`
+const WORK06_RENDER = `${MESSESTAND_IMG}/render1.jpeg`
 // Photo file extensions are mixed-case (JPG/jpg); the exact names matter
-// for the case-sensitive Linux deploy
-const WORK05_PHOTO_NAMES = [
-  'photo1.JPG', 'photo2.JPG', 'photo3.JPG', 'photo4.JPG', 'photo5.JPG',
-  'photo6.JPG', 'photo7.JPG', 'photo8.JPG', 'photo9.jpg', 'photo10.jpg',
-  'photo11.jpg', 'photo12.jpg', 'photo13.jpg', 'photo14.jpg', 'photo15.JPG',
+// for the case-sensitive Linux deploy. Curated set — photos 3, 7, 10, 11
+// and 14 are dropped, so the gallery shows only the photos on the pages
+const WORK06_PHOTO_NAMES = [
+  'photo1.JPG', 'photo2.JPG', 'photo4.JPG', 'photo5.JPG',
+  'photo6.JPG', 'photo8.JPG', 'photo9.jpg',
+  'photo12.jpg', 'photo15.jpg', 'photo13.jpg',
 ]
-const WORK05_PHOTOS = WORK05_PHOTO_NAMES.map(name => `${MESSESTAND_IMG}/${name}`)
-const WORK05_PLANS = [
+const WORK06_PHOTOS = WORK06_PHOTO_NAMES.map(name => `${MESSESTAND_IMG}/${name}`)
+const WORK06_PLANS = [
   `${MESSESTAND_IMG}/plan1.jpg`,
   `${MESSESTAND_IMG}/plan2.jpg`,
   `${MESSESTAND_IMG}/plan3.jpg`,
   `${MESSESTAND_IMG}/plan4.jpg`,
 ]
-const WORK05_DRAWINGS = [WORK05_RENDER, ...WORK05_PLANS]
+const WORK06_DRAWINGS = [WORK06_RENDER, ...WORK06_PLANS]
+// The light grey H extracted from hblock.png (dark lattice brick) —
+// transparent PNG, floats on the page
+const WORK06_HBLOCK_H = `${MESSESTAND_IMG}/hblock-h.png`
 
-// Work.06 — Tanz-Gallery Lee-Keun Reimagined (2020, Hannover)
+// Work.05 — Atelier Anthrazit (Ongoing, Hannover)
+const ATELIER_IMG = `${BASE}atelier_anthrazit`
+const WORK05_STARTER = `${ATELIER_IMG}/Atelier-starter.png`
+const WORK05_GROUP = `${ATELIER_IMG}/group.jpg`
+// Artificial Artifacting exhibits — Done_01..Done_16 (no 05 exists);
+// page tiles show the 600px previews, the zoom overlay loads the full PNGs
+const WORK05_ARTIFACTING_NUMBERS = [1, 2, 3, 4, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
+const WORK05_ARTIFACTING = WORK05_ARTIFACTING_NUMBERS.map(
+  n => `${ATELIER_IMG}/ArtificialArtifacting_ImageLayout_330x425_Done_${String(n).padStart(2, '0')}-1.png`
+)
+// Exhibition photos — page tiles show the 600px previews, the zoom loads the fulls
+const WORK05_EXHIBIT_PHOTOS = [
+  `${ATELIER_IMG}/IMG-20250901-WA0015.jpg`,
+  `${ATELIER_IMG}/IMG-20250901-WA0016.jpg`,
+  `${ATELIER_IMG}/IMG-20250901-WA0017.jpg`,
+]
+// Ins Blaue exhibition photo — full-width print on the spread 10 right page
+const WORK05_INSBLAUE_PHOTO = `${ATELIER_IMG}/IMG-20250901-WA0018.jpg`
+// Ins Blaue fossil process — AI image, 3D-printed fossil, brain form;
+// page tiles show the 600px previews, the zoom loads the fulls
+const WORK05_INSBLAUE_FOSSIL = `${ATELIER_IMG}/ArtificialArtifacting_ImageLayout_Fossil_330x425.png`
+const WORK05_INSBLAUE_FOSSILE = `${ATELIER_IMG}/Fossile.jpg`
+const WORK05_INSBLAUE_BRAIN = `${ATELIER_IMG}/brain.jpg`
+const WORK05_INSBLAUE_IMAGES = [WORK05_INSBLAUE_FOSSIL, WORK05_INSBLAUE_FOSSILE, WORK05_INSBLAUE_BRAIN]
+
+// Work.07 — Tanz-Gallery Lee-Keun Reimagined (2020, Hannover)
 const TANZGALLERY_IMG = `${BASE}tanzgallery`
 // Page-sized versions (-full) shown on the pages; the originals open on click
-const WORK06_TANZ_FULL = `${TANZGALLERY_IMG}/Tanz-Gallery Lee-Keun Reimagined-full.png`
-const WORK06_DETAIL_FULL = `${TANZGALLERY_IMG}/Detail-full.png`
-const WORK06_TANZ = `${TANZGALLERY_IMG}/Tanz-Gallery Lee-Keun Reimagined.jpg`
-const WORK06_DETAIL = `${TANZGALLERY_IMG}/Detail.png`
-const WORK06_IMAGES = [
-  WORK06_TANZ,
-  WORK06_DETAIL,
+const WORK07_TANZ_FULL = `${TANZGALLERY_IMG}/Tanz-Gallery Lee-Keun Reimagined-full.png`
+const WORK07_DETAIL_FULL = `${TANZGALLERY_IMG}/Detail-full.png`
+const WORK07_TANZ = `${TANZGALLERY_IMG}/Tanz-Gallery Lee-Keun Reimagined.jpg`
+const WORK07_DETAIL = `${TANZGALLERY_IMG}/Detail.png`
+const WORK07_IMAGES = [
+  WORK07_TANZ,
+  WORK07_DETAIL,
 ]
 
 const thesisPageCount = 140
@@ -573,14 +603,14 @@ const bookPages = [
     meta: { year: '2023', place: 'Hannover', title: 'Apartment in VR', work: 4 },
     items: [
       // Walkthrough video — autoplays muted, taped like the polaroids
-      { type: 'gif', video: `${VROXEL_IMG}/EG2_30-web.mp4`, x: 8, y: 39, w: 84, rotation: 0, taped: true, noBg: true, tackers: [4, 2, 3, 1] },
+      { type: 'gif', video: `${VROXEL_IMG}/EG2_30-web.mp4`, x: 6, y: 38, w: 88, rotation: 0, noBg: true, shadow: '0 4px 12px rgba(0, 0, 0, 0.35)' },
       // Subtitle
-      { type: 'text', text: 'Walkthrough', x: 20, y: 64.5, w: 72, rotation: 0, align: 'right', font: "'automate', sans-serif", fontSize: 0.55, fontSizeMobile: 0.4, weight: 300, opacity: 0.65 },
+      { type: 'text', text: 'Walkthrough', x: 22, y: 64.5, w: 72, rotation: 0, align: 'right', font: "'automate', sans-serif", fontSize: 0.55, fontSizeMobile: 0.4, weight: 300, opacity: 0.65 },
       // Renders — side-scrolling gallery, one full image at a time;
       // aspect 2 crops a bit off the images' top and bottom
-      { type: 'gallery', images: WORK04_RENDERS, x: 8, y: 68, w: 84, rotation: 0, aspect: 2 },
+      { type: 'gallery', images: WORK04_RENDERS, x: 5.5, y: 68, w: 89, rotation: 0, aspect: 2 },
       // Subtitle
-      { type: 'text', text: 'Scenes', x: 20, y: 98.3, w: 72, rotation: 0, align: 'right', font: "'automate', sans-serif", fontSize: 0.55, fontSizeMobile: 0.4, weight: 300, opacity: 0.65 },
+      { type: 'text', text: 'Scenes', x: 22, y: 99.8, w: 72, rotation: 0, align: 'right', font: "'automate', sans-serif", fontSize: 0.55, fontSizeMobile: 0.4, weight: 300, opacity: 0.65 },
       // Inspiration — two rows in the original Inspo numbering, same
       // treatment as work.02's film references: taped, slightly rotated,
       // overlapping, clickable. Row 1: (1).jpg, (1).png, (2).png;
@@ -593,64 +623,147 @@ const bookPages = [
       { type: 'image', img: `${VROXEL_PREVIEW}/t1meout.jpg`, overlayImg: WORK04_T1MEOUT, x: 44, y: 15, w: 26, rotation: 1, taped: true, noBg: true, tackers: [3, 1, 4, 2], bringToFront: true, z: 2, overlay: true, overlaySet: WORK04_INSPO },
       { type: 'image', img: `${VROXEL_PREVIEW}/inspo-5.jpg`, overlayImg: WORK04_INSPO5, x: 68, y: 15, w: 26, rotation: -1.5, taped: true, noBg: true, tackers: [2, 4, 1, 3], bringToFront: true, z: 3, overlay: true, overlaySet: WORK04_INSPO },
       // Collage caption
-      { type: 'text', text: 'Inspiration', x: 20, y: 34, w: 72, rotation: 0, align: 'right', font: "'automate', sans-serif", fontSize: 0.55, fontSizeMobile: 0.4, weight: 300, opacity: 0.65 },
+      { type: 'text', text: 'Inspiration', x: 22, y: 34, w: 72, rotation: 0, align: 'right', font: "'automate', sans-serif", fontSize: 0.55, fontSizeMobile: 0.4, weight: 300, opacity: 0.65 },
     ],
   },
-  // ===== SPREAD 9: WORK05 — H-Block exhibition booth (2023, Hannover) =====
-  // Left page — title over the render, plans in a full-width 2x2 block
+  // ===== SPREADS 9-10: WORK05 — Atelier Anthrazit (Ongoing, Hannover) =====
+  // Spread 9, left page — title page
   {
     texture: 'left_page-black',
-    meta: { year: '2023', place: 'Hannover', title: 'H-Block Exhibition Booth', work: 5 },
+    meta: { year: 'Ongoing', place: 'Hannover', title: 'Atelier Anthrazit', work: 5 },
     items: [
-      // Render — full page width, starts level with the right page's photo
-      // grid; behind drops it to the text layer so the title sits on top
-      { type: 'image', img: WORK05_RENDER, overlayImg: WORK05_RENDER, x: 0, y: 7, w: 100, rotation: 0, taped: true, noBg: true, tackers: [1, 3, 2, 4], behind: true, overlay: true, overlaySet: WORK05_DRAWINGS },
-      // Title — same statement treatment as the other title pages, on top of the render
-      { type: 'statement', text: 'H-BLOCK\nEXHIBITION\nBOOTH', x: 5, y: 9, w: 84, h: 37.8, rotation: 0, aligns: { 0: 'left' }, blend: true },
-      { type: 'statement', text: 'H-BLOCK\nEXHIBITION\nBOOTH', x: 5, y: 9, w: 84, h: 37.8, rotation: 0, aligns: { 0: 'left' }, opacity: 0.75, hoverFull: true },
-      // Plans — 2x2 block, same width as the render, small gaps
-      { type: 'image', img: WORK05_PLANS[0], overlayImg: WORK05_PLANS[0], x: 0, y: 50.5, w: 48.5, rotation: 0, taped: true, noBg: true, tackers: [2, 4, 1, 3], bringToFront: true, overlay: true, overlaySet: WORK05_DRAWINGS, z: 2 },
-      { type: 'image', img: WORK05_PLANS[1], overlayImg: WORK05_PLANS[1], x: 51.5, y: 50.5, w: 48.5, rotation: 0, taped: true, noBg: true, tackers: [1, 3, 2, 4], bringToFront: true, overlay: true, overlaySet: WORK05_DRAWINGS, z: 2 },
-      { type: 'image', img: WORK05_PLANS[2], overlayImg: WORK05_PLANS[2], x: 0, y: 75.5, w: 48.5, rotation: 0, taped: true, noBg: true, tackers: [4, 2, 3, 1], bringToFront: true, overlay: true, overlaySet: WORK05_DRAWINGS, z: 2 },
-      { type: 'image', img: WORK05_PLANS[3], overlayImg: WORK05_PLANS[3], x: 51.5, y: 75.5, w: 48.5, rotation: 0, taped: true, noBg: true, tackers: [3, 1, 4, 2], bringToFront: true, overlay: true, overlaySet: WORK05_DRAWINGS, z: 2 },
+      // Starter full page — same proportions as the page, fits edge to edge
+      { type: 'image', img: WORK05_STARTER, x: -5.6, y: -5.75, w: 111.1, rotation: 0, taped: true, noBg: true, tackers: [1, 3, 2, 4], behind: true, holeInset: '1.5cqw' },
+      // Title — blended statement underneath, solid copy fills in on hover
+      { type: 'statement', text: 'ATELIER\nANTHRAZIT\nASSOCIATION\n& EXHIBITIONS', x: 5, y: 12.5, w: 84, h: 37.8, rotation: 0, aligns: { 0: 'left' }, blend: true },
+      { type: 'statement', text: 'ATELIER\nANTHRAZIT\nASSOCIATION\n& EXHIBITIONS', x: 5, y: 12.5, w: 84, h: 37.8, rotation: 0, aligns: { 0: 'left' }, opacity: 0.75, hoverFull: true },
     ],
   },
-  // Right page — all photos in a 3x6 grid, uniform tile height, little gaps
+  // Spread 9, right page — group photo
   {
     texture: 'right_page-black',
-    meta: { year: '2023', place: 'Hannover', title: 'H-Block Exhibition Booth', work: 5 },
+    meta: { year: 'Ongoing', place: 'Hannover', title: 'Atelier Anthrazit', work: 5 },
     items: [
-      // Rows at y 7/22/37/52/67/82; landscape tiles w 31.7 at x 0.7/33.9/67.1;
-      // the three portrait photos (6-8) keep the row height at w 10
-      { type: 'image', img: WORK05_PHOTOS[0], overlayImg: WORK05_PHOTOS[0], x: 0.7, y: 7, w: 31.7, rotation: 0, taped: true, noBg: true, tackers: [1, 3, 2, 4], bringToFront: true, overlay: true, overlaySet: WORK05_PHOTOS, z: 2 },
-      { type: 'image', img: WORK05_PHOTOS[1], overlayImg: WORK05_PHOTOS[1], x: 33.9, y: 7, w: 31.7, rotation: 0, taped: true, noBg: true, tackers: [2, 4, 1, 3], bringToFront: true, overlay: true, overlaySet: WORK05_PHOTOS, z: 2 },
-      { type: 'image', img: WORK05_PHOTOS[2], overlayImg: WORK05_PHOTOS[2], x: 67.1, y: 7, w: 31.7, rotation: 0, taped: true, noBg: true, tackers: [1, 3, 2, 4], bringToFront: true, overlay: true, overlaySet: WORK05_PHOTOS, z: 2 },
-      { type: 'image', img: WORK05_PHOTOS[3], overlayImg: WORK05_PHOTOS[3], x: 0.7, y: 22, w: 31.7, rotation: 0, taped: true, noBg: true, tackers: [2, 4, 1, 3], bringToFront: true, overlay: true, overlaySet: WORK05_PHOTOS, z: 2 },
-      { type: 'image', img: WORK05_PHOTOS[4], overlayImg: WORK05_PHOTOS[4], x: 33.9, y: 22, w: 31.7, rotation: 0, taped: true, noBg: true, tackers: [4, 2, 3, 1], bringToFront: true, overlay: true, overlaySet: WORK05_PHOTOS, z: 2 },
-      { type: 'image', img: `${MESSESTAND_IMG}/preview/photo6.jpg`, overlayImg: WORK05_PHOTOS[5], x: 67.1, y: 22, w: 31.7, rotation: 0, taped: true, noBg: true, tackers: [1, 3, 2, 4], bringToFront: true, overlay: true, overlaySet: WORK05_PHOTOS, z: 2 },
-      { type: 'image', img: `${MESSESTAND_IMG}/preview/photo7.jpg`, overlayImg: WORK05_PHOTOS[6], x: 0.7, y: 37, w: 31.7, rotation: 0, taped: true, noBg: true, tackers: [2, 4, 1, 3], bringToFront: true, overlay: true, overlaySet: WORK05_PHOTOS, z: 2 },
-      { type: 'image', img: `${MESSESTAND_IMG}/preview/photo8.jpg`, overlayImg: WORK05_PHOTOS[7], x: 33.9, y: 37, w: 31.7, rotation: 0, taped: true, noBg: true, tackers: [1, 3, 2, 4], bringToFront: true, overlay: true, overlaySet: WORK05_PHOTOS, z: 2 },
-      { type: 'image', img: WORK05_PHOTOS[8], overlayImg: WORK05_PHOTOS[8], x: 67.1, y: 37, w: 31.7, rotation: 0, taped: true, noBg: true, tackers: [4, 2, 3, 1], bringToFront: true, overlay: true, overlaySet: WORK05_PHOTOS, z: 2 },
-      { type: 'image', img: WORK05_PHOTOS[9], overlayImg: WORK05_PHOTOS[9], x: 0.7, y: 52, w: 31.7, rotation: 0, taped: true, noBg: true, tackers: [1, 3, 2, 4], bringToFront: true, overlay: true, overlaySet: WORK05_PHOTOS, z: 2 },
-      { type: 'image', img: WORK05_PHOTOS[10], overlayImg: WORK05_PHOTOS[10], x: 33.9, y: 52, w: 31.7, rotation: 0, taped: true, noBg: true, tackers: [2, 4, 1, 3], bringToFront: true, overlay: true, overlaySet: WORK05_PHOTOS, z: 2 },
-      { type: 'image', img: WORK05_PHOTOS[11], overlayImg: WORK05_PHOTOS[11], x: 67.1, y: 52, w: 31.7, rotation: 0, taped: true, noBg: true, tackers: [1, 3, 2, 4], bringToFront: true, overlay: true, overlaySet: WORK05_PHOTOS, z: 2 },
-      { type: 'image', img: WORK05_PHOTOS[12], overlayImg: WORK05_PHOTOS[12], x: 0.7, y: 67, w: 31.7, rotation: 0, taped: true, noBg: true, tackers: [4, 2, 3, 1], bringToFront: true, overlay: true, overlaySet: WORK05_PHOTOS, z: 2 },
-      { type: 'image', img: WORK05_PHOTOS[13], overlayImg: WORK05_PHOTOS[13], x: 33.9, y: 67, w: 31.7, rotation: 0, taped: true, noBg: true, tackers: [2, 4, 1, 3], bringToFront: true, overlay: true, overlaySet: WORK05_PHOTOS, z: 2 },
-      { type: 'image', img: WORK05_PHOTOS[14], overlayImg: WORK05_PHOTOS[14], x: 67.1, y: 67, w: 31.7, rotation: 0, taped: true, noBg: true, tackers: [1, 3, 2, 4], bringToFront: true, overlay: true, overlaySet: WORK05_PHOTOS, z: 2 },
-      // Project text — bottom-aligned below the photo grid
-      { type: 'text', text: 'In this design-build project, led by Prof. Mirco Becker and Prof. Tatjana Sabljo, we designed and build the joint exhibition stand of the professional associations for architecture, interior design, landscape architecture and urban planning. The design is based on the H-Block, a reusable timber lattice brick made of beech wood, developed by the Digital Methods department. The stand consists of 2,200 blocks and incorporates two concrete staircases that had been classified as construction waste. After the fair, the blocks were reused, first for installations in the former Galeria Kaufhof building at the Marktkirche in Hannover.', x: 0.7, y: 81, w: 98.1, h: 17.5, rotation: 0, font: "'tosh-b', sans-serif", fontSize: BODY_TEXT_SIZE, fontSizeMobile: BODY_TEXT_SIZE_MOBILE, align: 'justify', mobile: { x: 0.7, y: 80, w: 98.1, h: 18 } },
+      // Logo — inverted to a white mark on transparency, centered above the
+      // text; bringToFront lifts it over the text box, clicking opens the
+      // association's Instagram in a new tab
+      { type: 'image', img: `${ATELIER_IMG}/logo-white.png`, x: 45, y: 0.5, w: 10, rotation: 0, noBg: true, bringToFront: true, z: 2, opacity: 0.8, href: 'https://www.instagram.com/atelieranthrazit/' },
+      // Association text — bottom-aligned above the group photo
+      { type: 'text', text: 'I am a founding member of Atelier Anthrazit, a registered non-profit platform for realising creative projects in visual art, architecture, installation, music and performance. The association acts as a collaborative hub where artists work together to develop pieces that sit at the intersection of these disciplines. As part of my involvement, I worked on multiple team-exhibitions and pieces, as well as solo exhibitions.', x: 0, y: 0, w: 100, h: 23, rotation: 0, font: "'tosh-b', sans-serif", fontSize: BODY_TEXT_SIZE, fontSizeMobile: BODY_TEXT_SIZE_MOBILE, align: 'justify', mobile: { x: 0, y: 0, w: 100, h: 25 } },
+      { type: 'image', img: WORK05_GROUP, overlayImg: WORK05_GROUP, x: 0, y: 31, w: 100, rotation: 0.5, taped: true, noBg: true, tackers: [1, 3, 2, 4], bringToFront: true, overlay: true, overlaySet: [WORK05_GROUP], z: 2 },
     ],
   },
-  // ===== SPREADS 10-14: Placeholder pages for future projects =====
-  // ===== SPREAD 10: WORK06 — Tanz-Gallery Lee-Keun Reimagined (2020, Hannover) =====
+  // Spread 10, left page — Artificial Artifacting exhibition text and exhibits
+  {
+    texture: 'left_page-black',
+    meta: { year: 'Ongoing', place: 'Hannover', title: 'Atelier Anthrazit', work: 5 },
+    items: [
+      // Exhibition text — the title is built into the first paragraph,
+      // all caps at text size
+      { type: 'text', text: 'For my first solo exhibition **ARTIFICIAL ARTIFACTING**, I asked the members of our group for two descriptions: something they wished existed, and the feeling of a vivid memory, not the moment itself but how it made them feel. They did not know how their words would be used.', x: 0, y: 3, w: 100, rotation: 0, font: "'tosh-b', sans-serif", fontSize: BODY_TEXT_SIZE, fontSizeMobile: BODY_TEXT_SIZE_MOBILE, align: 'justify', mobile: { x: 0, y: 3, w: 100 } },
+      // Exhibits — 5x3 grid below the first paragraph, in Done numbering
+      // order (01-04, 06 / 07-11 / 12-16); tiles w 18.4 at x
+      // 0/20.4/40.8/61.2/81.6, rows y 23/41.6/60.2
+      { type: 'image', img: `${ATELIER_IMG}/preview/done-01.jpg`, overlayImg: WORK05_ARTIFACTING[0], x: 0, y: 13, w: 18.4, rotation: 0, noBg: true, bringToFront: true, overlay: true, overlaySet: WORK05_ARTIFACTING, z: 2 },
+      { type: 'image', img: `${ATELIER_IMG}/preview/done-02.jpg`, overlayImg: WORK05_ARTIFACTING[1], x: 20.4, y: 13, w: 18.4, rotation: 0, noBg: true, bringToFront: true, overlay: true, overlaySet: WORK05_ARTIFACTING, z: 2 },
+      { type: 'image', img: `${ATELIER_IMG}/preview/done-03.jpg`, overlayImg: WORK05_ARTIFACTING[2], x: 40.8, y: 13, w: 18.4, rotation: 0, noBg: true, bringToFront: true, overlay: true, overlaySet: WORK05_ARTIFACTING, z: 2 },
+      { type: 'image', img: `${ATELIER_IMG}/preview/done-04.jpg`, overlayImg: WORK05_ARTIFACTING[3], x: 61.2, y: 13, w: 18.4, rotation: 0, noBg: true, bringToFront: true, overlay: true, overlaySet: WORK05_ARTIFACTING, z: 2 },
+      { type: 'image', img: `${ATELIER_IMG}/preview/done-06.jpg`, overlayImg: WORK05_ARTIFACTING[4], x: 81.6, y: 13, w: 18.4, rotation: 0, noBg: true, bringToFront: true, overlay: true, overlaySet: WORK05_ARTIFACTING, z: 2 },
+      { type: 'image', img: `${ATELIER_IMG}/preview/done-07.jpg`, overlayImg: WORK05_ARTIFACTING[5], x: 0, y: 31.6, w: 18.4, rotation: 0, noBg: true, bringToFront: true, overlay: true, overlaySet: WORK05_ARTIFACTING, z: 2 },
+      { type: 'image', img: `${ATELIER_IMG}/preview/done-08.jpg`, overlayImg: WORK05_ARTIFACTING[6], x: 20.4, y: 31.6, w: 18.4, rotation: 0, noBg: true, bringToFront: true, overlay: true, overlaySet: WORK05_ARTIFACTING, z: 2 },
+      { type: 'image', img: `${ATELIER_IMG}/preview/done-09.jpg`, overlayImg: WORK05_ARTIFACTING[7], x: 40.8, y: 31.6, w: 18.4, rotation: 0, noBg: true, bringToFront: true, overlay: true, overlaySet: WORK05_ARTIFACTING, z: 2 },
+      { type: 'image', img: `${ATELIER_IMG}/preview/done-10.jpg`, overlayImg: WORK05_ARTIFACTING[8], x: 61.2, y: 31.6, w: 18.4, rotation: 0, noBg: true, bringToFront: true, overlay: true, overlaySet: WORK05_ARTIFACTING, z: 2 },
+      { type: 'image', img: `${ATELIER_IMG}/preview/done-11.jpg`, overlayImg: WORK05_ARTIFACTING[9], x: 81.6, y: 31.6, w: 18.4, rotation: 0, noBg: true, bringToFront: true, overlay: true, overlaySet: WORK05_ARTIFACTING, z: 2 },
+      { type: 'image', img: `${ATELIER_IMG}/preview/done-12.jpg`, overlayImg: WORK05_ARTIFACTING[10], x: 0, y: 50.2, w: 18.4, rotation: 0, noBg: true, bringToFront: true, overlay: true, overlaySet: WORK05_ARTIFACTING, z: 2 },
+      { type: 'image', img: `${ATELIER_IMG}/preview/done-13.jpg`, overlayImg: WORK05_ARTIFACTING[11], x: 20.4, y: 50.2, w: 18.4, rotation: 0, noBg: true, bringToFront: true, overlay: true, overlaySet: WORK05_ARTIFACTING, z: 2 },
+      { type: 'image', img: `${ATELIER_IMG}/preview/done-14.jpg`, overlayImg: WORK05_ARTIFACTING[12], x: 40.8, y: 50.2, w: 18.4, rotation: 0, noBg: true, bringToFront: true, overlay: true, overlaySet: WORK05_ARTIFACTING, z: 2 },
+      { type: 'image', img: `${ATELIER_IMG}/preview/done-15.jpg`, overlayImg: WORK05_ARTIFACTING[13], x: 61.2, y: 50.2, w: 18.4, rotation: 0, noBg: true, bringToFront: true, overlay: true, overlaySet: WORK05_ARTIFACTING, z: 2 },
+      { type: 'image', img: `${ATELIER_IMG}/preview/done-16.jpg`, overlayImg: WORK05_ARTIFACTING[14], x: 81.6, y: 50.2, w: 18.4, rotation: 0, noBg: true, bringToFront: true, overlay: true, overlaySet: WORK05_ARTIFACTING, z: 2 },
+      // Exhibition text — second paragraph below the grid
+      { type: 'text', text: 'I turned these descriptions into images with AI image generation, then into 3D models, and finally into physical objects through 3D printing, taking them from imagination to something tangible.', x: 0, y: 69, w: 100, rotation: 0, font: "'tosh-b', sans-serif", fontSize: BODY_TEXT_SIZE, fontSizeMobile: BODY_TEXT_SIZE_MOBILE, align: 'justify', mobile: { x: 0, y: 69, w: 100 } },
+      // Exhibition photos — below the text, one shared height, the block
+      // spanning the full width like the grid above
+      { type: 'image', img: `${ATELIER_IMG}/preview/WA0015.jpg`, overlayImg: WORK05_EXHIBIT_PHOTOS[0], x: 0, y: 77, w: 25.4, rotation: 0, taped: true, noBg: true, tackers: [1, 3, 2, 4], bringToFront: true, overlay: true, overlaySet: WORK05_EXHIBIT_PHOTOS, z: 2 },
+      { type: 'image', img: `${ATELIER_IMG}/preview/WA0016.jpg`, overlayImg: WORK05_EXHIBIT_PHOTOS[1], x: 27.4, y: 77, w: 25.4, rotation: 0, taped: true, noBg: true, tackers: [2, 4, 1, 3], bringToFront: true, overlay: true, overlaySet: WORK05_EXHIBIT_PHOTOS, z: 2 },
+      { type: 'image', img: `${ATELIER_IMG}/preview/WA0017.jpg`, overlayImg: WORK05_EXHIBIT_PHOTOS[2], x: 54.8, y: 77, w: 45.2, rotation: 0, taped: true, noBg: true, tackers: [4, 2, 3, 1], bringToFront: true, overlay: true, overlaySet: WORK05_EXHIBIT_PHOTOS, z: 2 },
+    ],
+  },
+  // Spread 10, right page — Ins Blaue exhibition text
+  {
+    texture: 'right_page-black',
+    meta: { year: 'Ongoing', place: 'Hannover', title: 'Atelier Anthrazit', work: 5 },
+    items: [
+      // Exhibition text — same field as the left page's paragraphs
+      { type: 'text', text: 'The following is my part of our exhibition for Ins Blaue, an initiative that opens Hannover\'s Art and Architecture spaces to the public and promotes the creative community.\n\nWe focused our effort on the theme of „**Intelligence. Natural. Artificial. Collective**“, following the architecture biennale in Venice. My work is using AI to create fossilized structures in an imagined world by Sina Neumann and Hannah Vette.', x: 0, y: 3, w: 100, rotation: 0, font: "'tosh-b', sans-serif", fontSize: BODY_TEXT_SIZE, fontSizeMobile: BODY_TEXT_SIZE_MOBILE, align: 'justify', mobile: { x: 0, y: 3, w: 100 } },
+      // Fossil process — AI image, printed fossil, brain form; shared
+      // gallery, the row spanning the full width like the photo below,
+      // all at one height; the AI image has no tape dots
+      { type: 'image', img: `${ATELIER_IMG}/preview/fossil.jpg`, overlayImg: WORK05_INSBLAUE_FOSSIL, x: 0, y: 19, w: 21.3, rotation: 0, noBg: true, bringToFront: true, overlay: true, overlaySet: WORK05_INSBLAUE_IMAGES, z: 2 },
+      { type: 'image', img: `${ATELIER_IMG}/preview/fossile.jpg`, overlayImg: WORK05_INSBLAUE_FOSSILE, x: 22.3, y: 19, w: 38.3, rotation: 0, taped: true, noBg: true, tackers: [2, 4, 1, 3], bringToFront: true, overlay: true, overlaySet: WORK05_INSBLAUE_IMAGES, z: 2 },
+      { type: 'image', img: `${ATELIER_IMG}/preview/brain.jpg`, overlayImg: WORK05_INSBLAUE_BRAIN, x: 61.6, y: 19, w: 38.3, rotation: 0, taped: true, noBg: true, tackers: [3, 1, 4, 2], bringToFront: true, overlay: true, overlaySet: WORK05_INSBLAUE_IMAGES, z: 2 },
+      // Last paragraph — between the image row and the photo, bottom edge
+      // just above the photo
+      { type: 'text', text: 'Those fossils have then been created in 3D, embedded in a stone-esque structure in the approximate form of a cerebrum, brought to life with 3D-printing and reworking with gypsum, to create the illusion of a natural fossil, that, in reality, is just a figment of the imagination.', x: 0, y: 28, w: 100, h: 19, rotation: 0, font: "'tosh-b', sans-serif", fontSize: BODY_TEXT_SIZE, fontSizeMobile: BODY_TEXT_SIZE_MOBILE, align: 'justify', mobile: { x: 0, y: 28, w: 100, h: 19 } },
+      // Ins Blaue photo — full-width at the bottom of the page
+      { type: 'image', img: WORK05_INSBLAUE_PHOTO, overlayImg: WORK05_INSBLAUE_PHOTO, x: 0, y: 49.2, w: 100, rotation: 0, taped: true, noBg: true, tackers: [1, 3, 2, 4], bringToFront: true, overlay: true, overlaySet: [WORK05_INSBLAUE_PHOTO], z: 2 },
+    ],
+  },
+  // ===== SPREAD 11: WORK06 — H-Block exhibition booth (2023, Hannover) =====
+  // Left page — render up top, plans stacked left, title and project text in the right column
+  {
+    texture: 'left_page-black',
+    meta: { year: '2023', place: 'Hannover', title: 'H-Block Exhibition Booth', work: 6 },
+    items: [
+      // Render — full page width, starts level with the right page's photo grid
+      { type: 'image', img: WORK06_RENDER, overlayImg: WORK06_RENDER, x: 0, y: 7, w: 100, rotation: 0, taped: true, noBg: true, tackers: [1, 3, 2, 4], behind: true, overlay: true, overlaySet: WORK06_DRAWINGS },
+      // Plans — plan 2 and plan 4 stacked in the left column; zoom 1.4
+      // enlarges the drawing inside the unchanged tile, cropping the edges
+      // (the click-to-zoom overlay still shows the full plan)
+      { type: 'image', img: WORK06_PLANS[1], overlayImg: WORK06_PLANS[1], x: 0, y: 50.5, w: 48.5, rotation: 0, zoom: 1.4, aspect: 1.414, taped: true, noBg: true, tackers: [1, 3, 2, 4], bringToFront: true, overlay: true, overlaySet: WORK06_DRAWINGS, z: 2 },
+      { type: 'image', img: WORK06_PLANS[3], overlayImg: WORK06_PLANS[3], x: 0, y: 75.5, w: 48.5, rotation: 0, zoom: 1.4, aspect: 1.414, taped: true, noBg: true, tackers: [3, 1, 4, 2], bringToFront: true, overlay: true, overlaySet: WORK06_DRAWINGS, z: 2 },
+      // Title — statement at the top of the plans' right column, above the text
+      { type: 'statement', text: 'H-BLOCK\nEXHIBITION\nBOOTH', x: 51.5, y: 50.5, w: 48.5, h: 37.8, rotation: 0, aligns: { 0: 'left' }, blend: true },
+      { type: 'statement', text: 'H-BLOCK\nEXHIBITION\nBOOTH', x: 51.5, y: 50.5, w: 48.5, h: 37.8, rotation: 0, aligns: { 0: 'left' }, opacity: 0.75, hoverFull: true },
+      // Project text — below the title, bottom edge level with plan 4
+      { type: 'text', text: 'In this design-build project, led by Prof. Mirco Becker and Prof. Tatjana Sabljo, we designed and build the joint stand of the professional associations for architecture, interior design, landscape architecture and urban planning for the REA 2023. The design is based on the H-Block, a reusable timber lattice brick made of beech wood, developed by the Digital Methods department. The 2,200 blocks were handbuilt in a collaborative effort between the two institutes. The stand integrates two concrete staircases that had been classified as construction waste and are reused here. After the fair, the blocks will be reused for installations in the former Galeria Kaufhof building at the Marktkirche in Hannover.', x: 51.5, y: 50.5, w: 48.5, h: 49, rotation: 0, font: "'tosh-b', sans-serif", fontSize: BODY_TEXT_SIZE, fontSizeMobile: BODY_TEXT_SIZE_MOBILE, align: 'justify' },
+    ],
+  },
+  // Right page — photos scattered photobook-style like work.03's film pages:
+  // natural aspect ratios, varied sizes, slight rotations
+  {
+    texture: 'right_page-black',
+    meta: { year: '2023', place: 'Hannover', title: 'H-Block Exhibition Booth', work: 6 },
+    items: [
+      // Photos 1, 2, 4, 5, 6, 8, 9, 12, 15 — the portraits 6 and 8
+      // (EXIF-rotated, they display tall from the landscape files) are the
+      // anchors at 90% of their reorganized size: 8 in the upper right
+      // corner, 6 in the bottom left, both on top of the pile. The
+      // landscapes fill the quadrants around that diagonal — 1 and 2 top
+      // left, 15, 12, 4 and 5 stacked bottom right, 9 as the hinge print at
+      // the page center, tucked under 8 and over 15's corner
+      { type: 'image', img: WORK06_PHOTOS[0], overlayImg: WORK06_PHOTOS[0], x: 0, y: 2.5, w: 59.8, rotation: -1, taped: true, noBg: true, tackers: [1, 3, 2, 4], bringToFront: true, overlay: true, overlaySet: WORK06_PHOTOS, z: 2 },
+      // The grey H — graphic accent left of photo 2, top edges level
+      { type: 'image', img: WORK06_HBLOCK_H, x: 0.5, y: 30.5, w: 10, rotation: 0, opacity: 0.7, href: 'https://www.aknds.de/fileadmin/aknds/PDFs/REA_Dokumentation_oT.pdf', noBg: true },
+      { type: 'image', img: WORK06_PHOTOS[1], overlayImg: WORK06_PHOTOS[1], x: 12, y: 28, w: 48, rotation: 0.5, taped: true, noBg: true, tackers: [2, 4, 1, 3], bringToFront: true, overlay: true, overlaySet: WORK06_PHOTOS, z: 3 },
+      { type: 'image', img: WORK06_PHOTOS[6], overlayImg: WORK06_PHOTOS[6], x: 0, y: 76.5, w: 58.3, rotation: 1, taped: true, noBg: true, tackers: [4, 2, 3, 1], bringToFront: true, overlay: true, overlaySet: WORK06_PHOTOS, z: 4 },
+      { type: 'image', img: WORK06_PHOTOS[8], overlayImg: WORK06_PHOTOS[8], x: 62.2, y: 68, w: 37.3, rotation: -0.5, taped: true, noBg: true, tackers: [2, 4, 1, 3], bringToFront: true, overlay: true, overlaySet: WORK06_PHOTOS, z: 5 },
+      { type: 'image', img: WORK06_PHOTOS[9], overlayImg: WORK06_PHOTOS[9], x: 62.2, y: 85, w: 37.3, rotation: 0.5, taped: true, noBg: true, tackers: [3, 1, 4, 2], bringToFront: true, overlay: true, overlaySet: WORK06_PHOTOS, z: 3 },
+      { type: 'image', img: WORK06_PHOTOS[7], overlayImg: WORK06_PHOTOS[7], x: 58.1, y: 49.5, w: 41.4, rotation: 0.5, taped: true, noBg: true, tackers: [4, 2, 3, 1], bringToFront: true, overlay: true, overlaySet: WORK06_PHOTOS, z: 2 },
+      { type: 'image', img: WORK06_PHOTOS[2], overlayImg: WORK06_PHOTOS[2], x: 24, y: 63, w: 30.8, rotation: 0.5, taped: true, noBg: true, tackers: [3, 1, 4, 2], bringToFront: true, overlay: true, overlaySet: WORK06_PHOTOS, z: 2 },
+      { type: 'image', img: WORK06_PHOTOS[3], overlayImg: WORK06_PHOTOS[3], x: 24, y: 48.8, w: 30.8, rotation: -1, taped: true, noBg: true, tackers: [1, 3, 2, 4], bringToFront: true, overlay: true, overlaySet: WORK06_PHOTOS, z: 3 },
+      { type: 'image', img: WORK06_PHOTOS[5], overlayImg: WORK06_PHOTOS[5], x: 63.5, y: 2.5, w: 36, rotation: 0.5, taped: true, noBg: true, tackers: [3, 1, 4, 2], bringToFront: true, overlay: true, overlaySet: WORK06_PHOTOS, z: 6 },
+      { type: 'image', img: WORK06_PHOTOS[4], overlayImg: WORK06_PHOTOS[4], x: 0, y: 48, w: 21.7, rotation: -0.5, taped: true, noBg: true, tackers: [1, 3, 2, 4], bringToFront: true, overlay: true, overlaySet: WORK06_PHOTOS, z: 6 },
+    ],
+  },
+  // ===== SPREAD 12: WORK07 — Tanz-Gallery Lee-Keun Reimagined (2020, Hannover) =====
   // Left page — light paper, image with the title on top, like work.05's title page
   {
-    meta: { year: '2020', place: 'Hannover', title: 'Tanz-Gallery Lee-Keun Reimagined', work: 6 },
+    meta: { year: '2020', place: 'Hannover', title: 'Tanz-Gallery Lee-Keun Reimagined', work: 7 },
     items: [
       // Image — page-sized -full version, edge to edge like the title-page
       // covers; behind drops it to the text layer so the title sits on top.
       // Clicking opens the original uncropped image
-      { type: 'image', img: WORK06_TANZ_FULL, overlayImg: WORK06_TANZ, x: -5.6, y: -5.75, w: 111.1, rotation: 0, taped: true, noBg: true, tackers: [1, 3, 2, 4], behind: true, overlay: true, overlaySet: WORK06_IMAGES },
+      { type: 'image', img: WORK07_TANZ_FULL, overlayImg: WORK07_TANZ, x: -5.6, y: -5.75, w: 111.1, rotation: 0, taped: true, noBg: true, tackers: [1, 3, 2, 4], behind: true, overlay: true, overlaySet: WORK07_IMAGES },
       // Title — same statement treatment as work.05, on top of the image
       // Title — statement block in the bottom left corner; the text flows
       // from the top of its box, so the box starts just high enough for the
@@ -661,20 +774,15 @@ const bookPages = [
   },
   // Right page — light paper, detail image
   {
-    meta: { year: '2020', place: 'Hannover', title: 'Tanz-Gallery Lee-Keun Reimagined', work: 6 },
+    meta: { year: '2020', place: 'Hannover', title: 'Tanz-Gallery Lee-Keun Reimagined', work: 7 },
     items: [
       // Detail — page-sized -full version, same height as the left page's
       // image, edge to edge, 10% transparent. Clicking opens the original.
       // No bringToFront: the image must not jump over the header on hover
-      { type: 'image', img: WORK06_DETAIL_FULL, overlayImg: WORK06_DETAIL, x: -5.9, y: -5.75, w: 111.8, rotation: 0, opacity: 0.9, taped: true, noBg: true, tackers: [2, 4, 1, 3], overlay: true, overlaySet: WORK06_IMAGES },
+      { type: 'image', img: WORK07_DETAIL_FULL, overlayImg: WORK07_DETAIL, x: -5.9, y: -5.75, w: 111.8, rotation: 0, opacity: 0.9, taped: true, noBg: true, tackers: [2, 4, 1, 3], overlay: true, overlaySet: WORK07_IMAGES },
     ],
   },
-  // Spread 11
-  { meta: { year: '', place: '', title: '' }, items: [] },
-  { meta: { year: '', place: '', title: '' }, items: [] },
-  // Spread 12
-  { meta: { year: '', place: '', title: '' }, items: [] },
-  { meta: { year: '', place: '', title: '' }, items: [] },
+  // ===== SPREADS 13-14: Placeholder pages for future projects =====
   // Spread 13
   { meta: { year: '', place: '', title: '' }, items: [] },
   { meta: { year: '', place: '', title: '' }, items: [] },

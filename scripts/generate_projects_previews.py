@@ -33,10 +33,12 @@ SOURCES = {
     'work03.jpg': (os.path.join('photography', 'CopenhagenBl (2).jpg'), None),
     # Work 04 — Apartment in VR, title page image (starter)
     'work04.jpg': (os.path.join('vroxel-apartment', 'thesis-starter1.png'), (1, 5, 4, 0)),
-    # Work 05 — H-Block exhibition booth, title page hero (render)
-    'work05.jpg': (os.path.join('messestand', 'render1.jpeg'), None),
-    # Work 06 — Tanz-Gallery Lee-Keun Reimagined, title page image
-    'work06.jpg': (os.path.join('tanzgallery', 'Tanz-Gallery Lee-Keun Reimagined.jpg'), None),
+    # Work 05 — Atelier Anthrazit, title page image (starter)
+    'work05.jpg': (os.path.join('atelier_anthrazit', 'Atelier-starter.png'), (1, 5, 4, 0)),
+    # Work 06 — H-Block exhibition booth, title page hero (render)
+    'work06.jpg': (os.path.join('messestand', 'render1.jpeg'), None),
+    # Work 07 — Tanz-Gallery Lee-Keun Reimagined, title page image
+    'work07.jpg': (os.path.join('tanzgallery', 'Tanz-Gallery Lee-Keun Reimagined.jpg'), None),
 }
 
 
