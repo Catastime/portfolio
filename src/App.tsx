@@ -167,7 +167,7 @@ const WORK06_RENDER = `${MESSESTAND_IMG}/render1.jpeg`
 const WORK06_PHOTO_NAMES = [
   'photo1.JPG', 'photo2.JPG', 'photo4.JPG', 'photo5.JPG',
   'photo6.JPG', 'photo8.JPG', 'photo9.jpg',
-  'photo12.jpg', 'photo15.jpg', 'photo13.jpg',
+  'photo12.jpg', 'photo15.JPG', 'photo13.jpg',
 ]
 const WORK06_PHOTOS = WORK06_PHOTO_NAMES.map(name => `${MESSESTAND_IMG}/${name}`)
 const WORK06_PLANS = [
