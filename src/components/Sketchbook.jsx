@@ -1485,17 +1485,19 @@ export default function Sketchbook({
       if (!ids.includes(id)) ids.push(id);
     }
     const workNum = String(ids.length).padStart(2, '0');
-    // Total: distinct works across all labelled spreads (impressum counts)
+    // Total: distinct works across all labelled spreads; the impressum is
+    // not a work and does not count toward the total
     const lastSpread = Math.ceil(pages.length / 2) - 1;
     const allIds = [];
     for (let s = 1; s <= lastSpread; s++) {
+      if (pages[s * 2]?.impressum) continue;
       const id = workIdFor(s);
       if (!allIds.includes(id)) allIds.push(id);
     }
     const totalWorks = allIds.length;
     if (isLeft) {
       return [
-        { type: 'corner-text', text: `WORK.${workNum}/${totalWorks}`, x: 5, y: 2.5, align: 'left' },
+        { type: 'corner-text', text: `WORK.${workNum}/${String(totalWorks).padStart(2, '0')}`, x: 5, y: 2.5, align: 'left' },
         { type: 'corner-text', text: meta.year || '', x: 5, y: 2.5, align: 'right' },
       ];
     } else {

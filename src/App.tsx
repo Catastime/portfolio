@@ -847,9 +847,10 @@ const bookPages = [
       { type: 'image', img: CASCADES_VIEW, overlayImg: CASCADES_VIEW, x: 0, y: 73.4, w: 100, rotation: 0, taped: true, noBg: true, tackers: [3, 1, 4, 2], bringToFront: true, overlay: true, overlaySet: CASCADES_RIGHT, z: 3 },
     ],
   },
-  // Spread 14
-  { meta: { year: '', place: '', title: '' }, items: [] },
-  { meta: { year: '', place: '', title: '' }, items: [] },
+  // Spread 14 — reserved for Work 09; the work field keeps the corner
+  // counter at nine total works
+  { meta: { year: '', place: '', title: '', work: 9 }, items: [] },
+  { meta: { year: '', place: '', title: '', work: 9 }, items: [] },
 
   // ===== SPREAD 15: IMPRESSUM — last page, black left, no right page =====
   {
