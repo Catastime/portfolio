@@ -11,7 +11,7 @@ import { motion } from 'motion/react'
 import { BASE } from '@/paths'
 import { startPreload } from '@/preload'
 
-// Sketchbook pages — 16 spreads (31 pages).
+// Sketchbook pages — 15 spreads (29 pages).
 // Spread 0: Introduction & CV (no corner text)
 // Spread 1: Master Thesis — "Artificial Intelligence in Architectural Design" (intro, Example & polaroids)
 // Spread 2: Master Thesis continued (history, concept & website interface)
@@ -23,8 +23,7 @@ import { startPreload } from '@/preload'
 // Spread 11: Work 06 — "H-Block Exhibition Booth" (2023, Hannover)
 // Spread 12: Work 07 — "Tanz-Gallery Lee-Keun Reimagined" (2020, Hannover)
 // Spread 13: Work 08 — "Cascades: Campus Hamburg" (2022, Hamburg)
-// Spread 14: reserved for Work 09
-// Spread 15: Impressum — last page, no right page
+// Spread 14: Impressum — last page, no right page
 // Corner text (spread number, year, place, title) is auto-injected by Sketchbook
 // for all spreads except spread 0, using the `meta` field on the left page.
 
@@ -63,8 +62,6 @@ const projectItems = [
   { id: 'work07', img: `${PROJECTS_PREVIEW}/work07.jpg`, aspect: 600 / 747, title: 'Tanz-Gallery Lee-Keun Reimagined', spread: 12, page: 24 },
   // Work 08 — Cascades, title page hero (render)
   { id: 'work08', img: `${PROJECTS_PREVIEW}/work08.jpg`, aspect: 600 / 362, title: 'Cascades: Campus Hamburg', spread: 13, page: 26 },
-  // Work 09 — empty slot until the student works spread is integrated
-  { id: 'work09', placeholder: true, height: 300 },
 ]
 
 // Body text blocks share one size across all spreads — text stays consistent
@@ -847,12 +844,8 @@ const bookPages = [
       { type: 'image', img: CASCADES_VIEW, overlayImg: CASCADES_VIEW, x: 0, y: 73.4, w: 100, rotation: 0, taped: true, noBg: true, tackers: [3, 1, 4, 2], bringToFront: true, overlay: true, overlaySet: CASCADES_RIGHT, z: 3 },
     ],
   },
-  // Spread 14 — reserved for Work 09; the work field keeps the corner
-  // counter at nine total works
-  { meta: { year: '', place: '', title: '', work: 9 }, items: [] },
-  { meta: { year: '', place: '', title: '', work: 9 }, items: [] },
 
-  // ===== SPREAD 15: IMPRESSUM — last page, black left, no right page =====
+  // ===== SPREAD 14: IMPRESSUM — last page, black left, no right page =====
   {
     meta: { year: '2026', place: '', title: '' },
     impressum: true,

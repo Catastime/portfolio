@@ -19,7 +19,7 @@ Stack: Vite · React 19 · TypeScript · Tailwind CSS v4 · Framer Motion · thr
 
 ## Content
 
-The book holds the CV and Works 01–09 — Master Thesis, Bachelor Thesis, Film Photography, Apartment in VR, Atelier Anthrazit, H-Block Exhibition Booth, Tanz-Gallery Lee-Keun Reimagined, Cascades: Campus Hamburg.
+The book holds the CV and Works 01–08 — Master Thesis, Bachelor Thesis, Film Photography, Apartment in VR, Atelier Anthrazit, H-Block Exhibition Booth, Tanz-Gallery Lee-Keun Reimagined, Cascades: Campus Hamburg.
 
 ## Assets
 
