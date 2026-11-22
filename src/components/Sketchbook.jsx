@@ -921,8 +921,9 @@ export default function Sketchbook({
 
   const handleClick = (e) => {
     if (suppressClickRef.current) return;
-    // Don't turn the page when tapping interactive items (video, MORE, links)
-    if (e.target.closest('.sketch-item-clickable, .sketch-more-btn, .sketch-filmstrip-window, .sketch-gallery-window, a')) return;
+    // Don't turn the page when tapping interactive items (video, MORE, links,
+    // plan toggle labels and its overlay sheet)
+    if (e.target.closest('.sketch-item-clickable, .sketch-more-btn, .sketch-filmstrip-window, .sketch-gallery-window, .sketch-plan-toggle-labels, .sketch-plan-toggle-sheet, a')) return;
     const rect = e.currentTarget.getBoundingClientRect();
     const x = e.clientX - rect.left;
     navigateToPage(mobilePage + (x > rect.width / 2 ? 1 : -1));
