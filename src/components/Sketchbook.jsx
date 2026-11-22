@@ -967,6 +967,9 @@ export default function Sketchbook({
       const classes = ['sketch-item', 'sketch-item-image', 'sketch-gif'];
       if (item.noBg) classes.push('sketch-item-image-nobg');
       const gifStyle = item.shadow ? { ...style, boxShadow: item.shadow } : style;
+      // behind: drop below the other items (z-index 0), like image items —
+      // for videos whose box sits under overlapping neighbours
+      if (item.behind) gifStyle.zIndex = 0;
       return (
         <div key={key} className={classes.join(' ')} style={gifStyle}>
           {item.taped && (() => {

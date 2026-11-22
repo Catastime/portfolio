@@ -22,7 +22,7 @@ import { startPreload } from '@/preload'
 // Spreads 9-10: Work 05 — "Atelier Anthrazit" (ongoing, Hannover)
 // Spread 11: Work 06 — "H-Block Exhibition Booth" (2023, Hannover)
 // Spread 12: Work 07 — "Tanz-Gallery Lee-Keun Reimagined" (2020, Hannover)
-// Spread 13: Work 08 — "Cascades: Campus Hamburg" (2022, Hamburg)
+// Spread 13: Work 08 — "Cascades: Campus Hamburg" (2021, Hamburg)
 // Spread 14: Impressum — last page, no right page
 // Corner text (spread number, year, place, title) is auto-injected by Sketchbook
 // for all spreads except spread 0, using the `meta` field on the left page.
@@ -220,7 +220,7 @@ const WORK07_IMAGES = [
   WORK07_DETAIL,
 ]
 
-// Work.08 — Cascades: Campus Hamburg, lecture hall building for the University of Hamburg (2022, Hamburg)
+// Work.08 — Cascades: Campus Hamburg, lecture hall building for the University of Hamburg (2021, Hamburg)
 const CASCADES_IMG = `${BASE}cascades`
 // Hero render — full page width on the spread 13 left page
 const CASCADES_RENDER = `${CASCADES_IMG}/v3_2.jpeg`
@@ -298,7 +298,7 @@ const bookPages = [
   {
     items: [
       // Atelier Anthrazit — the image we zoom out from
-      { type: 'image', img: `${BASE}tim/Atelier Anthrazit-039-breit-bw.jpg`, imgMobile: `${BASE}tim/Atelier Anthrazit-039-breit-bw-mobile.jpg`, x: -4, y: 8, w: 108, rotation: 0, taped: true, noBg: true, shadow: '0 2px 8px rgba(0, 0, 0, 0.15)', tackers: [3, 1, 4, 2] },
+      { type: 'image', img: `${BASE}tim/Atelier Anthrazit-039-breit-bw.jpg`, imgMobile: `${BASE}tim/Atelier Anthrazit-039-breit-bw-mobile.jpg`, x: -4, y: 8, w: 108, rotation: 0, taped: true, noBg: true, shadow: '0 2px 8px rgba(0, 0, 0, 0.15)' },
       // Punched holes on the image — the book renders its own dots
       { type: 'holes', x: -4, y: 8, w: 108, h: 37, rotation: 0 },
       // CV — single column below the image: leader lines to right-aligned dates
@@ -338,7 +338,7 @@ const bookPages = [
     meta: { year: '2023/24', place: 'Hannover', title: 'Artificial Intelligence in Architectural Design', work: 1 },
     items: [
       // thesis-starter full page — same proportions as the page, fits edge to edge
-      { type: 'image', img: `${THESIS_IMG}/thesis-starter-full-page.png`, x: -5.6, y: -5.75, w: 111.1, rotation: 0, taped: true, noBg: true, tackers: [1, 3, 2, 4], behind: true, holeInset: '1.5cqw' },
+      { type: 'image', img: `${THESIS_IMG}/thesis-starter-full-page.png`, x: -5.6, y: -5.75, w: 111.1, rotation: 0, taped: true, noBg: true, behind: true, holeInset: '1.5cqw' },
       // Header — statement style (t26-carbon caps, spread-0 sizing) at the top of the building
       { type: 'statement', text: 'MASTER\nTHESIS:\nARTIFICIAL\nINTELLIGENCE\nIN\nARCHITECTURAL\nDESIGN', x: 14.8, y: 13, w: 84, h: 37.8, rotation: 0, aligns: { 0: 'left', 4: 'left' }, blend: true },
       // Solid header at 50% on top of the blended one — keeps the text
@@ -355,7 +355,7 @@ const bookPages = [
     texture: 'right_page-black',
     meta: { year: '2023/24', place: 'Hannover', title: 'Artificial Intelligence in Architectural Design', work: 1 },
     items: [
-      { type: 'image', img: `${THESIS_IMG}/Example_start.png`, x: 25, y: 5, w: 50, rotation: 0, taped: true, noBg: true, tackers: [1, 3, 2, 4] },
+      { type: 'image', img: `${THESIS_IMG}/Example_start.png`, x: 25, y: 5, w: 50, rotation: 0, taped: true, noBg: true },
       // Subtitle — grey caption at the image's lower right corner
       { type: 'text', text: 'Original Photograph', x: 25, y: 41, w: 50, rotation: 0, font: "'automate', sans-serif", fontSize: 0.55, fontSizeMobile: 0.4, weight: 300, opacity: 0.65, align: 'right' },
       // Interactivity hint — Hitobito footnote at the very bottom
@@ -385,7 +385,7 @@ const bookPages = [
       { type: 'text', text: 'However, the concept of artificial intelligence has undergone significant changes since its inception in the 1950s by John McCarthy. While he viewed AI as the understanding and reproduction of human intelligence, the term has now become vastly expansive, encompassing various categories of programs, from personal assistants to deep learning algorithms.', x: 8, y: 89, w: 84, h: 8, rotation: 0, align: 'justify', font: "'tosh-b', sans-serif", fontSize: BODY_TEXT_SIZE, fontSizeMobile: BODY_TEXT_SIZE_MOBILE, mobile: { x: 8, y: 84, w: 84, h: 13 } },
       // Timeline — centered, from the page's top edge, as large as the
       // gap to the text below allows
-      { type: 'image', img: `${THESIS_IMG}/Timeline.png`, x: 8.65, y: 5, w: 82.7, rotation: 0, taped: true, noBg: true, frame: true, frameLift: 1.5, overlay: true, tackers: [1, 3, 2, 4], mobile: { x: 11, y: 5, w: 78 } },
+      { type: 'image', img: `${THESIS_IMG}/Timeline.png`, x: 8.65, y: 5, w: 82.7, rotation: 0, taped: true, noBg: true, frame: true, frameLift: 1.5, overlay: true, mobile: { x: 11, y: 5, w: 78 } },
     ],
   },
   {
@@ -414,12 +414,12 @@ const bookPages = [
     meta: { year: '2023/24', place: 'Hannover', title: 'Artificial Intelligence in Architectural Design', work: 1 },
     items: [
       // Comic pages — comic1 flips around to reveal the cleanup process it depicts
-      { type: 'image', img: `${THESIS_IMG}/comic/comic1.png`, flipImg: `${THESIS_IMG}/cleanup/cleanup.jpg`, flipText: 'The technical happenings of the image cleanup running automated in the background', flipTextMobile: 'Image Cleanup process running automated in the background', x: 8, y: 5, w: 17, rotation: 0, taped: true, noBg: true, tackers: [1, 3, 2, 4] },
-      { type: 'image', img: `${THESIS_IMG}/comic/comic2.png`, x: 30.3, y: 5, w: 17, rotation: 0, taped: true, noBg: true, tackers: [2, 4, 1, 3] },
-      { type: 'image', img: `${THESIS_IMG}/comic/comic3.png`, x: 52.7, y: 5, w: 17, rotation: 0, taped: true, noBg: true, tackers: [3, 1, 4, 2] },
+      { type: 'image', img: `${THESIS_IMG}/comic/comic1.png`, flipImg: `${THESIS_IMG}/cleanup/cleanup.jpg`, flipText: 'The technical happenings of the image cleanup running automated in the background', flipTextMobile: 'Image Cleanup process running automated in the background', x: 8, y: 5, w: 17, rotation: 0, taped: true, noBg: true },
+      { type: 'image', img: `${THESIS_IMG}/comic/comic2.png`, x: 30.3, y: 5, w: 17, rotation: 0, taped: true, noBg: true },
+      { type: 'image', img: `${THESIS_IMG}/comic/comic3.png`, x: 52.7, y: 5, w: 17, rotation: 0, taped: true, noBg: true },
       // Fourth column — the two shorter comics, top and bottom of the row
-      { type: 'image', img: `${THESIS_IMG}/comic/comic4.png`, flipVideo: `${THESIS_IMG}/Gif3.mp4`, flipBox: { x: 8, y: 5, w: 84 }, x: 75, y: 5, w: 17, rotation: 0, taped: true, noBg: true, tackers: [4, 2, 3, 1] },
-      { type: 'image', img: `${THESIS_IMG}/comic/comic-terminate.png`, x: 75, y: 40, w: 17, rotation: 0, taped: true, noBg: true, tackers: [1, 4, 2, 3] },
+      { type: 'image', img: `${THESIS_IMG}/comic/comic4.png`, flipVideo: `${THESIS_IMG}/Gif3.mp4`, flipBox: { x: 8, y: 5, w: 84 }, x: 75, y: 5, w: 17, rotation: 0, taped: true, noBg: true },
+      { type: 'image', img: `${THESIS_IMG}/comic/comic-terminate.png`, x: 75, y: 40, w: 17, rotation: 0, taped: true, noBg: true },
       // Subtitles — grey captions under each comic
       { type: 'text', text: 'Upload & Cleanup', x: 8, y: 52.3, w: 17, rotation: 0, font: "'automate', sans-serif", fontSize: 0.55, fontSizeMobile: 0.4, weight: 300, opacity: 0.65 },
       { type: 'text', text: 'Downscaling & Filing', x: 30.3, y: 52.3, w: 17, rotation: 0, font: "'automate', sans-serif", fontSize: 0.55, fontSizeMobile: 0.4, weight: 300, opacity: 0.65 },
@@ -439,7 +439,7 @@ const bookPages = [
       // In Context — the thesis in its historical context, full width like the comics text
       { type: 'text', title: 'In Context', text: 'This master thesis was written in 2023, at a time when the field of AI image generation was still young and largely inaccessible to non-technologist creatives. Commercial solutions such as Midjourney and DALL·E existed, but they remained niche tools that offered little to no utility for architectural visualization or conceptualization. Meanwhile, Stable Diffusion — the most promising technology for this use case — was primarily accessible through its API, and the few existing interfaces required a level of technical proficiency far beyond what could be expected of a non-technical audience.\n\nAt that point, no commercialized solution addressed the specific needs of architects. This thesis therefore set out to close that gap: its goal was to build an AI interface for generating architectural concepts and renderings, with a deliberate focus on ease of use, making this powerful technology genuinely accessible to students and professionals in the field of architecture.', x: 8, y: 5, w: 84, rotation: 0, font: "'tosh-b', sans-serif", fontSize: BODY_TEXT_SIZE, fontSizeMobile: 0.45, align: 'justify', bodyLineHeight: 1.4 },
       // Video poster — opens the thesis film in the video overlay, full width like the CV image
-      { type: 'image', img: `${THESIS_IMG}/website.png`, x: 8, y: 47, w: 84, rotation: 0, taped: true, noBg: true, video: `${THESIS_IMG}/FinalVideo.mp4`, tackers: [4, 2, 3, 1] },
+      { type: 'image', img: `${THESIS_IMG}/website.png`, x: 8, y: 47, w: 84, rotation: 0, taped: true, noBg: true, video: `${THESIS_IMG}/FinalVideo.mp4` },
       // Subtitle — grey caption under the video poster
       { type: 'text', text: 'Interface Showcase', x: 20, y: 80, w: 72, rotation: 0, align: 'right', font: "'automate', sans-serif", fontSize: 0.55, fontSizeMobile: 0.4, weight: 300, opacity: 0.65 },
       // MORE — square button, unchanged
@@ -454,7 +454,7 @@ const bookPages = [
     texture: 'left_page-black',
     meta: { year: '2020/21', place: 'Hannover', title: 'Day and Night Kitchen', work: 2 },
     items: [
-      { type: 'image', img: `${BACHELOR_IMG}/cover.png`, x: -5.6, y: -5.75, w: 111.1, rotation: 0, taped: true, noBg: true, tackers: [1, 3, 2, 4], behind: true, holeInset: '1.5cqw' },
+      { type: 'image', img: `${BACHELOR_IMG}/cover.png`, x: -5.6, y: -5.75, w: 111.1, rotation: 0, taped: true, noBg: true, behind: true, holeInset: '1.5cqw' },
       // Title — same statement treatment as work.01's title page: a blended
       // copy underneath, a 75%-solid copy on top that fills in on hover
       { type: 'statement', text: 'BACHELOR\nTHESIS:\nDAY\nAND\nNIGHT\nKITCHEN', x: 5, y: 2.5, w: 84, h: 37.8, rotation: 0, aligns: { 0: 'left' }, blend: true },
@@ -472,19 +472,19 @@ const bookPages = [
       // Film references — two rows, all the same height, slightly
       // overlapping, clickable. Row 1: Blade Runner 2049 stills + Tsukumo
       // shop; row 2: Tokyo cityscapes
-      { type: 'image', img: `${BACHELOR_IMG}/preview/Blade-Runner-2049.jpg`, overlayImg: `${BACHELOR_IMG}/Blade-Runner-2049.jpg`, x: 28, y: 40, w: 37.7, rotation: -2, taped: true, noBg: true, tackers: [1, 3, 2, 4], bringToFront: true, z: 2, overlay: true, overlaySet: PAGE2_GALLERY },
-      { type: 'image', img: `${BACHELOR_IMG}/preview/blade-runner-2049-2.jpg`, overlayImg: `${BACHELOR_IMG}/blade-runner-2049-2.jpg`, x: 48, y: 50, w: 37.7, rotation: -1, taped: true, noBg: true, tackers: [2, 4, 1, 3], bringToFront: true, z: 3, overlay: true, overlaySet: PAGE2_GALLERY },
-      { type: 'image', img: `${BACHELOR_IMG}/preview/blade-runner-2049-3.jpg`, overlayImg: `${BACHELOR_IMG}/blade-runner-2049-3.jpg`, x: 62.6, y: 40, w: 33.4, rotation: -1, taped: true, noBg: true, tackers: [4, 2, 3, 1], bringToFront: true, z: 2, overlay: true, overlaySet: PAGE2_GALLERY },
-      { type: 'image', img: `${BACHELOR_IMG}/preview/Tsukumo+Shop+Abram.jpg`, overlayImg: `${BACHELOR_IMG}/Tsukumo+Shop+Abram.jpg`, x: 8, y: 50, w: 21.2, rotation: -1.5, taped: true, noBg: true, tackers: [3, 1, 4, 2], bringToFront: true, z: 3, overlay: true, overlaySet: PAGE2_GALLERY },
-      { type: 'image', img: `${BACHELOR_IMG}/preview/tokyo-1.jpg`, overlayImg: `${BACHELOR_IMG}/tokyo-1.jpg`, x: 22.5, y: 50, w: 31.8, rotation: 2, taped: true, noBg: true, tackers: [2, 4, 1, 3], bringToFront: true, z: 1, overlay: true, overlaySet: PAGE2_GALLERY },
-      { type: 'image', img: `${BACHELOR_IMG}/preview/tokyo-2.jpg`, overlayImg: `${BACHELOR_IMG}/tokyo-2.jpg`, x: 4, y: 40, w: 32.9, rotation: 1.5, taped: true, noBg: true, tackers: [1, 3, 2, 4], bringToFront: true, z: 2, overlay: true, overlaySet: PAGE2_GALLERY },
-      { type: 'image', img: `${BACHELOR_IMG}/preview/tokyo-3.jpg`, overlayImg: `${BACHELOR_IMG}/tokyo-3.jpg`, x: 79, y: 50, w: 14.2, rotation: 1.5, taped: true, noBg: true, tackers: [4, 2, 3, 1], bringToFront: true, z: 1, overlay: true, overlaySet: PAGE2_GALLERY },
-      { type: 'image', img: `${BACHELOR_IMG}/preview/tokyo-4.jpg`, overlayImg: `${BACHELOR_IMG}/tokyo-4.jpg`, x: 57, y: 40, w: 15, rotation: 2, taped: true, noBg: true, tackers: [3, 1, 4, 2], bringToFront: true, z: 2, overlay: true, overlaySet: PAGE2_GALLERY },
+      { type: 'image', img: `${BACHELOR_IMG}/preview/Blade-Runner-2049.jpg`, overlayImg: `${BACHELOR_IMG}/Blade-Runner-2049.jpg`, x: 28, y: 40, w: 37.7, rotation: -2, taped: true, noBg: true, bringToFront: true, z: 2, overlay: true, overlaySet: PAGE2_GALLERY },
+      { type: 'image', img: `${BACHELOR_IMG}/preview/blade-runner-2049-2.jpg`, overlayImg: `${BACHELOR_IMG}/blade-runner-2049-2.jpg`, x: 48, y: 50, w: 37.7, rotation: -1, taped: true, noBg: true, bringToFront: true, z: 3, overlay: true, overlaySet: PAGE2_GALLERY },
+      { type: 'image', img: `${BACHELOR_IMG}/preview/blade-runner-2049-3.jpg`, overlayImg: `${BACHELOR_IMG}/blade-runner-2049-3.jpg`, x: 62.6, y: 40, w: 33.4, rotation: -1, taped: true, noBg: true, bringToFront: true, z: 2, overlay: true, overlaySet: PAGE2_GALLERY },
+      { type: 'image', img: `${BACHELOR_IMG}/preview/Tsukumo+Shop+Abram.jpg`, overlayImg: `${BACHELOR_IMG}/Tsukumo+Shop+Abram.jpg`, x: 8, y: 50, w: 21.2, rotation: -1.5, taped: true, noBg: true, bringToFront: true, z: 3, overlay: true, overlaySet: PAGE2_GALLERY },
+      { type: 'image', img: `${BACHELOR_IMG}/preview/tokyo-1.jpg`, overlayImg: `${BACHELOR_IMG}/tokyo-1.jpg`, x: 22.5, y: 50, w: 31.8, rotation: 2, taped: true, noBg: true, bringToFront: true, z: 1, overlay: true, overlaySet: PAGE2_GALLERY },
+      { type: 'image', img: `${BACHELOR_IMG}/preview/tokyo-2.jpg`, overlayImg: `${BACHELOR_IMG}/tokyo-2.jpg`, x: 4, y: 40, w: 32.9, rotation: 1.5, taped: true, noBg: true, bringToFront: true, z: 2, overlay: true, overlaySet: PAGE2_GALLERY },
+      { type: 'image', img: `${BACHELOR_IMG}/preview/tokyo-3.jpg`, overlayImg: `${BACHELOR_IMG}/tokyo-3.jpg`, x: 79, y: 50, w: 14.2, rotation: 1.5, taped: true, noBg: true, bringToFront: true, z: 1, overlay: true, overlaySet: PAGE2_GALLERY },
+      { type: 'image', img: `${BACHELOR_IMG}/preview/tokyo-4.jpg`, overlayImg: `${BACHELOR_IMG}/tokyo-4.jpg`, x: 57, y: 40, w: 15, rotation: 2, taped: true, noBg: true, bringToFront: true, z: 2, overlay: true, overlaySet: PAGE2_GALLERY },
       // Collage caption
       { type: 'text', text: 'Inspiration', x: 20, y: 66.5, w: 72, rotation: 0, align: 'right', font: "'automate', sans-serif", fontSize: 0.55, fontSizeMobile: 0.4, weight: 300, opacity: 0.65 },
       // Color spectrum analysis — plays as a gif; hovering swaps in the
       // still spectrum image
-      { type: 'gif', video: `${BACHELOR_IMG}/BRF_1.mp4`, poster: `${BACHELOR_IMG}/BRF_1-poster.jpg`, hoverImg: `${BACHELOR_IMG}/spectrum.png`, x: 8, y: 73.5, w: 84, rotation: 0, taped: true, noBg: true, tackers: [4, 2, 3, 1] },
+      { type: 'gif', video: `${BACHELOR_IMG}/BRF_1.mp4`, poster: `${BACHELOR_IMG}/BRF_1-poster.jpg`, hoverImg: `${BACHELOR_IMG}/spectrum.png`, x: 8, y: 73.5, w: 84, rotation: 0, taped: true, noBg: true },
       // Subtitle — grey caption under the video
       { type: 'text', text: 'Colorspectrum analysis Blade Runner 2049', x: 20, y: 97.6, w: 72, rotation: 0, align: 'right', font: "'automate', sans-serif", fontSize: 0.55, fontSizeMobile: 0.4, weight: 300, opacity: 0.65 },
     ],
@@ -495,12 +495,12 @@ const bookPages = [
     meta: { year: '2020/21', place: 'Hannover', title: 'Day and Night Kitchen', work: 2 },
     items: [
       // Top row — SP1 and SP5
-      { type: 'image', img: `${BACHELOR_IMG}/preview/SP1.jpg`, overlayImg: `${BACHELOR_IMG}/SP1.png`, x: 5, y: 4, w: 46, rotation: -1.5, taped: true, noBg: true, tackers: [1, 3, 2, 4], overlay: true, overlaySet: PAGE3_GALLERY },
-      { type: 'image', img: `${BACHELOR_IMG}/preview/sp5.jpg`, overlayImg: `${BACHELOR_IMG}/sp5.png`, x: 55, y: 5, w: 40, rotation: 1.5, taped: true, noBg: true, tackers: [2, 4, 1, 3], overlay: true, overlaySet: PAGE3_GALLERY },
+      { type: 'image', img: `${BACHELOR_IMG}/preview/SP1.jpg`, overlayImg: `${BACHELOR_IMG}/SP1.png`, x: 5, y: 4, w: 46, rotation: -1.5, taped: true, noBg: true, overlay: true, overlaySet: PAGE3_GALLERY },
+      { type: 'image', img: `${BACHELOR_IMG}/preview/sp5.jpg`, overlayImg: `${BACHELOR_IMG}/sp5.png`, x: 55, y: 5, w: 40, rotation: 1.5, taped: true, noBg: true, overlay: true, overlaySet: PAGE3_GALLERY },
       // Middle row — swiss pavilion exterior and interior, Analyse
-      { type: 'image', img: `${BACHELOR_IMG}/preview/swiss-pavilion-außen.jpg`, overlayImg: `${BACHELOR_IMG}/swiss-pavilion-außen.jpg`, x: 5, y: 26, w: 31, rotation: 1.5, taped: true, noBg: true, tackers: [2, 4, 1, 3], overlay: true, overlaySet: PAGE3_GALLERY },
-      { type: 'image', img: `${BACHELOR_IMG}/preview/swiss-pavilion-innen1.jpg`, overlayImg: `${BACHELOR_IMG}/swiss-pavilion-innen1.jpg`, x: 40, y: 27, w: 30, rotation: -1.5, taped: true, noBg: true, tackers: [1, 3, 2, 4], overlay: true, overlaySet: PAGE3_GALLERY },
-      { type: 'image', img: `${BACHELOR_IMG}/preview/Analyse.jpg`, overlayImg: `${BACHELOR_IMG}/Analyse.jpg`, x: 73, y: 24, w: 23, rotation: -2, taped: true, noBg: true, tackers: [4, 2, 3, 1], overlay: true, overlaySet: PAGE3_GALLERY },
+      { type: 'image', img: `${BACHELOR_IMG}/preview/swiss-pavilion-außen.jpg`, overlayImg: `${BACHELOR_IMG}/swiss-pavilion-außen.jpg`, x: 5, y: 26, w: 31, rotation: 1.5, taped: true, noBg: true, overlay: true, overlaySet: PAGE3_GALLERY },
+      { type: 'image', img: `${BACHELOR_IMG}/preview/swiss-pavilion-innen1.jpg`, overlayImg: `${BACHELOR_IMG}/swiss-pavilion-innen1.jpg`, x: 40, y: 27, w: 30, rotation: -1.5, taped: true, noBg: true, overlay: true, overlaySet: PAGE3_GALLERY },
+      { type: 'image', img: `${BACHELOR_IMG}/preview/Analyse.jpg`, overlayImg: `${BACHELOR_IMG}/Analyse.jpg`, x: 73, y: 24, w: 23, rotation: -2, taped: true, noBg: true, overlay: true, overlaySet: PAGE3_GALLERY },
       // Subtitle — starts below the lower left image of the upper block
       { type: 'text', text: 'Architectural Reference: Swiss Pavillion - Kerez 2016', x: 5, y: 43, w: 60, rotation: 0, align: 'left', font: "'automate', sans-serif", fontSize: 0.55, fontSizeMobile: 0.4, weight: 300, opacity: 0.65 },
       // Bottom left — the four M75 plates as an even 2x2 grid, all the
@@ -509,10 +509,10 @@ const bookPages = [
       { type: 'text', text: 'Personal material experiments', x: 4.5, y: 93.3, w: 60, rotation: 0, align: 'left', font: "'automate', sans-serif", fontSize: 0.55, fontSizeMobile: 0.4, weight: 300, opacity: 0.65 },
       // Interactivity hint — like the polaroid page's footnote
       { type: 'text', text: '*CLICK, HOLD, AND MOVE TO LIFT AND ROTATE THE 3D-MODELS.', x: 8, y: 100, w: 84, rotation: 0, font: "'Hitobito', sans-serif", fontSize: 0.7, fontSizeMobile: 0.45, align: 'center', hoverLight: true, showModelFrames: true },
-      { type: 'image', img: `${BACHELOR_IMG}/preview/M75_2809.jpg`, overlayImg: `${BACHELOR_IMG}/M75_2809.jpg`, x: 0, y: 54.5, w: 28, rotation: 89, taped: true, noBg: true, tackers: [3, 1, 4, 2], overlay: true, overlaySet: M75_GALLERY },
-      { type: 'image', img: `${BACHELOR_IMG}/preview/M75_2815.jpg`, overlayImg: `${BACHELOR_IMG}/M75_2815.jpg`, x: 20, y: 54.5, w: 28, rotation: 91, taped: true, noBg: true, tackers: [2, 4, 1, 3], overlay: true, overlaySet: M75_GALLERY },
-      { type: 'image', img: `${BACHELOR_IMG}/preview/M75_2822.jpg`, overlayImg: `${BACHELOR_IMG}/M75_2822.jpg`, x: 0, y: 75.3, w: 28, rotation: 88.5, taped: true, noBg: true, tackers: [1, 3, 2, 4], overlay: true, overlaySet: M75_GALLERY },
-      { type: 'image', img: `${BACHELOR_IMG}/preview/M75_2824.jpg`, overlayImg: `${BACHELOR_IMG}/M75_2824.jpg`, x: 20, y: 75.3, w: 28, rotation: 91.5, taped: true, noBg: true, tackers: [4, 2, 3, 1], overlay: true, overlaySet: M75_GALLERY },
+      { type: 'image', img: `${BACHELOR_IMG}/preview/M75_2809.jpg`, overlayImg: `${BACHELOR_IMG}/M75_2809.jpg`, x: 0, y: 54.5, w: 28, rotation: 89, taped: true, noBg: true, overlay: true, overlaySet: M75_GALLERY },
+      { type: 'image', img: `${BACHELOR_IMG}/preview/M75_2815.jpg`, overlayImg: `${BACHELOR_IMG}/M75_2815.jpg`, x: 20, y: 54.5, w: 28, rotation: 91, taped: true, noBg: true, overlay: true, overlaySet: M75_GALLERY },
+      { type: 'image', img: `${BACHELOR_IMG}/preview/M75_2822.jpg`, overlayImg: `${BACHELOR_IMG}/M75_2822.jpg`, x: 0, y: 75.3, w: 28, rotation: 88.5, taped: true, noBg: true, overlay: true, overlaySet: M75_GALLERY },
+      { type: 'image', img: `${BACHELOR_IMG}/preview/M75_2824.jpg`, overlayImg: `${BACHELOR_IMG}/M75_2824.jpg`, x: 20, y: 75.3, w: 28, rotation: 91.5, taped: true, noBg: true, overlay: true, overlaySet: M75_GALLERY },
       // Bottom right — the two Kugel models, a bit smaller
       { type: 'model', src: `${BACHELOR_IMG}/Kugel1.glb`, texture: `${BACHELOR_IMG}/concrete.jpg`, tile: 10, poster: `${BACHELOR_IMG}/Kugel1-poster.png`, x: 58, y: 51, w: 30, rotation: 0 },
       { type: 'model', src: `${BACHELOR_IMG}/Kugel2.glb`, texture: `${BACHELOR_IMG}/concrete.jpg`, tile: 10, poster: `${BACHELOR_IMG}/Kugel2-poster.png`, x: 58, y: 74, w: 30, rotation: 0 },
@@ -526,7 +526,7 @@ const bookPages = [
       // mapped over the surface
       { type: 'model', src: `${BACHELOR_IMG}/work2.glb`, texture: `${BACHELOR_IMG}/concrete.jpg`, tile: 100, poster: `${BACHELOR_IMG}/work2-poster.png`, frameInset: '20%', x: -4, y: 4, w: 108, aspect: 1.66, rotation: 0 },
       // Unity video — poster render, same width as work.01's showcase
-      { type: 'image', img: `${BACHELOR_IMG}/preview/unity-poster.jpg`, x: 8, y: 52, w: 84, rotation: 0, taped: true, noBg: true, video: `${BACHELOR_IMG}/Unity.mp4`, tackers: [4, 2, 3, 1] },
+      { type: 'image', img: `${BACHELOR_IMG}/preview/unity-poster.jpg`, x: 8, y: 52, w: 84, rotation: 0, taped: true, noBg: true, video: `${BACHELOR_IMG}/Unity.mp4` },
       // Subtitle — grey caption under the video
       { type: 'text', text: 'Scene & Architecture', x: 20, y: 86.5, w: 72, rotation: 0, align: 'right', font: "'automate', sans-serif", fontSize: 0.55, fontSizeMobile: 0.4, weight: 300, opacity: 0.65 },
       // MORE — square button, opens the bachelor sheets overlay
@@ -548,11 +548,11 @@ const bookPages = [
       // Priority: Copenhagen (2) and (1) are largest
       { type: 'statement', text: 'EXPOSURES', x: 50, y: 3, w: 84, h: 37.8, rotation: 1, align: 'center', blend: true },
       { type: 'statement', text: 'EXPOSURES', x: 50, y: 3, w: 84, h: 37.8, rotation: 1, align: 'center', opacity: 0.75, hoverFull: true },
-      { type: 'image', img: `${PHOTOGRAPHY_IMG}/CopenhagenBl (2).jpg`, overlayImg: `${PHOTOGRAPHY_IMG}/CopenhagenBl (2).jpg`, x: 4, y: 13, w: 42, rotation: -1, taped: true, noBg: true, tackers: [1, 3, 2, 4], overlay: true, overlaySet: WORK03_COPENHAGEN, z: 2, bringToFront: true },
-      { type: 'image', img: `${PHOTOGRAPHY_IMG}/CopenhagenBl (1).jpg`, overlayImg: `${PHOTOGRAPHY_IMG}/CopenhagenBl (1).jpg`, x: 50, y: 8, w: 44, rotation: 1, taped: true, noBg: true, tackers: [2, 4, 1, 3], overlay: true, overlaySet: WORK03_COPENHAGEN, z: 3, bringToFront: true },
-      { type: 'image', img: `${PHOTOGRAPHY_IMG}/CopenhagenBl (3).jpg`, overlayImg: `${PHOTOGRAPHY_IMG}/CopenhagenBl (3).jpg`, x: 45, y: 59, w: 35, rotation: 0.5, taped: true, noBg: true, tackers: [1, 3, 2, 4], overlay: true, overlaySet: WORK03_COPENHAGEN, z: 5, bringToFront: true },
-      { type: 'image', img: `${PHOTOGRAPHY_IMG}/CopenhagenBl (4).jpg`, overlayImg: `${PHOTOGRAPHY_IMG}/CopenhagenBl (4).jpg`, x: 6, y: 61, w: 35, rotation: -0.5, taped: true, noBg: true, tackers: [2, 4, 1, 3], overlay: true, overlaySet: WORK03_COPENHAGEN, z: 1, bringToFront: true },
-      { type: 'image', img: `${PHOTOGRAPHY_IMG}/CopenhagenBl (5).jpg`, overlayImg: `${PHOTOGRAPHY_IMG}/CopenhagenBl (5).jpg`, x: 65, y: 48, w: 33.6, rotation: -1, taped: true, noBg: true, tackers: [3, 1, 4, 2], overlay: true, overlaySet: WORK03_COPENHAGEN, z: 4, bringToFront: true },
+      { type: 'image', img: `${PHOTOGRAPHY_IMG}/CopenhagenBl (2).jpg`, overlayImg: `${PHOTOGRAPHY_IMG}/CopenhagenBl (2).jpg`, x: 4, y: 13, w: 42, rotation: -1, taped: true, noBg: true, overlay: true, overlaySet: WORK03_COPENHAGEN, z: 2, bringToFront: true },
+      { type: 'image', img: `${PHOTOGRAPHY_IMG}/CopenhagenBl (1).jpg`, overlayImg: `${PHOTOGRAPHY_IMG}/CopenhagenBl (1).jpg`, x: 50, y: 8, w: 44, rotation: 1, taped: true, noBg: true, overlay: true, overlaySet: WORK03_COPENHAGEN, z: 3, bringToFront: true },
+      { type: 'image', img: `${PHOTOGRAPHY_IMG}/CopenhagenBl (3).jpg`, overlayImg: `${PHOTOGRAPHY_IMG}/CopenhagenBl (3).jpg`, x: 45, y: 59, w: 35, rotation: 0.5, taped: true, noBg: true, overlay: true, overlaySet: WORK03_COPENHAGEN, z: 5, bringToFront: true },
+      { type: 'image', img: `${PHOTOGRAPHY_IMG}/CopenhagenBl (4).jpg`, overlayImg: `${PHOTOGRAPHY_IMG}/CopenhagenBl (4).jpg`, x: 6, y: 61, w: 35, rotation: -0.5, taped: true, noBg: true, overlay: true, overlaySet: WORK03_COPENHAGEN, z: 1, bringToFront: true },
+      { type: 'image', img: `${PHOTOGRAPHY_IMG}/CopenhagenBl (5).jpg`, overlayImg: `${PHOTOGRAPHY_IMG}/CopenhagenBl (5).jpg`, x: 65, y: 48, w: 33.6, rotation: -1, taped: true, noBg: true, overlay: true, overlaySet: WORK03_COPENHAGEN, z: 4, bringToFront: true },
       // Subtitle
       { type: 'text', text: 'Copenhagen', x: 22, y: 92, w: 72, rotation: 0, align: 'right', font: "'automate', sans-serif", fontSize: 0.65, fontSizeMobile: 0.45, weight: 300, opacity: 0.7 },
     ],
@@ -564,10 +564,10 @@ const bookPages = [
     items: [
       // experimental photos — photobook style
       // Priority: experimental (1) and (4) - (4) is wide at bottom, nothing below it
-      { type: 'image', img: `${PHOTOGRAPHY_IMG}/experimental (1).jpg`, overlayImg: `${PHOTOGRAPHY_IMG}/experimental (1).jpg`, x: 5, y: 8, w: 46, rotation: -1, taped: true, noBg: true, tackers: [1, 3, 2, 4], overlay: true, overlaySet: WORK03_EXPERIMENTAL, z: 2, bringToFront: true },
-      { type: 'image', img: `${PHOTOGRAPHY_IMG}/experimental (2).jpg`, overlayImg: `${PHOTOGRAPHY_IMG}/experimental (2).jpg`, x: 55, y: 8, w: 40, rotation: 1, taped: true, noBg: true, tackers: [2, 4, 1, 3], overlay: true, overlaySet: WORK03_EXPERIMENTAL, z: 2, bringToFront: true },
-      { type: 'image', img: `${PHOTOGRAPHY_IMG}/experimental (4).jpg`, overlayImg: `${PHOTOGRAPHY_IMG}/experimental (4).jpg`, x: 5, y: 65, w: 70, rotation: 0, taped: true, noBg: true, tackers: [1, 3, 2, 4], overlay: true, overlaySet: WORK03_EXPERIMENTAL, z: 1, bringToFront: true },
-      { type: 'image', img: `${PHOTOGRAPHY_IMG}/experimental (3).jpg`, overlayImg: `${PHOTOGRAPHY_IMG}/experimental (3).jpg`, x: 65, y: 55, w: 30, rotation: -0.5, taped: true, noBg: true, tackers: [1, 3, 2, 4], overlay: true, overlaySet: WORK03_EXPERIMENTAL, z: 3, bringToFront: true },
+      { type: 'image', img: `${PHOTOGRAPHY_IMG}/experimental (1).jpg`, overlayImg: `${PHOTOGRAPHY_IMG}/experimental (1).jpg`, x: 5, y: 8, w: 46, rotation: -1, taped: true, noBg: true, overlay: true, overlaySet: WORK03_EXPERIMENTAL, z: 2, bringToFront: true },
+      { type: 'image', img: `${PHOTOGRAPHY_IMG}/experimental (2).jpg`, overlayImg: `${PHOTOGRAPHY_IMG}/experimental (2).jpg`, x: 55, y: 8, w: 40, rotation: 1, taped: true, noBg: true, overlay: true, overlaySet: WORK03_EXPERIMENTAL, z: 2, bringToFront: true },
+      { type: 'image', img: `${PHOTOGRAPHY_IMG}/experimental (4).jpg`, overlayImg: `${PHOTOGRAPHY_IMG}/experimental (4).jpg`, x: 5, y: 65, w: 70, rotation: 0, taped: true, noBg: true, overlay: true, overlaySet: WORK03_EXPERIMENTAL, z: 1, bringToFront: true },
+      { type: 'image', img: `${PHOTOGRAPHY_IMG}/experimental (3).jpg`, overlayImg: `${PHOTOGRAPHY_IMG}/experimental (3).jpg`, x: 65, y: 55, w: 30, rotation: -0.5, taped: true, noBg: true, overlay: true, overlaySet: WORK03_EXPERIMENTAL, z: 3, bringToFront: true },
       // Subtitle
       { type: 'text', text: 'Experimental', x: 20, y: 92, w: 72, rotation: 0, align: 'right', font: "'automate', sans-serif", fontSize: 0.65, fontSizeMobile: 0.45, weight: 300, opacity: 0.7 },
     ],
@@ -580,11 +580,11 @@ const bookPages = [
     items: [
       // Hannover photos — varied sizes
       // Priority: Hannover (3) and (5) are largest
-      { type: 'image', img: `${PHOTOGRAPHY_IMG}/Hannover (3).jpg`, overlayImg: `${PHOTOGRAPHY_IMG}/Hannover (3).jpg`, x: 10, y: 9.5, w: 46, rotation: 0.5, taped: true, noBg: true, tackers: [1, 3, 2, 4], overlay: true, overlaySet: WORK03_HANNOVER, z: 2, bringToFront: true },
-      { type: 'image', img: `${PHOTOGRAPHY_IMG}/Hannover (5).jpg`, overlayImg: `${PHOTOGRAPHY_IMG}/Hannover (5).jpg`, x: 60, y: 5, w: 40, rotation: -1, taped: true, noBg: true, tackers: [2, 4, 1, 3], overlay: true, overlaySet: WORK03_HANNOVER, z: 3, bringToFront: true },
-      { type: 'image', img: `${PHOTOGRAPHY_IMG}/Hannover (1).jpg`, overlayImg: `${PHOTOGRAPHY_IMG}/Hannover (1).jpg`, x: 5, y: 55, w: 37, rotation: 1.5, taped: true, noBg: true, tackers: [2, 4, 1, 3], overlay: true, overlaySet: WORK03_HANNOVER, z: 1, bringToFront: true },
-      { type: 'image', img: `${PHOTOGRAPHY_IMG}/Hannover (2).jpg`, overlayImg: `${PHOTOGRAPHY_IMG}/Hannover (2).jpg`, x: 45, y: 53, w: 33, rotation: -1.5, taped: true, noBg: true, tackers: [1, 3, 2, 4], overlay: true, overlaySet: WORK03_HANNOVER, z: 2, bringToFront: true },
-      { type: 'image', img: `${PHOTOGRAPHY_IMG}/Hannover (4).jpg`, overlayImg: `${PHOTOGRAPHY_IMG}/Hannover (4).jpg`, x: 70, y: 60, w: 31, rotation: 1, taped: true, noBg: true, tackers: [4, 2, 3, 1], overlay: true, overlaySet: WORK03_HANNOVER, z: 3, bringToFront: true },
+      { type: 'image', img: `${PHOTOGRAPHY_IMG}/Hannover (3).jpg`, overlayImg: `${PHOTOGRAPHY_IMG}/Hannover (3).jpg`, x: 10, y: 9.5, w: 46, rotation: 0.5, taped: true, noBg: true, overlay: true, overlaySet: WORK03_HANNOVER, z: 2, bringToFront: true },
+      { type: 'image', img: `${PHOTOGRAPHY_IMG}/Hannover (5).jpg`, overlayImg: `${PHOTOGRAPHY_IMG}/Hannover (5).jpg`, x: 60, y: 5, w: 40, rotation: -1, taped: true, noBg: true, overlay: true, overlaySet: WORK03_HANNOVER, z: 3, bringToFront: true },
+      { type: 'image', img: `${PHOTOGRAPHY_IMG}/Hannover (1).jpg`, overlayImg: `${PHOTOGRAPHY_IMG}/Hannover (1).jpg`, x: 5, y: 55, w: 37, rotation: 1.5, taped: true, noBg: true, overlay: true, overlaySet: WORK03_HANNOVER, z: 1, bringToFront: true },
+      { type: 'image', img: `${PHOTOGRAPHY_IMG}/Hannover (2).jpg`, overlayImg: `${PHOTOGRAPHY_IMG}/Hannover (2).jpg`, x: 45, y: 53, w: 33, rotation: -1.5, taped: true, noBg: true, overlay: true, overlaySet: WORK03_HANNOVER, z: 2, bringToFront: true },
+      { type: 'image', img: `${PHOTOGRAPHY_IMG}/Hannover (4).jpg`, overlayImg: `${PHOTOGRAPHY_IMG}/Hannover (4).jpg`, x: 70, y: 60, w: 31, rotation: 1, taped: true, noBg: true, overlay: true, overlaySet: WORK03_HANNOVER, z: 3, bringToFront: true },
       // Subtitle
       { type: 'text', text: 'Hannover', x: 24, y: 95, w: 72, rotation: 0, align: 'right', font: "'automate', sans-serif", fontSize: 0.65, fontSizeMobile: 0.45, weight: 300, opacity: 0.7 },
     ],
@@ -596,11 +596,11 @@ const bookPages = [
     items: [
       // BW photos — varied sizes
       // Priority: BW (1) and (4) are largest
-      { type: 'image', img: `${PHOTOGRAPHY_IMG}/BW (1).jpg`, overlayImg: `${PHOTOGRAPHY_IMG}/BW (1).jpg`, x: 10, y: 8, w: 46, rotation: 0.5, taped: true, noBg: true, tackers: [1, 3, 2, 4], overlay: true, overlaySet: WORK03_BW, z: 2.5, bringToFront: true },
-      { type: 'image', img: `${PHOTOGRAPHY_IMG}/BW (4).jpg`, overlayImg: `${PHOTOGRAPHY_IMG}/BW (4).jpg`, x: 60, y: 5, w: 40, rotation: -1, taped: true, noBg: true, tackers: [2, 4, 1, 3], overlay: true, overlaySet: WORK03_BW, z: 3, bringToFront: true },
-      { type: 'image', img: `${PHOTOGRAPHY_IMG}/BW (2).jpg`, overlayImg: `${PHOTOGRAPHY_IMG}/BW (2).jpg`, x: 5, y: 55, w: 31, rotation: 1.5, taped: true, noBg: true, tackers: [2, 4, 1, 3], overlay: true, overlaySet: WORK03_BW, z: 1, bringToFront: true },
-      { type: 'image', img: `${PHOTOGRAPHY_IMG}/BW (3).jpg`, overlayImg: `${PHOTOGRAPHY_IMG}/BW (3).jpg`, x: 72, y: 57, w: 30, rotation: 1, taped: true, noBg: true, tackers: [1, 3, 2, 4], overlay: true, overlaySet: WORK03_BW, z: 2, bringToFront: true },
-      { type: 'image', img: `${PHOTOGRAPHY_IMG}/BW (5).jpg`, overlayImg: `${PHOTOGRAPHY_IMG}/BW (5).jpg`, x: 38.5, y: 51, w: 30, rotation: -1.5, taped: true, noBg: true, tackers: [4, 2, 3, 1], overlay: true, overlaySet: WORK03_BW, z: 2, bringToFront: true },
+      { type: 'image', img: `${PHOTOGRAPHY_IMG}/BW (1).jpg`, overlayImg: `${PHOTOGRAPHY_IMG}/BW (1).jpg`, x: 10, y: 8, w: 46, rotation: 0.5, taped: true, noBg: true, overlay: true, overlaySet: WORK03_BW, z: 2.5, bringToFront: true },
+      { type: 'image', img: `${PHOTOGRAPHY_IMG}/BW (4).jpg`, overlayImg: `${PHOTOGRAPHY_IMG}/BW (4).jpg`, x: 60, y: 5, w: 40, rotation: -1, taped: true, noBg: true, overlay: true, overlaySet: WORK03_BW, z: 3, bringToFront: true },
+      { type: 'image', img: `${PHOTOGRAPHY_IMG}/BW (2).jpg`, overlayImg: `${PHOTOGRAPHY_IMG}/BW (2).jpg`, x: 5, y: 55, w: 31, rotation: 1.5, taped: true, noBg: true, overlay: true, overlaySet: WORK03_BW, z: 1, bringToFront: true },
+      { type: 'image', img: `${PHOTOGRAPHY_IMG}/BW (3).jpg`, overlayImg: `${PHOTOGRAPHY_IMG}/BW (3).jpg`, x: 72, y: 57, w: 30, rotation: 1, taped: true, noBg: true, overlay: true, overlaySet: WORK03_BW, z: 2, bringToFront: true },
+      { type: 'image', img: `${PHOTOGRAPHY_IMG}/BW (5).jpg`, overlayImg: `${PHOTOGRAPHY_IMG}/BW (5).jpg`, x: 38.5, y: 51, w: 30, rotation: -1.5, taped: true, noBg: true, overlay: true, overlaySet: WORK03_BW, z: 2, bringToFront: true },
       // Subtitle
       { type: 'text', text: 'Monochrome', x: 25, y: 91, w: 72, rotation: 0, align: 'right', font: "'automate', sans-serif", fontSize: 0.65, fontSizeMobile: 0.45, weight: 300, opacity: 0.7 },
     ],
@@ -612,7 +612,7 @@ const bookPages = [
     meta: { year: '2023', place: 'Hannover', title: 'Apartment in VR', work: 4 },
     items: [
       // starter full page — same proportions as the page, fits edge to edge
-      { type: 'image', img: `${VROXEL_IMG}/thesis-starter1.png`, x: -5.6, y: -5.75, w: 111.1, rotation: 0, taped: true, noBg: true, tackers: [1, 3, 2, 4], behind: true, holeInset: '1.5cqw' },
+      { type: 'image', img: `${VROXEL_IMG}/thesis-starter1.png`, x: -5.6, y: -5.75, w: 111.1, rotation: 0, taped: true, noBg: true, behind: true, holeInset: '1.5cqw' },
       // Title — same statement treatment as work.02's title page: a blended
       // copy underneath, a 75%-solid copy on top that fills in on hover
       { type: 'statement', text: 'APARTMENT\nIN VR', x: 5, y: 2.5, w: 84, h: 37.8, rotation: 0, aligns: { 0: 'left' }, blend: true },
@@ -626,8 +626,9 @@ const bookPages = [
     texture: 'right_page-black',
     meta: { year: '2023', place: 'Hannover', title: 'Apartment in VR', work: 4 },
     items: [
-      // Walkthrough video — autoplays muted, taped like the polaroids
-      { type: 'gif', video: `${VROXEL_IMG}/EG2_30-web.mp4`, x: 6, y: 38, w: 88, rotation: 0, noBg: true, shadow: '0 4px 12px rgba(0, 0, 0, 0.35)' },
+      // Walkthrough video — autoplays muted, behind the overlapping
+      // inspiration collage (not clickable, the collage sits on top)
+      { type: 'gif', video: `${VROXEL_IMG}/EG2_30-web.mp4`, x: 6, y: 38, w: 88, rotation: 0, noBg: true, behind: true, shadow: '0 4px 12px rgba(0, 0, 0, 0.35)' },
       // Subtitle
       { type: 'text', text: 'Walkthrough', x: 22, y: 64.5, w: 72, rotation: 0, align: 'right', font: "'automate', sans-serif", fontSize: 0.55, fontSizeMobile: 0.4, weight: 300, opacity: 0.65 },
       // Renders — side-scrolling gallery, one full image at a time;
@@ -639,13 +640,13 @@ const bookPages = [
       // treatment as work.02's film references: taped, slightly rotated,
       // overlapping, clickable. Row 1: (1).jpg, (1).png, (2).png;
       // row 2: (3).JPG, (3).png, (4).png, (5).png
-      { type: 'image', img: `${VROXEL_PREVIEW}/takara.jpg`, overlayImg: WORK04_TAKARA, x: 5, y: 5, w: 26, rotation: -2, taped: true, noBg: true, tackers: [1, 3, 2, 4], bringToFront: true, z: 2, overlay: true, overlaySet: WORK04_INSPO },
-      { type: 'image', img: `${VROXEL_PREVIEW}/gik.jpg`, overlayImg: WORK04_GIK, x: 30, y: 5, w: 38, rotation: 1.5, taped: true, noBg: true, tackers: [2, 4, 1, 3], bringToFront: true, z: 3, overlay: true, overlaySet: WORK04_INSPO },
-      { type: 'image', img: `${VROXEL_PREVIEW}/pinsel.jpg`, overlayImg: WORK04_PINSEL, x: 60, y: 5, w: 38, rotation: -1, taped: true, noBg: true, tackers: [1, 3, 2, 4], bringToFront: true, z: 2, overlay: true, overlaySet: WORK04_INSPO },
-      { type: 'image', img: `${VROXEL_PREVIEW}/photo.jpg`, overlayImg: WORK04_PHOTO, x: 4, y: 15, w: 20.8, rotation: 1.5, taped: true, noBg: true, tackers: [2, 4, 1, 3], bringToFront: true, z: 2, overlay: true, overlaySet: WORK04_INSPO },
-      { type: 'image', img: `${VROXEL_PREVIEW}/grid.jpg`, overlayImg: WORK04_GRID, x: 20, y: 15, w: 26, rotation: -1, taped: true, noBg: true, tackers: [4, 2, 3, 1], bringToFront: true, z: 3, overlay: true, overlaySet: WORK04_INSPO },
-      { type: 'image', img: `${VROXEL_PREVIEW}/t1meout.jpg`, overlayImg: WORK04_T1MEOUT, x: 44, y: 15, w: 26, rotation: 1, taped: true, noBg: true, tackers: [3, 1, 4, 2], bringToFront: true, z: 2, overlay: true, overlaySet: WORK04_INSPO },
-      { type: 'image', img: `${VROXEL_PREVIEW}/inspo-5.jpg`, overlayImg: WORK04_INSPO5, x: 68, y: 15, w: 26, rotation: -1.5, taped: true, noBg: true, tackers: [2, 4, 1, 3], bringToFront: true, z: 3, overlay: true, overlaySet: WORK04_INSPO },
+      { type: 'image', img: `${VROXEL_PREVIEW}/takara.jpg`, overlayImg: WORK04_TAKARA, x: 5, y: 5, w: 26, rotation: -2, taped: true, noBg: true, bringToFront: true, z: 2, overlay: true, overlaySet: WORK04_INSPO },
+      { type: 'image', img: `${VROXEL_PREVIEW}/gik.jpg`, overlayImg: WORK04_GIK, x: 30, y: 5, w: 38, rotation: 1.5, taped: true, noBg: true, bringToFront: true, z: 3, overlay: true, overlaySet: WORK04_INSPO },
+      { type: 'image', img: `${VROXEL_PREVIEW}/pinsel.jpg`, overlayImg: WORK04_PINSEL, x: 60, y: 5, w: 38, rotation: -1, taped: true, noBg: true, bringToFront: true, z: 2, overlay: true, overlaySet: WORK04_INSPO },
+      { type: 'image', img: `${VROXEL_PREVIEW}/photo.jpg`, overlayImg: WORK04_PHOTO, x: 4, y: 15, w: 20.8, rotation: 1.5, taped: true, noBg: true, bringToFront: true, z: 2, overlay: true, overlaySet: WORK04_INSPO },
+      { type: 'image', img: `${VROXEL_PREVIEW}/grid.jpg`, overlayImg: WORK04_GRID, x: 20, y: 15, w: 26, rotation: -1, taped: true, noBg: true, bringToFront: true, z: 3, overlay: true, overlaySet: WORK04_INSPO },
+      { type: 'image', img: `${VROXEL_PREVIEW}/t1meout.jpg`, overlayImg: WORK04_T1MEOUT, x: 44, y: 15, w: 26, rotation: 1, taped: true, noBg: true, bringToFront: true, z: 2, overlay: true, overlaySet: WORK04_INSPO },
+      { type: 'image', img: `${VROXEL_PREVIEW}/inspo-5.jpg`, overlayImg: WORK04_INSPO5, x: 68, y: 15, w: 26, rotation: -1.5, taped: true, noBg: true, bringToFront: true, z: 3, overlay: true, overlaySet: WORK04_INSPO },
       // Collage caption
       { type: 'text', text: 'Inspiration', x: 22, y: 34, w: 72, rotation: 0, align: 'right', font: "'automate', sans-serif", fontSize: 0.55, fontSizeMobile: 0.4, weight: 300, opacity: 0.65 },
     ],
@@ -657,7 +658,7 @@ const bookPages = [
     meta: { year: 'Ongoing', place: 'Hannover', title: 'Atelier Anthrazit', work: 5 },
     items: [
       // Starter full page — same proportions as the page, fits edge to edge
-      { type: 'image', img: WORK05_STARTER, x: -5.6, y: -5.75, w: 111.1, rotation: 0, taped: true, noBg: true, tackers: [1, 3, 2, 4], behind: true, holeInset: '1.5cqw' },
+      { type: 'image', img: WORK05_STARTER, x: -5.6, y: -5.75, w: 111.1, rotation: 0, taped: true, noBg: true, behind: true, holeInset: '1.5cqw' },
       // Title — blended statement underneath, solid copy fills in on hover
       { type: 'statement', text: 'ATELIER\nANTHRAZIT\nASSOCIATION\n& EXHIBITIONS', x: 5, y: 12.5, w: 84, h: 37.8, rotation: 0, aligns: { 0: 'left' }, blend: true },
       { type: 'statement', text: 'ATELIER\nANTHRAZIT\nASSOCIATION\n& EXHIBITIONS', x: 5, y: 12.5, w: 84, h: 37.8, rotation: 0, aligns: { 0: 'left' }, opacity: 0.75, hoverFull: true },
@@ -674,7 +675,7 @@ const bookPages = [
       { type: 'image', img: `${ATELIER_IMG}/logo-white.png`, x: 45, y: 0.5, w: 10, rotation: 0, noBg: true, bringToFront: true, z: 2, opacity: 0.8, href: 'https://www.instagram.com/atelieranthrazit/' },
       // Association text — bottom-aligned above the group photo
       { type: 'text', text: 'I am a founding member of Atelier Anthrazit, a registered non-profit platform for realising creative projects in visual art, architecture, installation, music and performance. The association acts as a collaborative hub where artists work together to develop pieces that sit at the intersection of these disciplines. As part of my involvement, I worked on multiple team-exhibitions and pieces, as well as solo exhibitions.', x: 0, y: 0, w: 100, h: 23, rotation: 0, font: "'tosh-b', sans-serif", fontSize: BODY_TEXT_SIZE, fontSizeMobile: BODY_TEXT_SIZE_MOBILE, align: 'justify', mobile: { x: 0, y: 0, w: 100, h: 25 } },
-      { type: 'image', img: WORK05_GROUP, overlayImg: WORK05_GROUP, x: 0, y: 31, w: 100, rotation: 0.5, taped: true, noBg: true, tackers: [1, 3, 2, 4], bringToFront: true, overlay: true, overlaySet: [WORK05_GROUP], z: 2 },
+      { type: 'image', img: WORK05_GROUP, overlayImg: WORK05_GROUP, x: 0, y: 31, w: 100, rotation: 0.5, taped: true, noBg: true, bringToFront: true, overlay: true, overlaySet: [WORK05_GROUP], z: 2 },
     ],
   },
   // Spread 10, left page — Artificial Artifacting exhibition text and exhibits
@@ -707,9 +708,9 @@ const bookPages = [
       { type: 'text', text: 'I turned these descriptions into images with AI image generation, then into 3D models, and finally into physical objects through 3D printing, taking them from imagination to something tangible.', x: 0, y: 69, w: 100, rotation: 0, font: "'tosh-b', sans-serif", fontSize: BODY_TEXT_SIZE, fontSizeMobile: 0.44, align: 'justify', mobile: { x: 0, y: 69, w: 100 } },
       // Exhibition photos — below the text, one shared height, the block
       // spanning the full width like the grid above
-      { type: 'image', img: `${ATELIER_IMG}/preview/WA0015.jpg`, overlayImg: WORK05_EXHIBIT_PHOTOS[0], x: 0, y: 77, w: 25.4, rotation: 0, taped: true, noBg: true, tackers: [1, 3, 2, 4], bringToFront: true, overlay: true, overlaySet: WORK05_EXHIBIT_PHOTOS, z: 2 },
-      { type: 'image', img: `${ATELIER_IMG}/preview/WA0016.jpg`, overlayImg: WORK05_EXHIBIT_PHOTOS[1], x: 27.4, y: 77, w: 25.4, rotation: 0, taped: true, noBg: true, tackers: [2, 4, 1, 3], bringToFront: true, overlay: true, overlaySet: WORK05_EXHIBIT_PHOTOS, z: 2 },
-      { type: 'image', img: `${ATELIER_IMG}/preview/WA0017.jpg`, overlayImg: WORK05_EXHIBIT_PHOTOS[2], x: 54.8, y: 77, w: 45.2, rotation: 0, taped: true, noBg: true, tackers: [4, 2, 3, 1], bringToFront: true, overlay: true, overlaySet: WORK05_EXHIBIT_PHOTOS, z: 2 },
+      { type: 'image', img: `${ATELIER_IMG}/preview/WA0015.jpg`, overlayImg: WORK05_EXHIBIT_PHOTOS[0], x: 0, y: 77, w: 25.4, rotation: 0, taped: true, noBg: true, bringToFront: true, overlay: true, overlaySet: WORK05_EXHIBIT_PHOTOS, z: 2 },
+      { type: 'image', img: `${ATELIER_IMG}/preview/WA0016.jpg`, overlayImg: WORK05_EXHIBIT_PHOTOS[1], x: 27.4, y: 77, w: 25.4, rotation: 0, taped: true, noBg: true, bringToFront: true, overlay: true, overlaySet: WORK05_EXHIBIT_PHOTOS, z: 2 },
+      { type: 'image', img: `${ATELIER_IMG}/preview/WA0017.jpg`, overlayImg: WORK05_EXHIBIT_PHOTOS[2], x: 54.8, y: 77, w: 45.2, rotation: 0, taped: true, noBg: true, bringToFront: true, overlay: true, overlaySet: WORK05_EXHIBIT_PHOTOS, z: 2 },
     ],
   },
   // Spread 10, right page — Ins Blaue exhibition text
@@ -723,13 +724,13 @@ const bookPages = [
       // gallery, the row spanning the full width like the photo below,
       // all at one height; the AI image has no tape dots
       { type: 'image', img: `${ATELIER_IMG}/preview/fossil.jpg`, overlayImg: WORK05_INSBLAUE_FOSSIL, x: 0, y: 19, w: 21.3, rotation: 0, noBg: true, bringToFront: true, overlay: true, overlaySet: WORK05_INSBLAUE_IMAGES, z: 2 },
-      { type: 'image', img: `${ATELIER_IMG}/preview/fossile.jpg`, overlayImg: WORK05_INSBLAUE_FOSSILE, x: 22.3, y: 19, w: 38.3, rotation: 0, taped: true, noBg: true, tackers: [2, 4, 1, 3], bringToFront: true, overlay: true, overlaySet: WORK05_INSBLAUE_IMAGES, z: 2 },
-      { type: 'image', img: `${ATELIER_IMG}/preview/brain.jpg`, overlayImg: WORK05_INSBLAUE_BRAIN, x: 61.6, y: 19, w: 38.3, rotation: 0, taped: true, noBg: true, tackers: [3, 1, 4, 2], bringToFront: true, overlay: true, overlaySet: WORK05_INSBLAUE_IMAGES, z: 2 },
+      { type: 'image', img: `${ATELIER_IMG}/preview/fossile.jpg`, overlayImg: WORK05_INSBLAUE_FOSSILE, x: 22.3, y: 19, w: 38.3, rotation: 0, taped: true, noBg: true, bringToFront: true, overlay: true, overlaySet: WORK05_INSBLAUE_IMAGES, z: 2 },
+      { type: 'image', img: `${ATELIER_IMG}/preview/brain.jpg`, overlayImg: WORK05_INSBLAUE_BRAIN, x: 61.6, y: 19, w: 38.3, rotation: 0, taped: true, noBg: true, bringToFront: true, overlay: true, overlaySet: WORK05_INSBLAUE_IMAGES, z: 2 },
       // Last paragraph — between the image row and the photo, bottom edge
       // just above the photo
       { type: 'text', text: 'Those fossils have then been created in 3D, embedded in a stone-esque structure in the approximate form of a cerebrum, brought to life with 3D-printing and reworking with gypsum, to create the illusion of a natural fossil, that, in reality, is just a figment of the imagination.', x: 0, y: 28, w: 100, h: 19, rotation: 0, font: "'tosh-b', sans-serif", fontSize: BODY_TEXT_SIZE, fontSizeMobile: 0.44, align: 'justify', mobile: { x: 0, y: 28, w: 100, h: 19 } },
       // Ins Blaue photo — full-width at the bottom of the page
-      { type: 'image', img: WORK05_INSBLAUE_PHOTO, overlayImg: WORK05_INSBLAUE_PHOTO, x: 0, y: 49.2, w: 100, rotation: 0, taped: true, noBg: true, tackers: [1, 3, 2, 4], bringToFront: true, overlay: true, overlaySet: [WORK05_INSBLAUE_PHOTO], z: 2 },
+      { type: 'image', img: WORK05_INSBLAUE_PHOTO, overlayImg: WORK05_INSBLAUE_PHOTO, x: 0, y: 49.2, w: 100, rotation: 0, taped: true, noBg: true, bringToFront: true, overlay: true, overlaySet: [WORK05_INSBLAUE_PHOTO], z: 2 },
     ],
   },
   // ===== SPREAD 11: WORK06 — H-Block exhibition booth (2023, Hannover) =====
@@ -739,12 +740,12 @@ const bookPages = [
     meta: { year: '2023', place: 'Hannover', title: 'H-Block Exhibition Booth', work: 6 },
     items: [
       // Render — full page width, starts level with the right page's photo grid
-      { type: 'image', img: WORK06_RENDER, overlayImg: WORK06_RENDER, x: 0, y: 7, w: 100, rotation: 0, taped: true, noBg: true, tackers: [1, 3, 2, 4], behind: true, overlay: true, overlaySet: WORK06_DRAWINGS },
+      { type: 'image', img: WORK06_RENDER, overlayImg: WORK06_RENDER, x: 0, y: 7, w: 100, rotation: 0, taped: true, noBg: true, behind: true, overlay: true, overlaySet: WORK06_DRAWINGS },
       // Plans — plan 2 and plan 4 stacked in the left column; zoom 1.4
       // enlarges the drawing inside the unchanged tile, cropping the edges
       // (the click-to-zoom overlay still shows the full plan)
-      { type: 'image', img: WORK06_PLANS[1], overlayImg: WORK06_PLANS[1], x: 0, y: 50.5, w: 48.5, rotation: 0, zoom: 1.4, aspect: 1.414, taped: true, noBg: true, tackers: [1, 3, 2, 4], bringToFront: true, overlay: true, overlaySet: WORK06_DRAWINGS, z: 2 },
-      { type: 'image', img: WORK06_PLANS[3], overlayImg: WORK06_PLANS[3], x: 0, y: 75.5, w: 48.5, rotation: 0, zoom: 1.4, aspect: 1.414, taped: true, noBg: true, tackers: [3, 1, 4, 2], bringToFront: true, overlay: true, overlaySet: WORK06_DRAWINGS, z: 2 },
+      { type: 'image', img: WORK06_PLANS[1], overlayImg: WORK06_PLANS[1], x: 0, y: 50.5, w: 48.5, rotation: 0, zoom: 1.4, aspect: 1.414, taped: true, noBg: true, bringToFront: true, overlay: true, overlaySet: WORK06_DRAWINGS, z: 2 },
+      { type: 'image', img: WORK06_PLANS[3], overlayImg: WORK06_PLANS[3], x: 0, y: 75.5, w: 48.5, rotation: 0, zoom: 1.4, aspect: 1.414, taped: true, noBg: true, bringToFront: true, overlay: true, overlaySet: WORK06_DRAWINGS, z: 2 },
       // Title — statement at the top of the plans' right column, above the text
       { type: 'statement', text: 'H-BLOCK\nEXHIBITION\nBOOTH', x: 51.5, y: 50.5, w: 48.5, h: 37.8, rotation: 0, aligns: { 0: 'left' }, blend: true },
       { type: 'statement', text: 'H-BLOCK\nEXHIBITION\nBOOTH', x: 51.5, y: 50.5, w: 48.5, h: 37.8, rotation: 0, aligns: { 0: 'left' }, opacity: 0.75, hoverFull: true },
@@ -765,18 +766,18 @@ const bookPages = [
       // landscapes fill the quadrants around that diagonal — 1 and 2 top
       // left, 15, 12, 4 and 5 stacked bottom right, 9 as the hinge print at
       // the page center, tucked under 8 and over 15's corner
-      { type: 'image', img: WORK06_PHOTOS[0], overlayImg: WORK06_PHOTOS[0], x: 0, y: 2.5, w: 59.8, rotation: -1, taped: true, noBg: true, tackers: [1, 3, 2, 4], bringToFront: true, overlay: true, overlaySet: WORK06_PHOTOS, z: 2 },
+      { type: 'image', img: WORK06_PHOTOS[0], overlayImg: WORK06_PHOTOS[0], x: 0, y: 2.5, w: 59.8, rotation: -1, taped: true, noBg: true, bringToFront: true, overlay: true, overlaySet: WORK06_PHOTOS, z: 2 },
       // The grey H — graphic accent left of photo 2, top edges level
       { type: 'image', img: WORK06_HBLOCK_H, x: 0.5, y: 30.5, w: 10, rotation: 0, opacity: 0.7, href: 'https://www.aknds.de/fileadmin/aknds/PDFs/REA_Dokumentation_oT.pdf', noBg: true },
-      { type: 'image', img: WORK06_PHOTOS[1], overlayImg: WORK06_PHOTOS[1], x: 12, y: 28, w: 48, rotation: 0.5, taped: true, noBg: true, tackers: [2, 4, 1, 3], bringToFront: true, overlay: true, overlaySet: WORK06_PHOTOS, z: 3 },
-      { type: 'image', img: WORK06_PHOTOS[6], overlayImg: WORK06_PHOTOS[6], x: 0, y: 76.5, w: 58.3, rotation: 1, taped: true, noBg: true, tackers: [4, 2, 3, 1], bringToFront: true, overlay: true, overlaySet: WORK06_PHOTOS, z: 4 },
-      { type: 'image', img: WORK06_PHOTOS[8], overlayImg: WORK06_PHOTOS[8], x: 62.2, y: 68, w: 37.3, rotation: -0.5, taped: true, noBg: true, tackers: [2, 4, 1, 3], bringToFront: true, overlay: true, overlaySet: WORK06_PHOTOS, z: 5 },
-      { type: 'image', img: WORK06_PHOTOS[9], overlayImg: WORK06_PHOTOS[9], x: 62.2, y: 85, w: 37.3, rotation: 0.5, taped: true, noBg: true, tackers: [3, 1, 4, 2], bringToFront: true, overlay: true, overlaySet: WORK06_PHOTOS, z: 3 },
-      { type: 'image', img: WORK06_PHOTOS[7], overlayImg: WORK06_PHOTOS[7], x: 58.1, y: 49.5, w: 41.4, rotation: 0.5, taped: true, noBg: true, tackers: [4, 2, 3, 1], bringToFront: true, overlay: true, overlaySet: WORK06_PHOTOS, z: 2 },
-      { type: 'image', img: WORK06_PHOTOS[2], overlayImg: WORK06_PHOTOS[2], x: 24, y: 63, w: 30.8, rotation: 0.5, taped: true, noBg: true, tackers: [3, 1, 4, 2], bringToFront: true, overlay: true, overlaySet: WORK06_PHOTOS, z: 2 },
-      { type: 'image', img: WORK06_PHOTOS[3], overlayImg: WORK06_PHOTOS[3], x: 24, y: 48.8, w: 30.8, rotation: -1, taped: true, noBg: true, tackers: [1, 3, 2, 4], bringToFront: true, overlay: true, overlaySet: WORK06_PHOTOS, z: 3 },
-      { type: 'image', img: WORK06_PHOTOS[5], overlayImg: WORK06_PHOTOS[5], x: 63.5, y: 2.5, w: 36, rotation: 0.5, taped: true, noBg: true, tackers: [3, 1, 4, 2], bringToFront: true, overlay: true, overlaySet: WORK06_PHOTOS, z: 6 },
-      { type: 'image', img: WORK06_PHOTOS[4], overlayImg: WORK06_PHOTOS[4], x: 0, y: 48, w: 21.7, rotation: -0.5, taped: true, noBg: true, tackers: [1, 3, 2, 4], bringToFront: true, overlay: true, overlaySet: WORK06_PHOTOS, z: 6 },
+      { type: 'image', img: WORK06_PHOTOS[1], overlayImg: WORK06_PHOTOS[1], x: 12, y: 28, w: 48, rotation: 0.5, taped: true, noBg: true, bringToFront: true, overlay: true, overlaySet: WORK06_PHOTOS, z: 3 },
+      { type: 'image', img: WORK06_PHOTOS[6], overlayImg: WORK06_PHOTOS[6], x: 0, y: 76.5, w: 58.3, rotation: 1, taped: true, noBg: true, bringToFront: true, overlay: true, overlaySet: WORK06_PHOTOS, z: 4 },
+      { type: 'image', img: WORK06_PHOTOS[8], overlayImg: WORK06_PHOTOS[8], x: 62.2, y: 68, w: 37.3, rotation: -0.5, taped: true, noBg: true, bringToFront: true, overlay: true, overlaySet: WORK06_PHOTOS, z: 5 },
+      { type: 'image', img: WORK06_PHOTOS[9], overlayImg: WORK06_PHOTOS[9], x: 62.2, y: 85, w: 37.3, rotation: 0.5, taped: true, noBg: true, bringToFront: true, overlay: true, overlaySet: WORK06_PHOTOS, z: 3 },
+      { type: 'image', img: WORK06_PHOTOS[7], overlayImg: WORK06_PHOTOS[7], x: 58.1, y: 49.5, w: 41.4, rotation: 0.5, taped: true, noBg: true, bringToFront: true, overlay: true, overlaySet: WORK06_PHOTOS, z: 2 },
+      { type: 'image', img: WORK06_PHOTOS[2], overlayImg: WORK06_PHOTOS[2], x: 24, y: 63, w: 30.8, rotation: 0.5, taped: true, noBg: true, bringToFront: true, overlay: true, overlaySet: WORK06_PHOTOS, z: 2 },
+      { type: 'image', img: WORK06_PHOTOS[3], overlayImg: WORK06_PHOTOS[3], x: 24, y: 48.8, w: 30.8, rotation: -1, taped: true, noBg: true, bringToFront: true, overlay: true, overlaySet: WORK06_PHOTOS, z: 3 },
+      { type: 'image', img: WORK06_PHOTOS[5], overlayImg: WORK06_PHOTOS[5], x: 63.5, y: 2.5, w: 36, rotation: 0.5, taped: true, noBg: true, bringToFront: true, overlay: true, overlaySet: WORK06_PHOTOS, z: 6 },
+      { type: 'image', img: WORK06_PHOTOS[4], overlayImg: WORK06_PHOTOS[4], x: 0, y: 48, w: 21.7, rotation: -0.5, taped: true, noBg: true, bringToFront: true, overlay: true, overlaySet: WORK06_PHOTOS, z: 6 },
     ],
   },
   // ===== SPREAD 12: WORK07 — Tanz-Gallery Lee-Keun Reimagined (2020, Hannover) =====
@@ -787,7 +788,7 @@ const bookPages = [
       // Image — page-sized -full version, edge to edge like the title-page
       // covers; behind drops it to the text layer so the title sits on top.
       // Clicking opens the original uncropped image
-      { type: 'image', img: WORK07_TANZ_FULL, overlayImg: WORK07_TANZ, x: -5.6, y: -5.75, w: 111.1, rotation: 0, taped: true, noBg: true, tackers: [1, 3, 2, 4], behind: true, overlay: true, overlaySet: WORK07_IMAGES, noMobileOverlay: true },
+      { type: 'image', img: WORK07_TANZ_FULL, overlayImg: WORK07_TANZ, x: -5.6, y: -5.75, w: 111.1, rotation: 0, taped: true, noBg: true, behind: true, overlay: true, overlaySet: WORK07_IMAGES, noMobileOverlay: true },
       // Title — same statement treatment as work.05, on top of the image
       // Title — statement block in the bottom left corner; the text flows
       // from the top of its box, so the box starts just high enough for the
@@ -803,18 +804,18 @@ const bookPages = [
       // Detail — page-sized -full version, same height as the left page's
       // image, edge to edge, 10% transparent. Clicking opens the original.
       // No bringToFront: the image must not jump over the header on hover
-      { type: 'image', img: WORK07_DETAIL_FULL, overlayImg: WORK07_DETAIL, x: -5.9, y: -5.75, w: 111.8, rotation: 0, opacity: 0.9, taped: true, noBg: true, tackers: [2, 4, 1, 3], overlay: true, overlaySet: WORK07_IMAGES, noMobileOverlay: true },
+      { type: 'image', img: WORK07_DETAIL_FULL, overlayImg: WORK07_DETAIL, x: -5.9, y: -5.75, w: 111.8, rotation: 0, opacity: 0.9, taped: true, noBg: true, overlay: true, overlaySet: WORK07_IMAGES, noMobileOverlay: true },
     ],
   },
-  // ===== SPREAD 13: WORK08 — Cascades: Campus Hamburg, lecture hall building for the University of Hamburg (2022, Hamburg) =====
+  // ===== SPREAD 13: WORK08 — Cascades: Campus Hamburg, lecture hall building for the University of Hamburg (2021, Hamburg) =====
   // Left page — light paper, render up top, axonometric and site plan stacked
   // left, title and project text in the right column (H-Block layout)
   {
-    meta: { year: '2022', place: 'Hamburg', title: 'Cascades: Campus Hamburg', work: 8 },
+    meta: { year: '2021', place: 'Hamburg', title: 'Cascades: Campus Hamburg', work: 8 },
     items: [
       // Render — full page width, cropped to render1's aspect so the lower
       // block sits at the same H-Block positions
-      { type: 'image', img: CASCADES_RENDER, overlayImg: CASCADES_RENDER, x: 0, y: 7, w: 100, rotation: 0, taped: true, noBg: true, tackers: [1, 3, 2, 4], behind: true, overlay: true, overlaySet: CASCADES_DRAWINGS },
+      { type: 'image', img: CASCADES_RENDER, overlayImg: CASCADES_RENDER, x: 0, y: 7, w: 100, rotation: 0, taped: true, noBg: true, behind: true, overlay: true, overlaySet: CASCADES_DRAWINGS },
       // Site plan and axonometric — stacked in the left column in A-format
       // tiles like H-Block's plans; zoom 1 shows the drawings nearly full
       // (the click-to-zoom overlay shows them completely)
@@ -829,7 +830,7 @@ const bookPages = [
   },
   // Right page — light paper, plans, section and render, all aligned straight
   {
-    meta: { year: '2022', place: 'Hamburg', title: 'Cascades: Campus Hamburg', work: 8 },
+    meta: { year: '2021', place: 'Hamburg', title: 'Cascades: Campus Hamburg', work: 8 },
     items: [
       // Ground floor plan — full page width up top
       { type: 'image', img: CASCADES_GR_EG, overlayImg: CASCADES_GR_EG_WHITE, x: 0, y: 2.5, w: 100, rotation: 0, noBg: true, bringToFront: true, overlay: true, overlaySet: CASCADES_RIGHT, z: 2 },
@@ -841,7 +842,7 @@ const bookPages = [
       // Section — wide band across the page middle
       { type: 'image', img: CASCADES_SCHNITT, overlayImg: CASCADES_SCHNITT_WHITE, x: 0, y: 47.4, w: 100, rotation: 0, noBg: true, bringToFront: true, overlay: true, overlaySet: CASCADES_RIGHT, z: 2 },
       // Panorama render — full page width, bottom edge on the sheet end
-      { type: 'image', img: CASCADES_VIEW, overlayImg: CASCADES_VIEW, x: 0, y: 73.4, w: 100, rotation: 0, taped: true, noBg: true, tackers: [3, 1, 4, 2], bringToFront: true, overlay: true, overlaySet: CASCADES_RIGHT, z: 3 },
+      { type: 'image', img: CASCADES_VIEW, overlayImg: CASCADES_VIEW, x: 0, y: 73.4, w: 100, rotation: 0, taped: true, noBg: true, bringToFront: true, overlay: true, overlaySet: CASCADES_RIGHT, z: 3 },
     ],
   },
 

@@ -808,8 +808,11 @@
 
 
 /* Hover-full statement overlay — fully opaque while hovered */
-.sketch-item-statement.sketch-statement-hover {
-  pointer-events: auto !important;
+/* hoverFull: only the text lines catch the pointer, so the hover fill-in
+   keeps working — the oversized statement box must not block the taps and
+   hovers of the items underneath (grid images, photos, …) */
+.sketch-item-statement.sketch-statement-hover > div {
+  pointer-events: auto;
 }
 
 .sketch-item-statement.sketch-statement-hover:hover {

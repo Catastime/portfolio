@@ -51,6 +51,19 @@ export function startPreload() {
       `${BASE}master-thesis/comic/comic-terminate.png`,
       `${BASE}master-thesis/cleanup/cleanup.jpg`,
       `${BASE}master-thesis/website.png`,
+      // Works 04–08 — anchors of the later spreads, warmed during idle
+      `${BASE}vroxel-apartment/thesis-starter1.png`,
+      `${BASE}atelier_anthrazit/Atelier-starter.png`,
+      `${BASE}atelier_anthrazit/IMG-20250901-WA0018.jpg`,
+      `${BASE}messestand/render1.jpeg`,
+      `${BASE}tanzgallery/Tanz-Gallery Lee-Keun Reimagined-full.png`,
+      `${BASE}tanzgallery/Detail-full.png`,
+      `${BASE}cascades/v3_2.jpeg`,
+      `${BASE}cascades/transparent/GR EG.png`,
+      `${BASE}cascades/transparent/Schwarzplan.png`,
+      `${BASE}cascades/transparent/GR OOG.png`,
+      `${BASE}cascades/transparent/Schnitt.png`,
+      `${BASE}cascades/lv2_2.jpeg`,
     ].forEach(warmImage)
   }
 
