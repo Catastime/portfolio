@@ -427,6 +427,38 @@
   max-width: none;
 }
 
+/* Plan toggle — EG/OG caption labels switching an overlay plan sheet */
+.sketch-plan-toggle-labels {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1em;
+  font-family: 'automate', sans-serif;
+  font-size: calc(0.7rem * var(--page-scale, 1));
+  color: var(--page-text, #3d3d3d);
+  line-height: 1.2;
+  user-select: none;
+}
+
+.sketch-plan-toggle-label {
+  cursor: pointer;
+  opacity: 0.35;
+  transition: opacity 0.18s ease;
+  letter-spacing: 0.06em;
+}
+
+.sketch-plan-toggle-label:hover {
+  opacity: 0.7;
+}
+
+.sketch-plan-toggle-label.is-active,
+.sketch-plan-toggle-label.is-active:hover {
+  opacity: 1;
+}
+
+.sketch-plan-toggle-sheet img {
+  cursor: pointer;
+}
+
 
 /* Sketch items */
 .sketch-item-sketch {

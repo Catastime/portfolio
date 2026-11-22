@@ -18,7 +18,13 @@ import { startPreload } from '@/preload'
 // Spread 3: Master Thesis continued (comics, video + MORE)
 // Spreads 4-5: Work 02 — "Day and Night Kitchen" (2020/21, Hannover)
 // Spreads 6-7: Work 03 — "Film Photography" (2023-2025, Northern Europe)
-// Spreads 8-14: Placeholder for future projects
+// Spread 8: Work 04 — "Apartment in VR" (2023, Hannover)
+// Spreads 9-10: Work 05 — "Atelier Anthrazit" (ongoing, Hannover)
+// Spread 11: Work 06 — "H-Block Exhibition Booth" (2023, Hannover)
+// Spread 12: Work 07 — "Tanz-Gallery Lee-Keun Reimagined" (2020, Hannover)
+// Spread 13: Work 08 — "Cascades: Campus Hamburg" (2022, Hamburg)
+// Spread 14: reserved for Work 09
+// Spread 15: Impressum — last page, no right page
 // Corner text (spread number, year, place, title) is auto-injected by Sketchbook
 // for all spreads except spread 0, using the `meta` field on the left page.
 
@@ -55,11 +61,10 @@ const projectItems = [
   { id: 'work06', img: `${PROJECTS_PREVIEW}/work06.jpg`, aspect: 600 / 362, title: 'H-Block Exhibition Booth', spread: 11, page: 22 },
   // Work 07 — Tanz-Gallery Lee-Keun Reimagined, title page image
   { id: 'work07', img: `${PROJECTS_PREVIEW}/work07.jpg`, aspect: 600 / 747, title: 'Tanz-Gallery Lee-Keun Reimagined', spread: 12, page: 24 },
-  // Future works — empty slots, replaced when a work is added
-  { id: 'work08', placeholder: true, height: 500 },
+  // Work 08 — Cascades, title page hero (render)
+  { id: 'work08', img: `${PROJECTS_PREVIEW}/work08.jpg`, aspect: 600 / 362, title: 'Cascades: Campus Hamburg', spread: 13, page: 26 },
+  // Work 09 — empty slot until the student works spread is integrated
   { id: 'work09', placeholder: true, height: 300 },
-  { id: 'work10', placeholder: true, height: 400 },
-  { id: 'work11', placeholder: true, height: 350 },
 ]
 
 // Body text blocks share one size across all spreads — text stays consistent
@@ -217,6 +222,28 @@ const WORK07_IMAGES = [
   WORK07_TANZ,
   WORK07_DETAIL,
 ]
+
+// Work.08 — Cascades: Campus Hamburg, lecture hall building for the University of Hamburg (2022, Hamburg)
+const CASCADES_IMG = `${BASE}cascades`
+// Hero render — full page width on the spread 13 left page
+const CASCADES_RENDER = `${CASCADES_IMG}/v3_2.jpeg`
+// Drawings — the page tiles use the transparent versions (white removed,
+// the lines float on the paper); the gallery overlay loads the
+// white-background originals
+const CASCADES_AXO = `${CASCADES_IMG}/transparent/axo_2.png`
+const CASCADES_SCHWARZPLAN = `${CASCADES_IMG}/transparent/Schwarzplan.png`
+const CASCADES_GR_EG = `${CASCADES_IMG}/transparent/GR EG.png`
+const CASCADES_GR_OOG = `${CASCADES_IMG}/transparent/GR OOG.png`
+const CASCADES_SCHNITT = `${CASCADES_IMG}/transparent/Schnitt.png`
+const CASCADES_AXO_WHITE = `${CASCADES_IMG}/axo_2.png`
+const CASCADES_SCHWARZPLAN_WHITE = `${CASCADES_IMG}/Schwarzplan.png`
+const CASCADES_GR_EG_WHITE = `${CASCADES_IMG}/GR EG.png`
+const CASCADES_GR_OOG_WHITE = `${CASCADES_IMG}/GR OOG.png`
+const CASCADES_SCHNITT_WHITE = `${CASCADES_IMG}/Schnitt.png`
+// Panorama render — lv2_2 anchors the right page (hv1_2 and lu2_2 stay unused)
+const CASCADES_VIEW = `${CASCADES_IMG}/lv2_2.jpeg`
+const CASCADES_DRAWINGS = [CASCADES_RENDER, CASCADES_AXO_WHITE, CASCADES_SCHWARZPLAN_WHITE]
+const CASCADES_RIGHT = [CASCADES_GR_EG_WHITE, CASCADES_GR_OOG_WHITE, CASCADES_SCHNITT_WHITE, CASCADES_VIEW]
 
 const thesisPageCount = 140
 const thesisPages = Array.from({ length: thesisPageCount }, (_, i) => ({
@@ -782,10 +809,44 @@ const bookPages = [
       { type: 'image', img: WORK07_DETAIL_FULL, overlayImg: WORK07_DETAIL, x: -5.9, y: -5.75, w: 111.8, rotation: 0, opacity: 0.9, taped: true, noBg: true, tackers: [2, 4, 1, 3], overlay: true, overlaySet: WORK07_IMAGES, noMobileOverlay: true },
     ],
   },
-  // ===== SPREADS 13-14: Placeholder pages for future projects =====
-  // Spread 13
-  { meta: { year: '', place: '', title: '' }, items: [] },
-  { meta: { year: '', place: '', title: '' }, items: [] },
+  // ===== SPREAD 13: WORK08 — Cascades: Campus Hamburg, lecture hall building for the University of Hamburg (2022, Hamburg) =====
+  // Left page — light paper, render up top, axonometric and site plan stacked
+  // left, title and project text in the right column (H-Block layout)
+  {
+    meta: { year: '2022', place: 'Hamburg', title: 'Cascades: Campus Hamburg', work: 8 },
+    items: [
+      // Render — full page width, cropped to render1's aspect so the lower
+      // block sits at the same H-Block positions
+      { type: 'image', img: CASCADES_RENDER, overlayImg: CASCADES_RENDER, x: 0, y: 7, w: 100, rotation: 0, taped: true, noBg: true, tackers: [1, 3, 2, 4], behind: true, overlay: true, overlaySet: CASCADES_DRAWINGS },
+      // Site plan and axonometric — stacked in the left column in A-format
+      // tiles like H-Block's plans; zoom 1 shows the drawings nearly full
+      // (the click-to-zoom overlay shows them completely)
+      { type: 'image', img: CASCADES_SCHWARZPLAN, overlayImg: CASCADES_SCHWARZPLAN_WHITE, x: 0, y: 50.5, w: 48.5, rotation: 0, zoom: 1, aspect: 1.414, noBg: true, bringToFront: true, overlay: true, overlaySet: CASCADES_DRAWINGS, z: 2 },
+      { type: 'image', img: CASCADES_AXO, overlayImg: CASCADES_AXO_WHITE, x: 0, y: 75.5, w: 48.5, rotation: 0, zoom: 1, aspect: 1.414, noBg: true, bringToFront: true, overlay: true, overlaySet: CASCADES_DRAWINGS, z: 2 },
+      // Title — statement at the top of the drawings' right column, above the text
+      { type: 'statement', text: 'CASCADES:\nCAMPUS\nHAMBURG', x: 51.5, y: 50.5, w: 48.5, h: 37.8, rotation: 0, aligns: { 0: 'left' }, blend: true },
+      { type: 'statement', text: 'CASCADES:\nCAMPUS\nHAMBURG', x: 51.5, y: 50.5, w: 48.5, h: 37.8, rotation: 0, aligns: { 0: 'left' }, opacity: 0.75, hoverFull: true },
+      // Project text — top-aligned, starting right below the title
+      { type: 'text', text: 'This studio project, led by Studio Kempe Thill at Leibniz Universität Hannover, designs a multi-use building for the University of Hamburg on a small hill rising four to five metres. Rather than levelling the slope, the design amplifies it: stepped cascades turn the site into an artificial hill whose partially greened roofs form terraces to linger on. The cascade continues inside — the halls step down in half-levels, each lit from behind: the raked seating rises toward the daylight while the front stays shaded. The programme stacks the halls with work and study spaces, a fourth-floor café, the rooftop terraces open to campus life. The silhouette borrows from Japanese rice terraces.', x: 51.5, y: 65, w: 48.5, rotation: 0, font: "'tosh-b', sans-serif", fontSize: BODY_TEXT_SIZE, fontSizeMobile: 0.44, align: 'justify' },
+    ],
+  },
+  // Right page — light paper, plans, section and render, all aligned straight
+  {
+    meta: { year: '2022', place: 'Hamburg', title: 'Cascades: Campus Hamburg', work: 8 },
+    items: [
+      // Ground floor plan — full page width up top
+      { type: 'image', img: CASCADES_GR_EG, overlayImg: CASCADES_GR_EG_WHITE, x: 0, y: 2.5, w: 100, rotation: 0, noBg: true, bringToFront: true, overlay: true, overlaySet: CASCADES_RIGHT, z: 2 },
+      // Upper floor plan — scaled and positioned to match the ground floor
+      // plan's building walls (computed from the ink clusters of both
+      // drawings). The EG/OG captions below the drawing toggle it: the
+      // sheet slides in from the right like tracing paper over the plan
+      { type: 'planToggle', labels: { x: 84, y: 45.8, w: 15, base: 'EG', over: 'OG' }, overlay: { img: CASCADES_GR_OOG, overlayImg: CASCADES_GR_OOG_WHITE, x: 32.6, y: 9.6, w: 42, margin: 1.5, overlay: true, overlaySet: CASCADES_RIGHT } },
+      // Section — wide band across the page middle
+      { type: 'image', img: CASCADES_SCHNITT, overlayImg: CASCADES_SCHNITT_WHITE, x: 0, y: 47.4, w: 100, rotation: 0, noBg: true, bringToFront: true, overlay: true, overlaySet: CASCADES_RIGHT, z: 2 },
+      // Panorama render — full page width, bottom edge on the sheet end
+      { type: 'image', img: CASCADES_VIEW, overlayImg: CASCADES_VIEW, x: 0, y: 73.4, w: 100, rotation: 0, taped: true, noBg: true, tackers: [3, 1, 4, 2], bringToFront: true, overlay: true, overlaySet: CASCADES_RIGHT, z: 3 },
+    ],
+  },
   // Spread 14
   { meta: { year: '', place: '', title: '' }, items: [] },
   { meta: { year: '', place: '', title: '' }, items: [] },

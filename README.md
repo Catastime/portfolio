@@ -1,45 +1,31 @@
 # Portfolio
 
-Personal portfolio site, hosted on GitHub Pages.
+Personal portfolio of Tim Moedeker — architecture and art projects, presented in a digital sketchbook.
 
-## Stack
+**Live:** [timmkr.space](https://timmkr.space)
 
-- Vite + React 19 + TypeScript
-- Tailwind CSS v4 (via `@tailwindcss/vite`)
-- Framer Motion (animations for reactbits.dev components)
-- lucide-react (icons)
-- Deployed via the GitHub Actions artifact-based Pages workflow
+## Concept
 
-## Commands
+This site is a sketchbook: two stacks of physical paper A4 pages on a digital cutting mat, flipped through spread by spread. A projects overlay gives the masonry-grid overview and jumps straight to any work.
 
-```bash
-npm install      # install deps
-npm run dev     # local dev server (http://localhost:5379)
-npm run build    # type-check + production build to dist/
-npm run preview  # preview the production build locally
-```
+## Architecture
 
-## Structure
+- **`src/App.tsx`** — all content: every page, spread and gallery is defined here as data.
+- **`src/components/Sketchbook.jsx`** — the book engine: page stacks, turning, spread layout.
+- **`src/components/`** — building blocks: `Dither` (animated background), `Dock` (navigation), `Masonry` (projects overlay grid), `CuttingMat` (cm-ruler backdrop), `ScrollSequence` (mobile intro), `DecryptedText`, `PixelIcons`.
+- **`src/paths.ts`** — a single `BASE` constant for all asset paths.
 
-```
-src/
-  App.tsx        # root component — compose reactbits.dev components here
-  main.tsx       # entry point
-  index.css      # Tailwind import + global styles
-  components/    # add reactbits.dev components here
-public/
-  favicon.svg
-.github/workflows/deploy.yml   # auto-deploys main -> GitHub Pages
-```
+Stack: Vite · React 19 · TypeScript · Tailwind CSS v4 · Framer Motion · three.js
 
-## Adding reactbits.dev components
+## Content
 
-1. Copy the component source from [reactbits.dev](https://reactbits.dev) into `src/components/`.
-2. Import it in `App.tsx` (or wherever it's used) via the `@` alias, e.g. `import ComponentName from '@/components/ComponentName'`.
-3. Most reactbits components rely on `framer-motion` (already installed). Some use `gsap`, `three`, or `ogl` — install those on demand.
+The book holds the CV and Works 01–09 — Master Thesis, Bachelor Thesis, Film Photography, Apartment in VR, Atelier Anthrazit, H-Block Exhibition Booth, Tanz-Gallery Lee-Keun Reimagined, Cascades: Campus Hamburg.
 
-## Deployment
+## Assets
 
-Pushing to `main` triggers `.github/workflows/deploy.yml`, which builds and deploys to GitHub Pages at `https://catastime.github.io/portfolio/`.
+- **`public/`** — one folder per project, plus `CV.pdf`, fonts and textures. Roughly 1 GB of images and video.
+- **`scripts/`** — Python generators for preview images and the CV PDF, font sources and a few diagnostic scripts.
 
-The `base` path is set to `/portfolio/` in `vite.config.ts` to match the project-page URL.
+## Workflow
+
+Everything lands on `main`; a push builds and deploys via GitHub Actions. Backup branches (`backup/YYYY-MM-DD`) snapshot the repo along the way.

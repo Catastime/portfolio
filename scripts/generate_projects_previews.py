@@ -39,6 +39,8 @@ SOURCES = {
     'work06.jpg': (os.path.join('messestand', 'render1.jpeg'), None),
     # Work 07 — Tanz-Gallery Lee-Keun Reimagined, title page image
     'work07.jpg': (os.path.join('tanzgallery', 'Tanz-Gallery Lee-Keun Reimagined.jpg'), None),
+    # Work 08 — Cascades, title page hero (render panorama)
+    'work08.jpg': (os.path.join('cascades', 'v3_2.jpeg'), None),
 }
 
 

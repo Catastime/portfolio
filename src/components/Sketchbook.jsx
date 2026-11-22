@@ -1,5 +1,6 @@
 /* eslint-disable react/no-unknown-property */
 import { useState, useEffect, useMemo, useRef, useLayoutEffect } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
@@ -50,10 +51,10 @@ const queueModelParse = (task) => {
  * @property {string} [img]
  * @property {string} [text]
  * @property {string} [title]
- * @property {number} x - x position as % of page width (0-100)
- * @property {number} y - y position as % of page height (0-100)
- * @property {number} w - width as % of page width (0-100)
- * @property {number} rotation - rotation in degrees
+ * @property {number} [x] - x position as % of page width (0-100)
+ * @property {number} [y] - y position as % of page height (0-100)
+ * @property {number} [w] - width as % of page width (0-100)
+ * @property {number} [rotation] - rotation in degrees
  * @property {boolean} [taped] - show black corner dots
  * @property {string} [flipImg] - backside image; the image flips on click (type: 'image')
  * @property {string} [flipVideo] - backside video, loops muted; alternative to flipImg (type: 'image')
@@ -67,6 +68,12 @@ const queueModelParse = (task) => {
  * @property {number} [frames] - frame count in the strip image (type: 'filmstrip')
  * @property {Object} [mobile] - geometry overrides merged on phones only
  * (x, y, w, h; h: 0 removes a desktop bottom-align box)
+ * @property {Object} [labels] - caption labels config (type: 'planToggle'):
+ * {x, y, w, base, over} — base/over caption texts; clicking over shows the sheet
+ * @property {Object} [overlay] - overlay sheet config (type: 'planToggle'):
+ * {img, overlayImg, x, y, w, margin, overlay, overlaySet} — the sheet slides in
+ * from the right; margin grows the paper beyond the drawing on all sides;
+ * overlay/overlaySet/overlayImg configure its gallery click
  */
 
 /**
@@ -393,6 +400,85 @@ function FittedModel({ fitted, template, concreteMap, heldRef, rotRef, tile }) {
         </group>
       </group>
     </group>
+  );
+}
+
+// PlanToggle — caption labels (e.g. EG / OG) switching a transparent overlay
+// plan on top of the base plan below it. The overlay sheet slides in from
+// beyond the right page edge like tracing paper being laid over the
+// drawing, and slides back out when the base caption is clicked again.
+function PlanToggle({ labels, overlay, onImageOpen, isMobile }) {
+  const [showOverlay, setShowOverlay] = useState(false);
+  const overlayActive = overlay.overlay && !(isMobile && overlay.noMobileOverlay);
+  // Paper border around the drawing, in % of page width — the sheet grows by
+  // it on all sides while the drawing keeps its exact position and size
+  const m = overlay.margin || 0;
+  const paperW = overlay.w + 2 * m;
+  return (
+    <div
+      className="sketch-item sketch-plan-toggle"
+      style={{ position: 'absolute', inset: 0, overflow: 'hidden', pointerEvents: 'none', zIndex: 101 }}
+    >
+      {/* Caption labels — the switch */}
+      <div
+        className="sketch-plan-toggle-labels"
+        style={{ position: 'absolute', left: `${labels.x}%`, top: `${labels.y}%`, width: `${labels.w}%`, pointerEvents: 'auto' }}
+      >
+        <span
+          className={`sketch-plan-toggle-label${showOverlay ? '' : ' is-active'}`}
+          onClick={() => setShowOverlay(false)}
+        >
+          {labels.base}
+        </span>
+        <span
+          className={`sketch-plan-toggle-label${showOverlay ? ' is-active' : ''}`}
+          onClick={() => setShowOverlay(true)}
+        >
+          {labels.over}
+        </span>
+      </div>
+      {/* The overlay sheet — slides in from beyond the right page edge */}
+      <AnimatePresence>
+        {showOverlay && (
+          <motion.div
+            key="plan-overlay-sheet"
+            className="sketch-plan-toggle-sheet"
+            style={{
+              position: 'absolute',
+              left: `${overlay.x - m}%`,
+              top: `${overlay.y - m * (210 / 297)}%`,
+              width: `${paperW}%`,
+              pointerEvents: 'auto',
+              // Tracing paper look — matched to the page paper tone
+              // (the scanned textures average rgb(204,204,204)), just a
+              // touch milkier; frosted, with a soft shadow lifting it off
+              backgroundColor: 'rgba(212, 212, 210, 0.65)',
+              backdropFilter: 'blur(1.5px)',
+              WebkitBackdropFilter: 'blur(1.5px)',
+              boxShadow: '0 3px 14px rgba(0, 0, 0, 0.18)',
+            }}
+            initial={{ x: '175%', rotate: 2.5 }}
+            animate={{ x: '0%', rotate: 0 }}
+            exit={{ x: '175%', rotate: 2.5 }}
+            transition={{ type: 'spring', stiffness: 120, damping: 19 }}
+          >
+            {/* The drawing sits inside the paper border, unchanged in size */}
+            <div style={{ margin: `${(m / paperW) * 100}%` }}>
+              <img
+                src={overlay.img}
+                alt=""
+                className="sketch-image"
+                onClick={overlayActive ? () => {
+                  const set = overlay.overlaySet || [overlay.img];
+                  const key = overlay.overlayImg || overlay.img;
+                  onImageOpen?.(set, Math.max(0, set.indexOf(key)));
+                } : undefined}
+              />
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
   );
 }
 
@@ -868,6 +954,10 @@ export default function Sketchbook({
 
     if (item.type === 'model') {
       return <ModelItem key={key} src={item.src} texture={item.texture} tile={item.tile} poster={item.poster} frameVisible={modelFramesVisible} frameInset={item.frameInset} style={{ ...style, aspectRatio: String(item.aspect || 1) }} />;
+    }
+
+    if (item.type === 'planToggle') {
+      return <PlanToggle key={key} labels={item.labels} overlay={item.overlay} onImageOpen={onImageOpen} isMobile={isMobile} />;
     }
 
     if (item.type === 'gif') {
